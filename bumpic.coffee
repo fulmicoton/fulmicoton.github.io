@@ -37,16 +37,18 @@ render_scene = (img, depth, camera)->
     N = W*H*4
     offset = ([i,j])->
         (i + j*W) * 4
-    x0 = W/2
-    y0 = H/2
-    d0 = depthp[ offset([x0,y0]) ]
+    x0 = Math.ceil (W/2)
+    y0 = Math.ceil (H/2)
+    d0 = depthp[ offset([x0,y0]) ]*0.05
+    
     S  = x0 * (camera.L - d0) / ( x0 + camera.x) 
+    z = 1.0
     for i in [0...W]
         for j in [0...H]
             c = offset [i,j] 
             d = depthp[c]*0.05
-            x = Math.floor(x0 - camera.x + (camera.x + i - x0) * (camera.L )  / (camera.L - d))
-            y = Math.floor(y0 - camera.y + (camera.y + j - y0) * (camera.L )  / (camera.L - d))
+            x = Math.floor(x0 - z*camera.x + z*(camera.x + i - x0) * (camera.L)  / (camera.L - d + d0))
+            y = Math.floor(y0 - z*camera.y + z*(camera.y + j - y0) * (camera.L)  / (camera.L - d + d0))
             if (0 <= x < W) and (0 <= y < H)
                 destc = offset [x,y]
                 destp[destc  ] = imgp[c]
@@ -70,7 +72,10 @@ render_scene = (img, depth, camera)->
                 destp[c] = Math.ceil(r/neighbor_count)
                 destp[c+1] = Math.ceil(g/neighbor_count)
                 destp[c+2] = Math.ceil(b/neighbor_count)
-                destp[c+3] = 255
+                #destp[c+3] = 255
+    for c in [0...W*H*4] by 4
+        destp[c+3] = 255
+    
     return dest
 
 ###
@@ -164,7 +169,7 @@ class Animation
             clearInterval @timer
 
 create_animation = (image, depth, amplitude=1.0)->
-    h = 30.0
+    h = 60.0
     point_from_angle = (theta)->
         { x: Math.cos(theta)*h, y: Math.sin(theta)*h, L: 100}
     N = 12

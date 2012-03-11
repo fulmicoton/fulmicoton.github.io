@@ -39,7 +39,7 @@
     return ctx.createImageData(W, H);
   };
   render_scene = function(img, depth, camera) {
-    var H, N, NEIGHBORS, S, W, b, c, d, d0, depthp, dest, destc, destp, g, i, imgp, j, neighbor, neighbor_count, neighbor_offset, offset, r, x, x0, y, y0, _i, _len, _ref, _ref2;
+    var H, N, NEIGHBORS, S, W, b, c, d, d0, depthp, dest, destc, destp, g, i, imgp, j, neighbor, neighbor_count, neighbor_offset, offset, r, x, x0, y, y0, z, _i, _len, _ref, _ref2, _ref3;
     W = img.width;
     H = img.height;
     dest = create_image_data(W, H);
@@ -52,16 +52,17 @@
       i = _arg[0], j = _arg[1];
       return (i + j * W) * 4;
     };
-    x0 = W / 2;
-    y0 = H / 2;
-    d0 = depthp[offset([x0, y0])];
+    x0 = Math.ceil(W / 2);
+    y0 = Math.ceil(H / 2);
+    d0 = depthp[offset([x0, y0])] * 0.05;
     S = x0 * (camera.L - d0) / (x0 + camera.x);
+    z = 1.0;
     for (i = 0; 0 <= W ? i < W : i > W; 0 <= W ? i++ : i--) {
       for (j = 0; 0 <= H ? j < H : j > H; 0 <= H ? j++ : j--) {
         c = offset([i, j]);
         d = depthp[c] * 0.05;
-        x = Math.floor(x0 - camera.x + (camera.x + i - x0) * camera.L / (camera.L - d));
-        y = Math.floor(y0 - camera.y + (camera.y + j - y0) * camera.L / (camera.L - d));
+        x = Math.floor(x0 - z * camera.x + z * (camera.x + i - x0) * camera.L / (camera.L - d + d0));
+        y = Math.floor(y0 - z * camera.y + z * (camera.y + j - y0) * camera.L / (camera.L - d + d0));
         if (((0 <= x && x < W)) && ((0 <= y && y < H))) {
           destc = offset([x, y]);
           destp[destc] = imgp[c];
@@ -92,9 +93,11 @@
           destp[c] = Math.ceil(r / neighbor_count);
           destp[c + 1] = Math.ceil(g / neighbor_count);
           destp[c + 2] = Math.ceil(b / neighbor_count);
-          destp[c + 3] = 255;
         }
       }
+    }
+    for (c = 0, _ref3 = W * H * 4; c < _ref3; c += 4) {
+      destp[c + 3] = 255;
     }
     return dest;
   };
@@ -199,7 +202,7 @@
     if (amplitude == null) {
       amplitude = 1.0;
     }
-    h = 30.0;
+    h = 60.0;
     point_from_angle = function(theta) {
       return {
         x: Math.cos(theta) * h,

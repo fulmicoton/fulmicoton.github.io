@@ -45,8 +45,8 @@ render_scene = (img, depth, camera)->
         for j in [0...H]
             c = offset [i,j] 
             d = depthp[c]*0.05
-            x = Math.floor(x0 - camera.x + (camera.x + i - x0) * (camera.L - d0)  / (camera.L - d))
-            y = Math.floor(y0 - camera.y + (camera.y + j - y0) * (camera.L - d0)  / (camera.L - d))
+            x = Math.floor(x0 - camera.x + (camera.x + i - x0) * (camera.L )  / (camera.L - d))
+            y = Math.floor(y0 - camera.y + (camera.y + j - y0) * (camera.L )  / (camera.L - d))
             if (0 <= x < W) and (0 <= y < H)
                 destc = offset [x,y]
                 destp[destc  ] = imgp[c]
@@ -157,23 +157,33 @@ class Animation
         render_frame = =>
             frame_id = (frame_id + 1) % @frames.length
             ctx.putImageData @frames[frame_id], 0, 0    
-        setInterval render_frame, 1000.0/speed
+        @timer = setInterval render_frame, 1000.0/speed
 
+    stop: ->
+        if @timer?
+            clearInterval @timer
 
 create_animation = (image, depth, amplitude=1.0)->
-    h = 100.0
+    h = 30.0
     point_from_angle = (theta)->
-        { x: Math.cos(theta)*h, y: Math.sin(theta)*h, L: 200}
-    N=12
+        { x: Math.cos(theta)*h, y: Math.sin(theta)*h, L: 100}
+    N = 12
     thetas = ( Math.PI*2.0*i/N for i in [0...N] )
     CAMERAS = ( point_from_angle(theta) for theta in thetas )
     return new Animation( render_scene(image,depth,camera) for camera in CAMERAS )
 
-main = ->
-    load_img_data 'image.png', (img_data)->
-        load_img_data 'depth.png', (depth_data)->
-            animation = create_animation img_data, depth_data, 6.0
+@load_animation = (animation_id)->
+    load_img_data (animation_id + '.png'), (img_data)->
+        load_img_data (animation_id + '_depth.png'), (depth_data)->
+            window.animation?.stop()
+            window.animation = create_animation img_data, depth_data, 6.0
+            canvas = document.getElementById('autostereoscopy')
+            canvas.width = img_data.width
+            canvas.height = img_data.height
             ctx = document.getElementById('autostereoscopy').getContext('2d')
             animation.play ctx, 24
+
+main = ->
+    window.load_animation 'poulejapon'
 
 $ main

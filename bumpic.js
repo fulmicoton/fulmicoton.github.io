@@ -60,8 +60,8 @@
       for (j = 0; 0 <= H ? j < H : j > H; 0 <= H ? j++ : j--) {
         c = offset([i, j]);
         d = depthp[c] * 0.05;
-        x = Math.floor(x0 - camera.x + (camera.x + i - x0) * (camera.L - d0) / (camera.L - d));
-        y = Math.floor(y0 - camera.y + (camera.y + j - y0) * (camera.L - d0) / (camera.L - d));
+        x = Math.floor(x0 - camera.x + (camera.x + i - x0) * camera.L / (camera.L - d));
+        y = Math.floor(y0 - camera.y + (camera.y + j - y0) * camera.L / (camera.L - d));
         if (((0 <= x && x < W)) && ((0 <= y && y < H))) {
           destc = offset([x, y]);
           destp[destc] = imgp[c];
@@ -185,7 +185,12 @@
         frame_id = (frame_id + 1) % this.frames.length;
         return ctx.putImageData(this.frames[frame_id], 0, 0);
       }, this);
-      return setInterval(render_frame, 1000.0 / speed);
+      return this.timer = setInterval(render_frame, 1000.0 / speed);
+    };
+    Animation.prototype.stop = function() {
+      if (this.timer != null) {
+        return clearInterval(this.timer);
+      }
     };
     return Animation;
   })();
@@ -194,12 +199,12 @@
     if (amplitude == null) {
       amplitude = 1.0;
     }
-    h = 100.0;
+    h = 30.0;
     point_from_angle = function(theta) {
       return {
         x: Math.cos(theta) * h,
         y: Math.sin(theta) * h,
-        L: 200
+        L: 100
       };
     };
     N = 12;
@@ -230,15 +235,24 @@
       return _results;
     })());
   };
-  main = function() {
-    return load_img_data('image.png', function(img_data) {
-      return load_img_data('depth.png', function(depth_data) {
-        var animation, ctx;
-        animation = create_animation(img_data, depth_data, 6.0);
+  this.load_animation = function(animation_id) {
+    return load_img_data(animation_id + '.png', function(img_data) {
+      return load_img_data(animation_id + '_depth.png', function(depth_data) {
+        var canvas, ctx, _ref;
+        if ((_ref = window.animation) != null) {
+          _ref.stop();
+        }
+        window.animation = create_animation(img_data, depth_data, 6.0);
+        canvas = document.getElementById('autostereoscopy');
+        canvas.width = img_data.width;
+        canvas.height = img_data.height;
         ctx = document.getElementById('autostereoscopy').getContext('2d');
         return animation.play(ctx, 24);
       });
     });
+  };
+  main = function() {
+    return window.load_animation('poulejapon');
   };
   $(main);
 }).call(this);

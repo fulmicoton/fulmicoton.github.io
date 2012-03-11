@@ -39,7 +39,7 @@
     return ctx.createImageData(W, H);
   };
   render_scene = function(img, depth, camera) {
-    var H, N, NEIGHBORS, W, b, c, d, d0, depthp, dest, dest_offset, destp, dx0, dy0, g, i, imgp, j, neighbor, neighbor_offset, offset, r, x, y, _i, _len, _ref, _ref2;
+    var H, N, NEIGHBORS, S, W, b, c, d, d0, depthp, dest, destc, destp, g, i, imgp, j, neighbor, neighbor_count, neighbor_offset, offset, r, x, x0, y, y0, _i, _len, _ref, _ref2;
     W = img.width;
     H = img.height;
     dest = create_image_data(W, H);
@@ -47,46 +47,52 @@
     depthp = depth.data;
     destp = dest.data;
     N = W * H * 4;
-    d0 = depthp[W / 2 + H * W / 2];
-    dx0 = Math.ceil(d0 * camera.hx * W / 2);
-    dy0 = Math.ceil(d0 * camera.hy * H / 2);
+    offset = function(_arg) {
+      var i, j;
+      i = _arg[0], j = _arg[1];
+      return (i + j * W) * 4;
+    };
+    x0 = W / 2;
+    y0 = H / 2;
+    d0 = depthp[offset([x0, y0])];
+    S = x0 * (camera.L - d0) / (x0 + camera.x);
     for (i = 0; 0 <= W ? i < W : i > W; 0 <= W ? i++ : i--) {
       for (j = 0; 0 <= H ? j < H : j > H; 0 <= H ? j++ : j--) {
-        offset = (i + j * W) * 4;
-        d = depthp[offset];
-        x = i + Math.ceil(d * camera.hx * i) - dx0;
-        y = j + Math.ceil(d * camera.hy * j) - dy0;
-        if ((0 <= x && x < W) && (0 <= y && y < H)) {
-          dest_offset = (x + y * W) * 4;
-          destp[dest_offset] = imgp[offset];
-          destp[dest_offset + 1] = imgp[offset + 1];
-          destp[dest_offset + 2] = imgp[offset + 2];
-          destp[dest_offset + 3] = 255;
+        c = offset([i, j]);
+        d = depthp[c] * 0.05;
+        x = Math.floor(x0 - camera.x + (camera.x + i - x0) * (camera.L - d0) / (camera.L - d));
+        y = Math.floor(y0 - camera.y + (camera.y + j - y0) * (camera.L - d0) / (camera.L - d));
+        if (((0 <= x && x < W)) && ((0 <= y && y < H))) {
+          destc = offset([x, y]);
+          destp[destc] = imgp[c];
+          destp[destc + 1] = imgp[c + 1];
+          destp[destc + 2] = imgp[c + 2];
+          destp[destc + 3] = 255;
         }
       }
     }
-    for (offset = 0, _ref = W * H * 4; offset < _ref; offset += 4) {
-      if (destp[offset + 3] === 0) {
-        c = 0;
+    for (c = 0, _ref = W * H * 4; c < _ref; c += 4) {
+      if (destp[c + 3] === 0) {
+        neighbor_count = 0;
         _ref2 = [0, 0, 0], r = _ref2[0], g = _ref2[1], b = _ref2[2];
         NEIGHBORS = [-W * 4, W * 4, -4, 4];
         for (_i = 0, _len = NEIGHBORS.length; _i < _len; _i++) {
           neighbor = NEIGHBORS[_i];
-          neighbor_offset = offset + neighbor;
+          neighbor_offset = c + neighbor;
           if ((0 <= neighbor_offset && neighbor_offset < N)) {
             if (destp[neighbor_offset + 3] === 255) {
-              c += 1;
+              neighbor_count += 1;
               r += destp[neighbor_offset + 0];
               g += destp[neighbor_offset + 1];
               b += destp[neighbor_offset + 2];
             }
           }
         }
-        if (c > 0) {
-          destp[offset] = Math.ceil(r / c);
-          destp[offset + 1] = Math.ceil(g / c);
-          destp[offset + 2] = Math.ceil(b / c);
-          destp[offset + 3] = 255;
+        if (neighbor_count > 0) {
+          destp[c] = Math.ceil(r / neighbor_count);
+          destp[c + 1] = Math.ceil(g / neighbor_count);
+          destp[c + 2] = Math.ceil(b / neighbor_count);
+          destp[c + 3] = 255;
         }
       }
     }
@@ -188,14 +194,15 @@
     if (amplitude == null) {
       amplitude = 1.0;
     }
-    h = 0.2 * amplitude / (255.0 * 15.0);
+    h = 100.0;
     point_from_angle = function(theta) {
       return {
-        hx: Math.cos(theta) * h,
-        hy: Math.sin(theta) * h
+        x: Math.cos(theta) * h,
+        y: Math.sin(theta) * h,
+        L: 200
       };
     };
-    N = 24;
+    N = 12;
     thetas = (function() {
       var _results;
       _results = [];
@@ -229,7 +236,7 @@
         var animation, ctx;
         animation = create_animation(img_data, depth_data, 6.0);
         ctx = document.getElementById('autostereoscopy').getContext('2d');
-        return animation.play(ctx, 48);
+        return animation.play(ctx, 24);
       });
     });
   };

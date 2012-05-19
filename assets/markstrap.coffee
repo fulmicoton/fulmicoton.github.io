@@ -1,7 +1,7 @@
 addMenus = ($h1)->
 	major = 0
 	minor = 0
-	$navbar = $ "#navbar ul.nav-list"
+	$navbar = $ "#sectionList ul.nav-list"
 	$("h1, h2").each ->
 		$headEl = $ this
 		title = $headEl.html()
@@ -17,7 +17,7 @@ addMenus = ($h1)->
 			minor += 1
 			sectionId = "section_" + major + "_" + minor
 			$navElement.html "<a href='##{ sectionId }'>#{ title }</a>"
-		$headEl.attr 'id', sectionId
+		$headEl.before $ "<span id='#{sectionId}' class='bookmark'></span>"
 		$navbar.append $navElement
 	
 	$('[data-spy="scroll"]').each ->
@@ -25,4 +25,4 @@ addMenus = ($h1)->
 
 $ ->
 	addMenus $ "body"
-	$('#navbar').scrollspy()
+	$('#navbar').scrollspy {offset: 50}

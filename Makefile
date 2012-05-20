@@ -1,6 +1,7 @@
 all: uptodate
 	cd potato && make doc
 	cp -R potato/doc/* .
+	git add -u
 	
 clean:
 	rm -fr potato

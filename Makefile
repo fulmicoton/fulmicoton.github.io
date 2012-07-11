@@ -1,14 +1,15 @@
-all: uptodate
-	cd potato && make doc
-	cp -R potato/doc/* .
-	git add -u
-	
-clean:
-	rm -fr potato
+all: readymade
 
-potato:
-	git clone https://github.com/poulejapon/potato.git potato
+rep/potato:
+	git clone https://github.com/poulejapon/potato.git rep/potato
 
-uptodate: potato
-	cd potato && git pull
+rep/readymade:
+	git clone https://github.com/poulejapon/readymade.git rep/readymade
+
+%: rep/%
+	cd $< && make doc
+	cp -R $</doc $@
+
+#uptodate: potato
+#	cd rep && git pull
 

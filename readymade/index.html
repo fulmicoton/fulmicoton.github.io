@@ -1,7 +1,8 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><link rel="stylesheet" type="text/css" media="screen" href="css/readymade.css"><link href="http://fonts.googleapis.com/css?family=Ubuntu+Condensed" rel="stylesheet" type="text/css"></head><body><div id="content"><img src="img/readymade.png" id="logo"><p>ReadyMade makes it easier for webdevelopers and designers to work with 
 assets that requires compilation : CoffeeScript, Less css, Sass, Stylus, Uglify, markdown ... and obviously all of your static files that don&#39;t require compilation (images, css, js, etc.).
 
-
+</p>
+<p>I can work as a standalone serve or integrate with ExpressJS.
 
 
 
@@ -50,10 +51,7 @@ To get the server running and serve your assets on <a href="http://localhost:100
 directory by 
 
 </p>
-<p>   readymade build -t <your-target-file> -d <your-build-dir>
-
-
-</p>
+<pre><code>readymade build -t <span class="tag">&lt;<span class="title">your-target-file</span>></span> -d <span class="tag">&lt;<span class="title">your-build-dir</span>></span></code></pre>
 <h2>Formats handled by default</h2>
 <table>
     <thead>
@@ -122,7 +120,7 @@ directory by
         <tr>
             <td><a href="http://twitter.github.com/hogan.js/">Mustache templates<br/>(via Hogan)</a></td>
             <td>templates.js</td>
-            <td>a &quot;mustaches&quot; directory containing all your templates.</td>
+            <td>a &quot;mustaches&quot; directory<br/>containing all your templates.</td>
             <td class='command'>npm install markitup</td>
         </tr>
     </tbody>
@@ -146,13 +144,10 @@ file by creating and editing readymade.Makefile.
     <span class="keyword">mkdir</span> -p <span class="string">`dirname $@`</span>
     cp <span class="variable">$^</span> <span class="variable">$@</span></code></pre>
 <p>This rule will be active if you run either <strong>readymade serve</strong> or
-<strong>readymade build</strong> with the -f readymade.Makefile option.
-
-
-
-
+<strong>readymade build</strong> with the -f option :
 
 </p>
+<pre><code>readymade serve -f readymade<span class="variable">.Makefile</span></code></pre>
 <h2>How to install</h2>
 <p>ReadyMade requires <a href="http://nodejs.org/">NodeJS</a> and <a href="http://fr.wikipedia.org/wiki/Make">Make</a> to be installed on your computer.
 Make comes by default on most Linux Distribution and with XCode on MacOS (dunno about Windows).
@@ -171,6 +166,29 @@ Make comes by default on most Linux Distribution and with XCode on MacOS (dunno 
 
 
 </p>
+<h2>Integrate with express</h2>
+<p>Readymade is up and running just by adding one line in your app.configure:
+
+</p>
+<pre><code>app.configure(<span class="keyword">function</span>(){
+    // <span class="keyword">...</span> 
+    app.use(<span class="keyword">require</span>(<span class="string">'readymade'</span>).middleware({root: <span class="string">"public"</span>}));
+    // <span class="keyword">...</span> 
+});</code></pre>
+<p>Readymade will then server the content within <strong>./public</strong> content on <strong>/public</strong>.
+In order to extend readymade with your own building rules, just pass the path to your
+makefile with the <strong>makefile</strong> option.
+
+</p>
+<pre><code>app.configure(<span class="keyword">function</span>(){
+    // <span class="keyword">...</span> 
+    var readymadeOptions = {
+        root: <span class="string">"public"</span>,
+        makefile:<span class="string">"./readymade.Makefile"</span>
+    };
+    app.use(<span class="keyword">require</span>(<span class="string">'readymade'</span>).middleware(readymadeOptions));
+    // <span class="keyword">...</span> 
+}); </code></pre>
 <h2> More help</h2>
 <p>Get more information about command-line options via :
 

@@ -74,9 +74,45 @@ div.editor-container {
   width: auto;
   min-height: 100%;
 }
+div.content i {
+  vertical-align: text-bottom;
+}
+div.content button {
+  background-color: #eee;
+  padding: 20px 40px;
+  background-color: white;
+  font-size: 20px;
+  border: none;
+  color: black;
+  font-size: 14px;
+}
 div.preview {
+  background-color: parent;
   position: relative;
   padding: 20px;
+}
+#box {
+  height: 100px;
+  width: 100px;
+  background-color: #777;
+  position: absolute;
+  left: 5px;
+  top: 5px;
+  opacity: 0;
+}
+@-webkit-keyframes loading {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1.0;
+  }
+}
+div.loading {
+  -webkit-animation-name: loading;
+  -webkit-animation-duration: 500ms;
+  -webkit-animation-iteration-count: 1;
+  -webkit-animation-timing-function: ease-out;
 }
 div.preview ul {
   margin: 0px;
@@ -136,10 +172,16 @@ div.preview button.delete {
   background-color: transparent;
   border: none;
 }
+div.preview div.error_msg {
+  color: red;
+  font-size: 10px;
+  clear: both;
+  font-weight: bold;
+}
 div.preview fieldset {
   padding: 10px;
   clear: both;
-  background-color: #fff;
+  background-color: transparent;
   border: none;
 }
 div.preview fieldset fieldset {

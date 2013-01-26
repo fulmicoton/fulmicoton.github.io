@@ -1,0 +1,177 @@
+html,
+body {
+  min-height: 100%;
+  height: 100%;
+}
+body {
+  padding: 20px;
+  padding-bottom: 300px;
+  padding: 40px 20px 20px 30px;
+}
+span.bookmark {
+  top: -15px;
+  display: block;
+  width: 0;
+  height: 0;
+  position: relative;
+}
+div.content ul {
+  margin-left: 40px;
+  margin-bottom: 20px;
+}
+div.content p {
+  font-size: 15px;
+  line-height: 22px;
+}
+div.navbar-fixed-top {
+  opacity: 0.9;
+}
+img#ribbon {
+  position: fixed;
+  top: 40px;
+  right: 0;
+  border: 0;
+}
+#sectionList {
+  position: fixed;
+  height: 100%;
+  margin-left: 0;
+  margin-right: 50px;
+}
+#sectionList .sidebar-nav {
+  padding: 9px 0;
+}
+h1 {
+  text-align: right;
+  margin-top: 50px;
+  margin-bottom: 20px;
+}
+h2 {
+  margin-top: 60px;
+  margin-bottom: 10px;
+}
+pre {
+  background: #272822;
+}
+pre code {
+  display: block;
+  padding: 0.5em;
+}
+pre .params .identifier .keymethods {
+  color: #FD971F;
+}
+pre .tag,
+pre .keyword,
+pre .literal,
+pre .change,
+pre .winutils,
+pre .flow,
+pre .lisp .title,
+pre .tex .special {
+  color: #F92672;
+}
+pre code {
+  color: #DDD;
+}
+pre code .constant {
+  color: #66D9EF;
+}
+pre .class .title {
+  color: white;
+}
+pre .attribute,
+pre .symbol,
+pre .value {
+  color: #BF79DB;
+}
+pre .tag .value,
+pre .string,
+pre .ruby .subst,
+pre .function .title,
+pre .haskell .label,
+pre .ini .title,
+pre .preprocessor,
+pre .ruby .instancevar,
+pre .ruby .class .parent,
+pre .built_in,
+pre .sql .aggregate,
+pre .django .template_tag,
+pre .django .variable,
+pre .smalltalk .class,
+pre .javadoc,
+pre .ruby .string,
+pre .django .filter .argument,
+pre .smalltalk .localvars,
+pre .smalltalk .array,
+pre .attr_selector,
+pre .pseudo,
+pre .addition,
+pre .stream,
+pre .envvar,
+pre .apache .tag,
+pre .apache .cbracket,
+pre .tex .command,
+pre .input_number {
+  color: #A6E22E;
+}
+pre .comment,
+pre .java .annotation,
+pre .python .decorator,
+pre .template_comment,
+pre .pi,
+pre .doctype,
+pre .deletion,
+pre .shebang,
+pre .apache .sqbracket,
+pre .tex .formula {
+  color: #75715E;
+}
+pre .keyword,
+pre .literal,
+pre .css .id,
+pre .phpdoc,
+pre .function .title,
+pre .class .title,
+pre .haskell .label,
+pre .vbscript .built_in,
+pre .sql .aggregate,
+pre .rsl .built_in,
+pre .smalltalk .class,
+pre .xml .tag .title,
+pre .diff .header,
+pre .chunk,
+pre .winutils,
+pre .bash .variable,
+pre .lisp .title,
+pre .apache .tag,
+pre .tex .special {
+  font-weight: bold;
+}
+pre .coffeescript .javascript,
+pre .xml .css,
+pre .xml .javascript,
+pre .xml .vbscript,
+pre .tex .formula {
+  opacity: 0.5;
+}
+#docs {
+  margin: auto;
+}
+.block {
+  clear: both;
+}
+.comment {
+  padding: 0 10px;
+  width: 50%;
+}
+.code {
+  width: 49%;
+  background: #f8f8ff;
+}
+td {
+  vertical-align: top;
+}
+table {
+  width: 90%;
+  border-collapse: collapse;
+}

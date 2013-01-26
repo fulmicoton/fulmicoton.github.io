@@ -1,0 +1,296 @@
+<!DOCTYPE html><html lang="en"><head><link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css"><link rel="stylesheet" href="assets/markstrap.css"></head><body data-spy="scroll"><a href="https://github.com/poulejapon/potato"><img id="ribbon" src="https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png" alt="Fork me on GitHub"></a><div class="navbar navbar-fixed-top"><div class="navbar-inner"><div class="container"><ul class="nav"><li><a href="index.html">Reference</a></li><li><a href="examples.html">Examples</a></li></ul></div></div></div><div id="container" class="site container-fluid"><div id="sectionList" class="span4"><div class="sidebar-nav"><ul class="nav nav-list"></ul></div></div><div class="span8 offset4 content"><h1>Getting started</h1>
+<p><a href="http://travis-ci.org/#!/poulejapon/potato"><img src="https://secure.travis-ci.org/poulejapon/potato.png" alt="Build Status"></a>
+
+
+</p>
+<h2>NodeJS</h2>
+<pre><code class="lang-bash">    npm install potato</code></pre>
+<h2>In the browser</h2>
+<p><a href="https://github.com/poulejapon/potato/archive/0.1.1.tar.gz">Download the Latest Version <strong>0.1.1</strong>   [ Tar Ball ] </a>
+
+</p>
+<p>Potato comes in two flavour. 
+
+</p>
+<p><strong>potato.min.js</strong> in which the potato module will endup as &quot;potato&quot; in your global
+namespace. 
+
+</p>
+<p><strong>potato-browserify.min.js</strong> which is browserified. In that case, the potato module is returned by the call <code>require potato</code>. 
+In the following examples we will consider the latter, and assign via <code>O = require &#39;potato&#39;</code>.
+
+
+
+</p>
+<h1>Core</h1>
+<p>Potato is a CoffeeScript micro-framework focused
+on composition. It relies on its own object model, whose syntax
+might recall that of an ORM.
+
+</p>
+<h2>Object composition</h2>
+<p>To declare a model for a user profile, you would typically declare it as a composition of the information of name, age and address. Address itself will be the composition of a street/city/zipcode/state/country.
+
+</p>
+<pre><code class="lang-coffeescript">O = require <span class="string">'potato'</span>
+
+Address = O.Potato
+    components:
+        street:  O.String
+        city:    O.String
+        zipcode: O.String
+
+Profile = O.Potato
+    components:
+        name:    O.String
+        address: Address
+        age:     O.Int</code></pre>
+<p>You may notice that this syntax also allows to inline the definition of a very simple composed object that is very unlikely to be reused. For instance :
+
+
+
+</p>
+<pre><code class="lang-coffeescript">O = require <span class="string">'potato'</span>
+
+UserInformation = O.Potato
+    components:
+        name: O.Potato
+            components:
+                first_name: O.String
+                last_name:  O.String
+        age: O.Int
+        address: Address</code></pre>
+<p>Though this style is not really recommended for such a definition, this syntax comes very handful with the
+deep-overriding feature described below.
+
+</p>
+<pre><code class="lang-coffeescript">O = require <span class="string">'potato'</span>
+
+UserInformation = O.Potato
+    components:
+        name: O.Potato
+            components:
+                first_name: O.String
+                last_name:  O.String
+        age:  O.Int
+        address: Address</code></pre>
+<h2>Deep Inheritance</h2>
+<p> The children components of your potatoes may themselves have components and your potatoes might rapidly look like small tree-like structures of components. You might still want to extend it, and override a piece of functionality located slightly deeper than in the very first layer of this tree.
+
+</p>
+<p>Potato makes it possible for you to inherit from an object, and extend or override pretty much anything, wherever in this tree ; be that a component, a method, or a static property of a component.
+
+</p>
+<p>For instance, my address potato was assuming that my users were french. For international users I&#39;ll need
+to at least add a state and a country mention.
+
+</p>
+<pre><code class="lang-coffeescript"><span class="comment"># ...</span>
+<span class="comment"># here we added two new components</span>
+<span class="comment"># to our Address object.</span>
+
+Address = potato.Potato
+    components:
+        state:   O.String
+        country: O.String</code></pre>
+<p>String (as well as all Literal types) has a static property called default that describes the default value
+that should be produced on instantiation.
+
+</p>
+<p>Let&#39;s say that our new application will have to handle american addresses. We&#39;d like to use the work done with our Address model, <strong>override</strong> a couple of values and <strong>add a state field</strong>.
+
+</p>
+<p>We could have written :
+
+</p>
+<pre><code class="lang-coffeescript"><span class="comment"># ...</span>
+AmericanAddress = Address
+    components:
+        city:    O.String
+            <span class="reserved">default</span>: <span class="string">"New York City"</span>
+        state:   O.String
+            <span class="reserved">default</span>: <span class="string">"NY"</span>
+        country: O.String
+            <span class="reserved">default</span>: <span class="string">"USA"</span></code></pre>
+<h2>Static properties, methods, literals</h2>
+<p>Your object may have static members. These are pretty like static members in C++ or python etc. They are accessible from the Potato itself, but not from its instances.
+
+</p>
+<p>The most obvious one is &quot;make&quot; which makes it possible to instantiate a potato.
+
+</p>
+<pre><code class="lang-coffeescript"><span class="comment">#</span>
+<span class="comment"># This should make an address with : </span>
+<span class="comment"># all our default values.</span>
+<span class="comment">#</span>
+address = InternationalAddress.make()</code></pre>
+<p>You may define more static members using the 
+&quot;static&quot; section prefix.
+
+</p>
+<pre><code class="lang-coffeescript">
+O = require <span class="string">'potato'</span>
+<span class="comment"># ...</span>
+Color = O.Potato
+    components:
+        r: O.Integer
+        g: O.Integer
+        b: O.Integer
+    static:
+        fromHexCode: (hexCode)->
+            <span class="comment"># ...</span>
+
+trendyPink = Color.fromHexCode <span class="string">'#ff9900'</span></code></pre>
+<p>In addition, in a pythonic fashion, all your methods are available as static methods.
+
+</p>
+<pre><code class="lang-coffeescript">O = require <span class="string">'potato'</span>
+<span class="comment"># ...</span>
+Color = O.Potato
+    components:
+        r: O.Integer
+        g: O.Integer
+        b: O.Integer
+    methods:
+        toHexCode: ->
+            <span class="comment"># ...</span>
+    static:
+        fromHexCode: (hexCode)->
+            <span class="comment"># ...</span>
+
+trendyPink = Color.fromHexCode <span class="string">'#ff9900'</span>
+console.log trendyPink.toHexCode() 
+<span class="comment"># should log '#ff9900'</span>
+<span class="comment"># and is equivalent to ...</span>
+console.log Color.toHexCode trendyPink</code></pre>
+<p>Potato also allows to attach static methods
+to javascript literals. You might want to 
+describe a type for which instances are simple
+strings and add a validation method.
+
+</p>
+<pre><code class="lang-coffeescript">O = require <span class="string">'potato'</span>
+Email = O.String
+    EMAIL_PTN:  <span class="regexp">/// ^    <span class="comment">#begin of line</span>
+       ([\w.-]+)         <span class="comment">#one or more letters, numbers, _ . or -</span>
+       @                 <span class="comment">#followed by an @ sign</span>
+       ([\w.-]+)         <span class="comment">#then one or more letters, numbers, _ . or -</span>
+       \.                <span class="comment">#followed by a period</span>
+       ([a-zA-Z.]{2,6})  <span class="comment">#followed by 2 to 6 letters or periods</span>
+       $ ///</span>i   
+    validate: (val)->
+        <span class="keyword">if</span> @EMAIL_PTN.exec(val)?
+            ok: <span class="literal">true</span>
+        <span class="keyword">else</span>
+            ok: <span class="literal">false</span>
+            errors: <span class="string">'This is not a valid email address.'</span></code></pre>
+<h2>Type Introspection</h2>
+<p>When writing objects inheriting from Potato, members listed
+in the <strong>components</strong> section are accessible via the
+<strong>components</strong> method, available for both the potato and
+its instances.
+
+</p>
+<p>You may hide some properties from the @components method by 
+declaring them in the <strong>property</strong> section.
+
+</p>
+<p>It is helpful to implement <strong>transient properties</strong>, that should
+not be serialized for instance.
+
+</p>
+<pre><code class="lang-coffeescript">O = require <span class="string">'potato'</span>
+
+Box = O.Potato
+    property:
+        _surface: O.Integer
+            <span class="reserved">default</span>: <span class="literal">undefined</span>
+    components:
+        x: O.Integer
+        y: O.Integer
+        w: O.Integer
+        h: O.Integer
+    methods:
+        surface: ->
+            <span class="keyword">if</span> <span class="keyword">not</span> @surface?
+                @surface = @w*@h
+            @surface
+
+<span class="keyword">for</span> k,v <span class="keyword">of</span> Box.components()
+    <span class="comment"># k takes  ("x", "y", "w", h) for value in this loop</span>
+    <span class="comment"># v takes potato.Integer for value in this loop.</span>
+    console.log k 
+
+box = Box.make()
+<span class="keyword">for</span> k,v <span class="keyword">of</span> box.components()
+    <span class="comment"># it works just the same with instances.</span>
+    console.log k</code></pre>
+<p>For instance, this functionality makes it possible a lot of the functionalities of potato
+(toJSON, validation, automatic form generation).
+
+
+
+
+</p>
+<h1>Events</h1>
+<h2>EventCasters</h2>
+<p>Event casters follows the same syntax as jQuery 
+event-binding. Everything is done using <strong>unbind/bind/trigger methods</strong>.
+
+</p>
+<pre><code class="lang-coffeescript">    O = require <span class="string">'potato'</span>
+
+    Engine = O.EventCaster
+        methods:
+            start: ->
+                <span class="keyword">if</span> <span class="keyword">not</span> @intervalId?
+                    console.log <span class="string">"start!"</span>
+                    @intervalId = setInterval (=> @trigger <span class="string">'run'</span>), <span class="number">500</span>
+            stop: ->
+                console.log <span class="string">"stop!"</span>
+                clearInterval @intervalId
+                @intervalId = <span class="literal">null</span>
+
+    Wheel = O.EventCaster
+        components:
+            name: O.String
+        methods:
+            roll: -> console.log <span class="string">"<span class="subst">#{@name}</span> rolling!"</span>
+        static:
+            named: (name)-> @make {name: name}
+
+    MotorBike = O.Potato
+        components:
+            engine: Engine
+            frontWheel: Wheel
+                components:
+                    name: O.String
+                        <span class="reserved">default</span>: <span class="string">"Front Wheel"</span>
+            backWheel: Wheel
+                components:
+                    name: O.String
+                        <span class="reserved">default</span>: <span class="string">"Back Wheel"</span>
+        methods:
+            clutch: ->
+                <span class="keyword">for</span> wheel <span class="keyword">in</span> [@frontWheel, @backWheel]
+                    <span class="keyword">do</span> (wheel)=>
+                        @engine.bind <span class="string">'run'</span>, -> wheel.roll()
+            declutch: ->
+                engine.unbind <span class="string">'run'</span>, -> wheel.roll()
+
+    motorbike = MotorBike.make()
+    motorbike.clutch()
+    motorbike.engine.start()</code></pre>
+<h1>Model</h1>
+<h1>View</h1>
+<h1>Form generation</h1>
+</div></div><script src="assets/jquery.min.js" type="application/javascript"></script><script src="assets/bootstrap/js/bootstrap.min.js" type="application/javascript"></script><script src="assets/markstrap.js" type="application/javascript"></script><script type="text/javascript">var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-31902957-1']);
+_gaq.push(['_trackPageview']);
+(function() {
+var ga = document.createElement('script');
+ga.type = 'text/javascript';
+ga.async = true;
+ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();</script></body></html>

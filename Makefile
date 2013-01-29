@@ -1,4 +1,7 @@
-all: readymade potato
+all: readymade potato clean
+
+clean:
+	rm -fr rep
 
 rep/potato:
 	git clone https://github.com/poulejapon/potato.git rep/potato

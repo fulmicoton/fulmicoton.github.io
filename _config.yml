@@ -1,0 +1,13 @@
+markdown: rdiscount
+pygments: true
+permalink: /posts/:title
+auto: true
+rdiscount:
+  extensions: [smart]
+
+name: Paul Masurel
+url: http://poulejapon.github.com
+description: I got an Idea!
+twitter: poulejapon
+github: poulejapon
+gravatar_url: http://gravatar.com/avatar/1cd46a26ceada395ae900bd4cd40a052

@@ -1,0 +1,59 @@
+<p>How do you recognize a good design in a web application? <strong>I believe a good design is like a wall which does not leak much the shit the business is throwing at it</strong>.</p>
+
+<p>I used to work on a e-reputation dashboard application. Customers would define thematic dashboard about theirs brands by drag-and-dropping widgets, and setting them up.</p>
+
+<p>One problem we encounterred as the number of widgets was growing was that we wanted to keep the code for the setting window as DRY as possible. Ideally, the widgets should declare the model of their settings and the setting form would be auto-generated.</p>
+
+<p>We would have wanted something like that : (Disclaimer: that&#8217;s coffeescript)</p>
+<div>
+  <pre><code class='coffeescript'>class PieChart extends Dashlet
+    @icon: 'timeline.png'
+    @settings:
+        x: Integer
+        y: Integer
+        w: Integer
+        h: Integer
+        axis: Axis
+        color: Color
+        filter: Filter
+
+    #... a bunch of stuff ...</code></pre>
+</div>
+<p>For instance one day, my product manager noticed that it would be nice for the new user to offer a couple of partially presets widgets. The sentiment analysis widget would be a pie-chart with the axis represent frozen on Sentiment Analysis. It would have a different icon as well.</p>
+<div>
+  <pre><code class='coffeescript'>class SentimentChart extends PieChart
+    @icon: 'smileyface.png'
+    @settings:
+        x: Integer
+        y: Integer
+        w: Integer
+        h: Integer
+        axis: Axis
+            frozen: true
+            value: 'sentiment'
+        color: Color
+        filter: Filter</code></pre>
+</div>
+<p>Not as dry as I wanted but that&#8217;s not so bad. Wait, now, if I modify the settings in PieChart, I need to modify all the widget which inherits from PieChart.</p>
+
+<p>I would have rather override only the bit that I want overriden. Something like that :</p>
+<div>
+  <pre><code class='coffeescript'>class SentimentChart extends PieChart
+    # yeah this in not valid coffeescript 
+    # but you get the idea, right?
+    @icon: 'smileyface.png'
+    @settings:
+        axis: Axis
+            frozen: true
+            value: 'sentiment'</code></pre>
+</div>
+<p>In most language, class are serving as instance factories. Not in Potato. (instance are made by calling YourPotato.make()) Instead classes are functions that takes some prototype as argument and returns an extended version of themselves.</p>
+<div>
+  <pre><code class='coffeescript'>SentimentChart =  PieChart # I extend PieChart
+    icon: 'smileyface.png'
+    settings:
+        axis: Axis # Axis is a potato as well
+            frozen: true
+            value: 'sentiment'</code></pre>
+</div>
+<p>Check out the <a href='https://poulejapon.github.com/potato'>documentation page</a>, and play with the examples to know more about potato&#8217;s inheritance.</p>

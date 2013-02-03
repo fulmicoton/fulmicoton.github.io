@@ -1,16 +1,17 @@
 
 class LazyObject(object):
     
-    __slots__ = [ "_recipe", "_result" ]
+    __slots__ = [ "_recipe", "_result", "_evaluated" ]
 
     def __init__(self, recipe):
         object.__setattr__(self, "_recipe", recipe)
         object.__setattr__(self, "_result", None)
-
+        object.__setattr__(self, "_evaluated", False)
 
     def _eval(self,):
-        if self._result is None:
+        if not self._evaluated:
             object.__setattr__(self, "_result", self._recipe())
+            object.__setattr__(self, "_evaluated", True)
         return self._result
 
     def __getattr__(self, name, *args, **kargs):

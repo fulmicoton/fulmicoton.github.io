@@ -135,7 +135,11 @@ def heapsort(l):
             yield heappop(heap)
 {% endhighlight %}
 
-----------------------------------------------------------------------------------------
+
+
+
+Lazy Implementation
+------------------------------------------------------------
 
 Now let's assume you skipped algorithm class, and can only
 remember about the good old merge sort. Let's take a look at a simple implementation.
@@ -280,4 +284,9 @@ is ```535``` which is very close to the which is very close to the theoretical m
 The real surprise here is the bad results of heaqp.nsmallest performs. It starts on par with the lazy algorithm and then gets even more expensive than a complete heap sort. At this point, I don't exactly understand why it does so. Keep in mind however that another benefit of this algorithm is to be linear with k in memory usage, while this is not true for the other algorithm.
 
 ![Number of comparison required to fetch the k-first elements of a list of 1000 elements.](https://docs.google.com/spreadsheet/oimg?key=0As3ux_ykgGX1dEk4Sk01ak41UHJOVXJ2SGN6XzdrZnc&oid=5&zx=3i4d8q37pnig)
+
+
+------------- 
+
+*Thanks to NewCarSmell from reddit for point out a flaw in my first implementation of LazyObject.*
 

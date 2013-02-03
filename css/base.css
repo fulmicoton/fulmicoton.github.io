@@ -129,8 +129,13 @@ section.sidebar section.sections {
     
   .content img {
     padding: 3px;
-    border: 1px solid #eeeeee;
-    max-width: 100%; }
+    //border: 1px solid #eeeeee;
+    max-width: 100%;
+    display: block;
+    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
   .content hr {
     border: 0;
     height: 6px;
@@ -224,10 +229,7 @@ section.discuss {
 
 @media(max-width:955px) {
   section.amazon {
-    visibility: hidden;
     display: none;
-    height: 0;
-    width: 0;
   }
 }
 

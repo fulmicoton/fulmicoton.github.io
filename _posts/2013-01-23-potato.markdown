@@ -2,6 +2,7 @@
 layout: post
 title: Potato inheritance
 category: posts
+published:false
 ---
 
 How do you recognize a good design in a web application?

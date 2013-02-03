@@ -13,6 +13,26 @@
 .hightlight code{
   float: left;
 }
+
+
+pre {
+  padding: 30px;
+  background-color: #322;
+  font-size: 16px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  overflow: hidden;
+  text-shadow: none;
+  color: #fff;
+  margin: 20px 0px;
+}
+
+div.highlight pre {
+  margin: 16px 0px;
+  padding: 10px 0px;
+}
+
+
 .highlight:hover {
   overflow: auto;
 }

@@ -16,11 +16,13 @@ a:hover {
 section.sidebar section.sections {
   margin-top: 25px;
 }
+
+
 .sidebar {
   position: fixed;
   left: 15px;
   top: 15px;
-  width: 80px;
+  width: 165px;
   font-family: Helvetica, sans-serif; }
   .sidebar a {
     text-decoration: none; }
@@ -33,7 +35,7 @@ section.sidebar section.sections {
     border-radius: 5px; }
   .sidebar .name {
     text-transform: uppercase;
-    margin: 10px 0 20px 0; }
+    margin: 10px 40px 20px 0; }
     .sidebar .name #fname {
       padding-left: 1px;
       font-size: 23px;
@@ -67,7 +69,7 @@ section.sidebar section.sections {
       margin-bottom: 7px; }
 
 .content {
-  margin-left: 120px;
+  margin-left: 185px;
   width: 650px;
   margin-bottom: 50px; }
   .content h1 {

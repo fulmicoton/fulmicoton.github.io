@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Pythonic Lazy Evaluation
+title:  Of being lazy
 category: posts
 ---
 

@@ -222,7 +222,7 @@ section.discuss {
 }
 
 
-@media(max-width:955px) { // 120 + 650 + 20 + 165
+@media(max-width:955px) {
   section.amazon {
     visibility: hidden;
     display: none;

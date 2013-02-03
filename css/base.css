@@ -22,7 +22,7 @@ section.sidebar section.sections {
   position: fixed;
   left: 15px;
   top: 15px;
-  width: 165px;
+  width: 85px;
   font-family: Helvetica, sans-serif; }
   .sidebar a {
     text-decoration: none; }
@@ -35,7 +35,7 @@ section.sidebar section.sections {
     border-radius: 5px; }
   .sidebar .name {
     text-transform: uppercase;
-    margin: 10px 40px 20px 0; }
+    margin: 10px 0px 20px 0; }
     .sidebar .name #fname {
       padding-left: 1px;
       font-size: 23px;
@@ -69,7 +69,7 @@ section.sidebar section.sections {
       margin-bottom: 7px; }
 
 .content {
-  margin-left: 185px;
+  margin-left: 120px;
   width: 650px;
   margin-bottom: 50px; }
   .content h1 {
@@ -220,3 +220,24 @@ section.sidebar section.sections {
 section.discuss {
   margin-top: 70px;
 }
+
+
+@media(max-width:955px) { // 120 + 650 + 20 + 165
+  section.amazon {
+    visibility: hidden;
+    display: none;
+    height: 0;
+    width: 0;
+  }
+}
+
+@media(min-width:955px) {
+  section.amazon {
+    float: right;
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 165px;
+  }
+}
+

@@ -2,7 +2,6 @@ import random
 from compare_count import CompareCount
 from lazy import lazy
 
-
 @lazy
 def zip_merge(left,right):
     if left == ():
@@ -13,7 +12,7 @@ def zip_merge(left,right):
         if left_head <= right_head:
             return (left_head, zip_merge(left_tail, right))
         else:
-            return zip_merge(right,left)
+            return (right_head, zip_merge(right_tail,left))
 
 def merge_sort(l):
     # Assuming l is a list, returns a sorted
@@ -29,8 +28,8 @@ def merge_sort(l):
         right = merge_sort(l[m:])
         return zip_merge(left, right)
 
-#random.shuffle(l)
-#l = range(100)
+l = range(100)
+random.shuffle(l)
 print merge_sort([2,1])
 
 
@@ -41,10 +40,13 @@ def test(N):
     l = map(CompareCount, l)
     nb_comparisons = []
     (t,q) = merge_sort(l)
-    for i in range(999):
-        (t,q) = q
+    for i in range(100):
         print CompareCount.count
+        (t,q) = q
     return nb_comparisons
 
-print test(1000)
+print test(100)
 #print merge_sort([1,2,5,3,-4])[0]
+
+
+

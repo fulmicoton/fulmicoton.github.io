@@ -9,9 +9,6 @@ def test(N):
     nb_comparisons = []
     l.sort()
     print CompareCount.count
-    #for i in range(999):
-    #    print CompareCount.count
-    #return nb_comparisons
 
-print test(1000)
+print test(100)
 #print merge_sort([1,2,5,3,-4])[0]

@@ -91,8 +91,8 @@ not require further calls to ``returns_two``.
 
 
 
-A simple example : The greatest k-elements
-----------------------------------------------------------------------------------------
+A simple example : The k-smallest elements
+-------------------------------------------------
 
 I can enjoy a free lunch like anyone else...
 However I used to see this functionality as just another
@@ -117,7 +117,7 @@ The classical answer to this problem
 ------------------------------------------------
 
 Let's detail the textbook-way to address this problem. The idea is to put the k-first elements into a binary heap, (that's a complexity of ```k log k``` to build the heap), go through through the remaining elements, append each of them to the heap, and iteratively pick up the greatest element so that the heap remains of size k (hence a complexity of ```n log k```).
-When the last element is reached, the heap will contain the k-lowest elements.  and then we need to pick up elements from the heap (a cost of ```k log k```). Overall the complexity of such an operation is therefore ```n log k```.
+When the last element is reached, the heap will contain the k-lowest elements.  and then we need to pick up elements from the heap (a cost of ```k log k```). Overall the complexity of such an operation is therefore ```n log k```. More importantly, the memory complexity is linear with k.
 
 An implementation of this algorithm is available ```heapq.nsmallest```. 
 

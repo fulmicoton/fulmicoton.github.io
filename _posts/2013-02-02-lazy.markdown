@@ -1,0 +1,272 @@
+---
+layout: post
+title: Lazy Evaluation with generators
+category: posts
+---
+
+What's lazy evaluation about ? 
+---------------------------------------
+
+Functional programming languages (Haskell, OCaml)
+offers a functionality called lazy evaluation. 
+Lazy evaluation consists of defering evaluation of objects
+to the moment they are actually used.
+
+It's as if all your function were returning, instead of results,
+the recipe to compute their result. It is actually pretty straightforward to hack __getattr__ an __setattr__ in order to implement LazyEvaluation as a decorator.
+
+{% highlight python %}
+
+class LazyObject(object):
+    
+    __slots__ = [ "_recipe", "_result" ]
+
+    def __init__(self, recipe):
+        object.__setattr__(self, "_recipe", recipe)
+        object.__setattr__(self, "_result", None)
+
+
+    def _eval(self,):
+        if self._result is None:
+            object.__setattr__(self, "_result", self._recipe())
+        return self._result
+
+    def __getattr__(self, name, *args, **kargs):
+        return getattr(self._eval(), name, *args, **kargs)
+    
+    def __setattr__(self, name, *args, **kargs):
+        return setattr(self._eval(), name, *args, **kargs)
+    
+    def __getitem__(self, key, *args, **kargs):
+        return self._eval().__getitem__(key, *args, **kargs)
+
+    def __len__(self,):
+        return len(self._eval())
+
+    def __add__(self,*args,**kargs):
+        return self._eval().__add__(*args,**kargs)
+
+    def __repr__(self,):
+        return repr(self._eval())
+    
+    # ... __mult__, __slice__ and so on ...
+
+# the lazy evalution decorator !
+def lazy(f):
+    def aux(*args, **kargs):
+        def recipe():
+            return f(*args,**kargs)
+        return LazyObject(recipe)
+    return aux
+{% endhighlight %}
+
+Let's now check out that the evalution is done
+at the last moment with a couple of "print statement".
+
+{% highlight python %}
+@lazy
+def returns_two():
+    print "evaluation for good"
+    return 2
+
+result = returns_two()
+print "lazy evaluation"
+print result + 1
+{% endhighlight %}
+
+This should result in the following output
+
+    lazy evaluation
+    evaluation for good
+    3 # 2+1
+
+As expected, the call to returns_two does not 
+actually call ``returns_two``, but create an object
+``LazyObject``. Eventually, when we try to add it with 1, 
+python will call our object's own implementation of
+``__add__`` which triggers the call to ``returns_two``.
+The result is cached and latter use of the object will
+not require further calls to ``returns_two``.
+
+
+
+A simple example : The greatest k-elements
+----------------------------------------------------------------------------------------
+
+When I first learned about this functionality,
+I had the feeling that it might probably be
+useful in some application where most of the
+time, the results where not used at all.
+But while I can enjoy a free lunch like
+everyone else, I had the feeling that
+lazy evaluation as a feature of a
+programming language would only help
+on cases in which optimization was a no-brainer 
+anyway.  I was wrong on two points : 
+first explicitely deferring evaluation can have a bad impact on readability.
+
+And the second point is somewhat a little trickier,
+and that's the whole point of my post. Lazy Evaluation 
+can result in a non-trivial impact on performances.
+It can actually change a program's very complexity.
+
+I was a little skeptical as I read that point on 
+some OCaml-related newsletter. He took the example
+of trying to pick the k-greatest numbers
+of a list of n-elements.
+
+The classical way to address the problem would be 
+to put the k-first elements into a binary heap, (that's a complexity 
+of ```k log k``` to build the heap), and then go through through the remaining elements, append each of them to the heap, and each time pick up the greatest element so that the heap remains of size k.
+(here we get a complexity of ```n log k```) and then we need to pick up elements from the heap (a cost of ```k log k```).
+Overall the complexity of such an operation is therefore ```n log k```.
+
+Without generators
+----------------------------------------------------------------------------------------
+
+Now let's assume you skipped algorithm class, and can only
+remember about the good old merge sort.
+Let's take a look at one implementation, without
+any generators at first. 
+
+{% highlight python %}
+def zip_merge(left,right):
+    if not left or not right:
+        return left + right
+    elif left[0] <= right[0]:
+        return [left[0]] + zip_merge(left[1:], right)
+    else:
+        return zip_merge(right,left)
+
+def merge_sort(l):
+    # Assuming l is a list, returns 
+    # a sorted version of l.
+    L = len(l)
+    if L <= 1:
+        return l
+    else:
+        m = L/2
+        left = merge_sort(l[0:m])
+        right = merge_sort(l[m:])
+        return zip_merge(left, right)
+{% endhighlight %}
+
+Ok, so let's take a look at the code.
+Merge sort adopts a "divide and conquer" strategy.
+We split the list in two parts, sort recursively both of them
+and merge them back. Merging two sorted list can 
+be done in linear time by peeking at the head of 
+both list and picking the lowest of the two values.
+
+In order to take advantage of lazy evaluation,
+we cannot candidly apply our ``lazy`` decorator 
+because the concatenation of the ``zip_merge`` algorithm will 
+require the whole evaluation of both list. To get the drop
+in complexity I promised we need to get close to ML's
+definition of a list.
+
+In ML a list are defined recursively as follows, a list can be either :
+
+- the empty list ``nil``, in python this will translate as the empty tuple ()
+- ``head::tail`` where ``head`` is the name of first element of the list, and ``tail`` is list of the other elements. In python this will translate as the tuple (head, <rest-of-the-list>).
+
+For instance if our algorithm is to output ``range(5)`` as
+its output, it will actually return a lazy version of 
+```(0, (1, 2, (3, (4, ()))))```
+
+Now let's adapt our algorithm to this new representation!
+
+{% highlight python %}
+@lazy
+def zip_merge(left,right):
+    if left == ():
+        return right # right is never empty.
+    else:
+        (left_head, left_tail) = left
+        (right_head, right_tail) = right
+        if left_head <= right_head:
+            return (left_head, zip_merge(left_tail, right))
+        else:
+            return zip_merge(right,left)
+
+def merge_sort(l):
+    # Assuming l is a list, returns a sorted
+    # version of l in the format (t,q)
+    L = len(l)
+    if L==0:
+        return ()
+    elif len(l)==1:
+        return (l[0], ())
+    else:
+        m = L/2
+        left = merge_sort(l[0:m])
+        right = merge_sort(l[m:])
+        return zip_merge(left, right)
+
+{% endhighlight %}
+
+Note that we added our decorator to the zip_merge function.
+
+
+
+
+Now with generators
+----------------------------------------------------------------
+
+Now let's put a bit generator in this algorithm.
+Impermeable to irony, we replace rely on
+heapq.merge which basically will do the same job as
+``zip_merge``, but with iterators.
+
+{% highlight python %}
+
+from heapq import merge as zip_merge
+
+def merge_sort(l):
+    # Assuming l is a list, returns an
+    # iterator on a sorted version of
+    # the list.
+    L = len(l)
+    if L <= 1:
+        return iter(l)
+    else:
+        m = L/2
+        left = merge_sort(l[0:m])
+        right = merge_sort(l[m:])
+        return zip_merge(left, right)
+{% endhighlight %}
+
+Not much as changed right? It's not even longer.
+But here comes the awesomeness. 
+
+This generator returned here acts pretty much 
+like lazy evaluation. As long as we don't consume the elements of the sorted generator, the computation is not done.
+Moreover, the elements will get sorted as we consume the list.
+
+
+Number of comparisons required
+-----------------------------------
+
+Now let's compare the number of comparisons require to peek at
+the k-greatest elements of a randomly sorted list of 1000 elements.
+
+To do so, we sorted a list of objects and that incremented
+a static counter at each call of their method ``__cmp__``.
+
+The graph below shows the result given by the test above.
+The x-axis is the number of elements we picked at, and the y-axis
+is the cumulative number of comparisons required.
+
+For comparison, we also added the number of comparison 
+required to python's sort algorithm in order to perform a
+complete sort.
+
+First we notice that python's sort algorithm totally beats
+our merge sort for a full sort. It required only 8632 comparisons
+to sort the whole list, when the theoretical minimum number of comparison to sort a 10000 elements list is 6644.
+
+I believe our algorithm performing not as well, is due to merge sort not being as effective than python's implementation. Let that alone, we see that fetching the 10 lowest elements of the list required 1080 comparisons, which is definitely better than the 8632 compare required by the complete sort as effective as it could be.
+
+![Number of comparison required to fetch the k-first elements of a list of 1000 elements.](https://docs.google.com/spreadsheet/oimg?key=0As3ux_ykgGX1dEk4Sk01ak41UHJOVXJ2SGN6XzdrZnc&oid=5&zx=8zslbelrqd3g)
+
+

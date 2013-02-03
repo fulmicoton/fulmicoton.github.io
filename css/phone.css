@@ -55,7 +55,7 @@ a:hover {
   .sidebar .sections {
     margin: 0; }
     .sidebar .sections a {
-      font-size: 30px;
+      font-size: 20px;
       margin: 0 20px 0 0;
       padding: 5px 10px; }
 
@@ -66,18 +66,26 @@ a:hover {
   width: inherit; }
   .content h1 {
     margin: 30px 0 5px 0;
-    font-size: 40px;
+    font-size: 30px;
     text-align: center;
   }
   .content h2 {
-    margin-top: 30px;
+    margin-top: 25px;
   }
   .content p {
     line-height: 1.7em;
+    font-size: 14px;
   }
   .content pre {
-    font-size: 16px;
+    font-size: 14px;
   }
+  .content ul {
+    margin: 10px 0px;
+    padding-left: 20px;
+  }
+    .content ul li {
+      margin: 3px 0px;
+    }
 
 
 section.amazon {

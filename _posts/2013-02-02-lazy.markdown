@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Lazy Evaluation with generators
+title:  Pythonic Lazy Evaluation
 category: posts
 ---
 
@@ -8,13 +8,12 @@ What's lazy evaluation about ?
 ---------------------------------------
 
 Some functional programming languages (like Haskell)
-offers a functionality called lazy evaluation. 
-It consists of defering evaluation of objects
-to the moment they are actually used.
+offers a functionality called lazy evaluation by default.
+It consists of defering evaluation of functions
+to the moment their results are actually used.
 
-You function are returning instead of results,
-the recipe to compute their result. It is actually pretty straightforward to hack ``__getattr__`` and ``__setattr__``
-in order to implement lazy evaluation as a decorator.
+Instead of results, everything works as if your
+function call are returning the recipe to compute the actual result. In python, it is actually pretty straightforward to hack ``__getattr__`` and ``__setattr__`` to implement an hackish lazy evaluation as a decorator.
 
 {% highlight python %}
 

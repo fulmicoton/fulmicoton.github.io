@@ -1,31 +1,4 @@
-.highlight {
-  margin: 0;
-  background-color: #322;
-  font-size: 16px;
-  padding: 0px 15px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  overflow: hidden;
-  text-shadow: none;
-  color: #111;
-  margin: 20px 0px;
-}
-.hightlight code{
-  float: left;
-}
 
-
-pre {
-  padding: 30px;
-  background-color: #322;
-  font-size: 16px;
-  -webkit-border-radius: 10px;
-  -moz-border-radius: 10px;
-  overflow: hidden;
-  text-shadow: none;
-  color: #fff;
-  margin: 20px 0px;
-}
 
 div.highlight pre {
   margin: 16px 0px;
@@ -96,5 +69,4 @@ div.highlight pre {
 .highlight .vg { color: #f8f8f2 } /* Name.Variable.Global */
 .highlight .vi { color: #f8f8f2 } /* Name.Variable.Instance */
 .highlight .il { color: #ae81ff } /* Literal.Number.Integer.Long */
-
 

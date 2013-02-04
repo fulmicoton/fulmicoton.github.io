@@ -243,3 +243,32 @@ section.discuss {
   }
 }
 
+.highlight {
+  margin: 0;
+  background-color: #322;
+  font-size: 16px;
+  padding: 0px 15px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  overflow: hidden;
+  text-shadow: none;
+  color: #111;
+  margin: 20px 0px;
+}
+
+
+
+
+
+pre {
+  padding: 30px;
+  background-color: #322;
+  font-size: 16px;
+  -webkit-border-radius: 10px;
+  -moz-border-radius: 10px;
+  overflow: hidden;
+  text-shadow: none;
+  color: #fff;
+  margin: 20px 0px;
+}
+

@@ -227,19 +227,28 @@ section.discuss {
 }
 
 
-@media(max-width:955px) {
-  section.amazon {
+@media(max-width:965px) {
+  section.amazon, section.google-ads {
     display: none;
   }
 }
 
-@media(min-width:955px) {
+@media(min-width:965px) {
   section.amazon {
-    float: right;
+    position: fixed;
+    top: 10px;
+    left: 800px;
+    width: 165px;
+  }
+
+  section.google-ads {
     position: fixed;
     top: 0;
     right: 0;
-    width: 165px;
+    width: 130px;
+    height: 600px;
+    padding: 0;
+    margin: 0;
   }
 }
 

@@ -70,6 +70,9 @@ a:hover {
     font-size: 30px;
     text-align: center;
   }
+  section.byline {
+   text-align: center; 
+  }
   .content h2 {
     margin-top: 30px;
     margin-bottom: 20px;
@@ -89,6 +92,11 @@ a:hover {
       margin: 3px 0px;
     }
 
+
+
+section.google-ads {
+  display: none;
+}
 
 section.amazon {
   display: none;

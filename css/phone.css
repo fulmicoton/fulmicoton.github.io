@@ -71,7 +71,8 @@ a:hover {
     text-align: center;
   }
   .content h2 {
-    margin-top: 25px;
+    margin-top: 30px;
+    margin-bottom: 20px;
   }
   .content p {
     line-height: 1.7em;

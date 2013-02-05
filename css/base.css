@@ -229,7 +229,7 @@ section.discuss {
 
 @media(max-width:965px) {
   section.amazon, section.google-ads {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -243,10 +243,10 @@ section.discuss {
 
   section.google-ads {
     position: fixed;
-    top: 0;
-    right: 0;
+    top: 10px;
+    left: 800px;
     width: 130px;
-    height: 600px;
+    height: 60px;
     padding: 0;
     margin: 0;
   }

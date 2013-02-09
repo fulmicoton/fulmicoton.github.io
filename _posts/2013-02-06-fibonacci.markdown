@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Of the Fibonacci Implementations
+title:  Of the implementations of Fibonacci 
 category: posts
 ---
 

@@ -2,11 +2,13 @@
 body {
   font-family: "Palatino Linotype", "Book Antiqua", Palatino, serif;
   margin: 0;
+  background-color: rgb(253, 253, 250);
   -webkit-font-smoothing: antialiased; }
 
 a {
-  color: #f90;
+  color: rgb(0, 90, 162);
   text-decoration: none;
+  text-shadow: 1px 1px 1px #fff;
 }
 
 a:hover {
@@ -82,7 +84,9 @@ section.sidebar section.sections {
   .content h2 {
     color: #333;
     font-family: "Yanone Kaffeesatz", Helvetica, sans-serif;
-    font-weight: 400; }
+    font-weight: 400;
+
+  }
   .content h2 a {
     color: #111;
     text-decoration: none; }
@@ -104,6 +108,7 @@ section.sidebar section.sections {
     font-size: 36px;
     margin: 18px 0 5px 0; }
   .content h2 {
+    margin-top: 80px;
     font-size: 30px;
     margin-bottom: 15px; }
   .content h3 {
@@ -120,7 +125,7 @@ section.sidebar section.sections {
      {
       text-wrap:none;
       font-size: 12px;
-      background-color: #eeeeee;
+      background-color: #fff;
       border: 1px solid #777777;
       border-radius: 3px;
       padding: 2px 3px;
@@ -265,7 +270,9 @@ section.discuss {
   margin: 20px 0px;
 }
 
-
+section.discuss {
+  font-family: Helvetica, arial, sans-serif;
+}
 
 
 
@@ -279,5 +286,15 @@ pre {
   text-shadow: none;
   color: #fff;
   margin: 20px 0px;
+}
+
+#idc-container .idc-head_action, #idc-container .idc-message {
+  border: solid 1px #ccc;
+  background-color: #fff !important;
+  background-image: none !important;
+}
+
+#idc-container .idc-c-m .idc-form-info {
+  margin-top: -3px;
 }
 

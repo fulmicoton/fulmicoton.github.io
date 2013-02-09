@@ -132,7 +132,7 @@ def fibo_dynamic(n):
 
 {% endhighlight %}
 
-We now have a solution which is linear in both memory and computational time.
+We now have a solution which is linear in computational time and constant in memory.
 
 
 <a id="analytical"></a>Analytical Formula and the gold number
@@ -258,5 +258,9 @@ Where I lied
 
 Actually everything here is a lie. The truth is that [big integer multiplication](http://en.wikipedia.org/wiki/Multiplication_algorithm) shouldn't be considered constant time, so that all the complexity described here does not relate to actual computational time.
 
+
+------------------------------------------------------------------------
+
+*Thanks to Tordek to point out an error on reddit.*
 
 

@@ -175,7 +175,7 @@ Now, the exponentiation of the diagonal matrix ``J`` is simple as it consists on
 
 Eventually, you'll come up with the following formula, where φ is also called the gold number :
 
-<img src="http://latex.codecogs.com/gif.latex?\begin{align*} &F_n = \phi^n + \bar{\phi}^n, \\ & where~~\phi = {1+\sqrt{5} \over 2}~and~\bar{\phi} = {1-\sqrt{5} \over 2} \end{align*}" title="\begin{align*} &F_n = \phi^n + \bar{\phi}^n, \\ & where~~\phi = {1+\sqrt{5} \over 2}~and~\bar{\phi} = {1-\sqrt{5} \over 2} \end{align*}" />
+<img src="http://latex.codecogs.com/gif.latex?\begin{align*} &F_n = { \phi^n - \bar{\phi}^n\over{\sqrt{5}}}, \\ & where~~\phi = {1+\sqrt{5} \over 2}~and~\bar{\phi} = {1-\sqrt{5} \over 2} \end{align*}" title="\begin{align*} &F_n = \phi^n + \bar{\phi}^n, \\ & where~~\phi = {1+\sqrt{5} \over 2}~and~\bar{\phi} = {1-\sqrt{5} \over 2} \end{align*}" />
 
 Now what is the complexity of computing this formula? 
 Computing the power is typically done doing so-called fast exponentiation.
@@ -262,5 +262,4 @@ Actually everything here is a lie. The truth is that [big integer multiplication
 ------------------------------------------------------------------------
 
 *Thanks to Tordek to point out an error on reddit.*
-
-
+*Thanks to Frank and Hameer for telling me about the error in the closed formula of Fibonacci.*

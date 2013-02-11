@@ -141,7 +141,7 @@ We now have a solution which is linear in computational time and constant in mem
 Let's now try to find a closed-form expression of fibonacci.
 To do so, we'll recycle an idea from [``fibo_dynamic``](#dynamic). Let's introduce X<sub>n</sub>, a sequence of vector that contains the two consecutives Fibonacci number F<sub>n</sub>, F<sub>n+1</sub>.
 
-<img src="http://latex.codecogs.com/gif.latex?\forall n \geq 1, X_n = \begin{bmatrix} F_{n-1} \\ F_n \end{bmatrix}" title="\forall n \geq 1, X_n = \begin{bmatrix} F_n-1 \\ F_n \end{bmatrix}" />
+<img src="http://latex.codecogs.com/gif.latex?\forall n \geq 1, X_n = \begin{bmatrix} F_n \\ F_{n+1} \end{bmatrix}" title="\forall n \geq 1, X_n = \begin{bmatrix} F_n \\ F_{n+1} \end{bmatrix}" />
 
 Now, we can reexpress python's line
 

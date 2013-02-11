@@ -263,3 +263,4 @@ Actually everything here is a lie. The truth is that [big integer multiplication
 
 *Thanks to Tordek to point out an error on reddit.*
 *Thanks to Frank and Hameer for telling me about the error in the closed formula of Fibonacci.*
+*Thanks to Mogo for telling me about the error X<sub>n</sub> and clicking on an advertisment.*

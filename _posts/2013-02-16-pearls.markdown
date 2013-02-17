@@ -317,7 +317,7 @@ For the last algorithm we will try to sum up a population by the numbers of pear
 
 This greatly reduce the number of branch in our tree. In addition, the space of the possible arguments with which solve is called with is small enought to cache the results.
 
-I implemented this idea, and added a couple of implementation tricks I talked about. The result is plain ugly so I won't copy-paste it on this blog but you can check it out on [github](https://github.com/poulejapon/poulejapon.github.com/tree/master/code/pearls/pearl2.py). We will call it the ``pignolage`` implementation, french people will definitely get what I mean.
+I implemented this idea, and added a couple of implementation tricks I talked about. The result is plain ugly so I won't copy-paste it on this blog but you can check it out on [github](https://github.com/poulejapon/poulejapon.github.com/blob/master/code/pearls/pearls2.py). We will call it the ``pignolage`` implementation, french people will definitely get what I mean.
 
 
 Results, because everyone loves a colorful graph.

@@ -1,7 +1,30 @@
 from math import floor, log
-from memoize import memoize
 
-# Let's call that the "pignolage" algorithm
+# Let's call that the "smart" algorithm
+
+"""In this implementation we represent our knowledge
+on the pearls as a quadruplet (n,h,l,r) where
+
+ * n is the number pearls for which we don't 
+   know anything.
+ * h is the number pearls for which we know
+   that if they are fake, they must be heavier
+   than the real pearls.
+ * l is the number of pearls for which we know
+   that if they are fake they must be lighter
+  than the real pearls
+ * r is the number of pearls for which we know they are real.
+"""
+
+def diff(pop_a, pop_b):
+  return tuple(a-b for (a,b) in zip(pop_a,pop_b))
+
+def add(*pops):
+  return tuple(sum(els) for els in zip(*pops))
+
+def minus(pop):
+  return tuple(-el for el in pop)
+
 def heavier(pop):
   (anything, light, heavy, real) = pop
   return (0, 0, heavy + anything, real + light)
@@ -13,28 +36,11 @@ def lighter(pop):
 def even(pop):
   return (0, 0, 0, sum(pop))
 
-def pop_cost(pop):
-  (anything, light, heavy, real) = pop
-  return anything * 2 + light+heavy
-
-def diff(pop_a, pop_b):
-  return tuple(a-b for (a,b) in zip(pop_a,pop_b))
-
-def add(*pops):
-  return tuple(sum(els) for els in zip(*pops))
-
-def minus(pop):
-  return tuple(-el for el in pop)
-
-def max_with_limit(g, m):
-  res = g.next()
-  for x in g:
-      res = max(res, x)
-      if res>m:
-          return res
-  return m
-
-def population_after_measures(population, measure):
+def measure_branches(population, measure):
+  """Given a population and a measure, returns 
+  the three resulting populations, depending on 
+  the outcome of the measure.
+  """
   (left, right) = measure
   pop_no_weighted = add(population, minus(left), minus(right))
   # if the balance says the two plates are even
@@ -44,82 +50,99 @@ def population_after_measures(population, measure):
   yield add( lighter(left), heavier(right), (0,0,0,O) )
   # if the balance says the left plate is heavier
   yield add( heavier(left), lighter(right), (0,0,0,O) )
-  
-def fill_plate_list(pop, plate_size):
+
+
+def nb_of_answers(pop):
+  """ Returns the number of possible
+  answer given a population.
+  """
+  return pop[0]*2 + pop[1] + pop[2]
+
+def fill_plate(pop, plate_size):
+  """ Yields all the possible sub population 
+  of plate_size pearls within pop.
+  """
   head,tail = pop[0], pop[1:]
   if len(pop)==1:
     if head >= plate_size:
       yield (plate_size,)
   else:
     for i in range(min(plate_size,pop[0])+1):
-      for fill_remaining in fill_plate_list(tail, plate_size-i):
+      for fill_remaining in fill_plate(tail, plate_size-i):
         yield (i,) + fill_remaining
 
-def fill_plate(pop, plate_size):
-  for plate in fill_plate_list(list(pop), plate_size):
-    yield plate
+def measures(pop):
+  """ Returns all possible normalized.
+  measures for a given population.
+  A measure is described as a couple (left, right)
+  where left is the population to put in the left
+  plate and right is the population to put in the
+  right plate.
 
-def measures(population):
-  N = sum(population)
-  cost = cost_branch(population)
+  Since (left,right) is equivalent to 
+  (right, left), we only yield measures for 
+  which left >= right
+  """
+  N = sum(pop) # the number of pearls
   possible_plate_sizes = range(1, N/2+1)
-  possible_plate_sizes.sort(key=lambda k:abs( 2*(N-2*k)-cost/3) )
   for plate_size in possible_plate_sizes:
-    for left in fill_plate(population, plate_size):
-      remaining = diff(population, left)
+    for left in fill_plate(pop, plate_size):
+      remaining = diff(pop, left)
       for right in fill_plate(remaining, plate_size):
-        yield (left, right)
-
-def cost_branch(pop):
-  return pop[0]*2 + pop[1] + pop[2]
-
-def cost_estimate(branches):
-  return max( cost_branch(branch) for branch in branches )
-
-def is_normalized(measure):
-  (left, right) = measure
-  return left >= right
-
-def browse_solutions(population, m):
-  pops_updated_per_measure = []
-  for measure in measures(population):
-    if is_normalized(measure):
-      pops_updated_per_measure.append(list(population_after_measures(population, measure)))
-  pops_updated_per_measure.sort(key=cost_estimate)
-  for pops_updated in pops_updated_per_measure:
-    measure_score = (
-      solve(pop, m-1)
-      for pop in pops_updated
-    )
-    if max_with_limit(measure_score, m-1) == m-1:
-      return m
-  return m+1
-
-def pearl_key(pop, limit):
-  return (tuple(pop), limit)
+        if left >= right:
+          yield (left, right)
 
 def solved(pop):
   return pop[0]==0 and sum(pop[1:3]) <= 1
 
-@memoize(key=pearl_key)
 def solve(pop, m):
+  """Returns True if the pearl problem
+  of the population pop can be solved
+  in less than m measures.
+
+  To do so, apart from the special cases
+  we test all possible measures. 
+
+  If one measure makes it possible to
+  solve the problem in m, we return m.
+
+  If one outcome of one measure gives
+  a result greater than m-1, we 
+  test the next measure.
+  """
+  if m < 0:
+    return False
   if solved(pop):
-    return 0
-  if 3**m < cost_branch(pop):
-    # we won't be able to reach the 
-    # limit of m
-    return m+1
-  return browse_solutions(pop, m)
+    return True
+  if 3**m < nb_of_answers(pop):
+    # we will never be able to
+    # reach the limit of m
+    # because of the information
+    # argument
+    return False
+  for measure in measures(pop):
+    for branch in measure_branches(pop, measure):
+      if not solve(branch, m-1):
+         break
+    else:
+      return True
+  return False
   
 def pearl_smart(n):
   if n<3:
     return None
   pop = (n, 0, 0, 0)
-  m = int(floor(log(n, 3)))+1 # min limit
-                            #  m+1 is the max limit
-  return solve(pop, m)
+  # our solution is either m
+  # or m+1
+  m = int(floor(log(n, 3)))+1 
+  if solve(pop, m):
+    return m
+  else:
+    return m+1
 
 if __name__ == "__main__":
   assert pearl_smart(3) == 2
   assert pearl_smart(12) == 3
   assert pearl_smart(13) == 4
+  pearl_smart(120)
+

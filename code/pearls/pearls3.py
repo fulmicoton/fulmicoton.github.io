@@ -1,4 +1,5 @@
 from math import floor, log
+from memoize import memoize
 
 # Let's call that the "smart" algorithm
 
@@ -95,6 +96,9 @@ def measures(pop):
 def solved(pop):
   return pop[0]==0 and sum(pop[1:3]) <= 1
 
+
+
+@memoize()
 def solve(pop, m):
   """Returns True if the pearl problem
   of the population pop can be solved
@@ -139,6 +143,8 @@ def pearl_smart(n):
     return m
   else:
     return m+1
+
+
 
 if __name__ == "__main__":
   assert pearl_smart(3) == 2

@@ -507,12 +507,12 @@ if __name__ == "__main__":
 Results, because everyone loves a colorful graph.
 --------------------------------------------------------
 
-<img src="https://docs.google.com/spreadsheet/oimg?key=0As3ux_ykgGX1dG1USEgwcGdrSlZFR2VVMkw5RnYxcXc&oid=3&zx=wwbpvnrs43l5" />
+<img src="https://docs.google.com/spreadsheet/oimg?key=0As3ux_ykgGX1dG1USEgwcGdrSlZFR2VVMkw5RnYxcXc&oid=3&zx=bsk5yv5pjw75" />
 
 Here is the running time of the algorithm for the different implementation. 
 
 As you can see the "smart" is doing way better than the other implementation. 
 
-Interestingly the computational of the smart implementation is not an increasing function of the number of pearls.
+Interestingly the computational of the smart implementation is not an increasing function of the number of pearls. If we plot it for a bigger 
 
-<img src="https://docs.google.com/spreadsheet/oimg?key=0As3ux_ykgGX1dG1USEgwcGdrSlZFR2VVMkw5RnYxcXc&oid=4&zx=xphlzrslnq5d" />
+<img src="https://docs.google.com/spreadsheet/oimg?key=0As3ux_ykgGX1dG1USEgwcGdrSlZFR2VVMkw5RnYxcXc&oid=4&zx=5e6pre1ocudh" />

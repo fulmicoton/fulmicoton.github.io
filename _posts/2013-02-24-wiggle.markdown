@@ -92,8 +92,8 @@ render_scene = (img, depth, camera)->
       r = camera.L  / (camera.L - d)
       # compute x,y : the projection of pixel (i,j,d)
       # according to our camera.
-      x = Math.floor(x0 - camera.x + (camera.x + i - x0)) 
-      y = Math.floor(y0 - camera.y + (camera.y + j - y0))
+      x = Math.floor(x0 - camera.x + (camera.x + i - x0)) * r
+      y = Math.floor(y0 - camera.y + (camera.y + j - y0)) * r
       destc = (x+W*y)*4
       if (0 <= destc < N)
         for v in [0..3]

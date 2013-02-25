@@ -123,6 +123,8 @@
       this.stop();
       ctx = canvas.getContext('2d');
       frame_id = 0;
+      canvas.width = this.width();
+      canvas.height = this.height();
       render_frame = function() {
         frame_id = (frame_id + 1) % _this.frames.length;
         return ctx.putImageData(_this.frames[frame_id], 0, 0);
@@ -170,7 +172,7 @@
     })());
   };
 
-  load_animation = function(animation_id, canvas) {
+  load_animation = function(animation_id, canvas, callback) {
     var cameras, h, i, nb_frames, theta, thetas;
     nb_frames = 12;
     h = 60.0;
@@ -193,15 +195,7 @@
     })();
     return load_image_data(animation_id + '.png', function(img) {
       return load_image_data(animation_id + '_depth.png', function(depth) {
-        var FPS, animation;
-        if (typeof animation !== "undefined" && animation !== null) {
-          animation.stop();
-        }
-        animation = compute_animation(img, depth, cameras);
-        FPS = nb_frames * 2;
-        canvas.width = animation.width();
-        canvas.height = animation.height();
-        return animation.play(canvas, FPS);
+        return callback(compute_animation(img, depth, cameras));
       });
     });
   };

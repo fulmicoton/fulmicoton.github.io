@@ -7,11 +7,10 @@ category: posts
 
 Wiggle Stereoscopy
 ---------------------------------------
-
 <canvas id='wigglestereoscopy'></canvas>
 
-
-Wiggle stereoscopy is probably the cheapest trick to give your brain a 3D feeling. While most technics try to take advantage of binocular vision by giving your left eye and your right eye different pictures, [wiggle stereoscopy](http://en.wikipedia.org/wiki/Wiggle_stereoscopy) is just about looping on a couple of pictures with a slight shift of point of view. Your brain will interpret the parallax and give you a sense of 3D. What's [parallax](http://en.wikipedia.org/wiki/Parallax) ? Basically the effect you get when you look at the landscape while driving a car. While objects far away are moving slowly, objects closer seem to move very fast. Quite frankly I don't understand why it is called stereoscopy.
+Wiggle stereoscopy is probably the cheapest trick to give your brain a 3D feeling. While most technics try to take advantage of binocular vision by giving your left eye and your right eye different pictures, [wiggle stereoscopy](http://en.wikipedia.org/wiki/Wiggle_stereoscopy) is just about looping on a couple of pictures with a slight shift of point of view. Your brain will interpret the parallax and give you a sense of 3D. What's [parallax](http://en.wikipedia.org/wiki/Parallax) ? Imagine you're in the mountain driving in a car. You're looking out the window. Objects far away are moving slowly, objects closer seem to move very fast. 
+That's parallax! 
 
 In this post, I'll show how to implement this effect with CoffeeScript, Canvas (no need for WebGL, Flash or anything), and simple image editor.
 
@@ -19,16 +18,13 @@ In this post, I'll show how to implement this effect with CoffeeScript, Canvas (
 Depth Map
 ------------------------
 
-First, we need to be able to get a description of the relief of our picture.
-To do so we will use a depth map. That's an image of the same size of your picture,
-but encoding the depth of each pixel.
+But first, we need to be able to get a description of the 3D shape of our picture. To do so we will use a depth map. That's an image of the same size of your picture, but encoding the coordinates of each pixel, on the z-axis. Basically it's encoding how close to us the pixel is supposed to be.
 
-Just open your editor, create a new picture. Fill it with black. Black will be the 
-background depth. Now just pain very roughly the region in which you want to "pop out". The brighter it is, the closer it will feel.
+Just open your editor, create a new picture. Fill it with black. Black will be the background depth. Now just pain very roughly in grays shades the region you want to "pop out". The brighter it is, the closer it will feel. Don't try to be too accurate, 3 shades are probably sufficient.
 
 ![Wiggle stereoscopy geometry](/images/wiggle/depthmap.png)
 
-The resulting depth map probably has 3 or 5 levels now, describing some gigantic flat plateaus with different levels. But let's get real, most of the world is not that square. Besides, you probably took boobs for your example right? One very neat trick here is to smooth your depth map with a gaussian blur. It will very likely make everything look more natural. And to tell the truth, our rendering will look very shitty if your depth map is not smooth.
+At this point the resulting depth map probably consists of a couple of wide areas associated to different levels. But let's get real, most of the world is not that square. One very neat trick here is to smooth your depth map with a gaussian blur. It will very likely make everything look more natural. And to tell the truth, our rendering will look very shitty if your depth map is not smooth.
 
 
 The poor man's 3D
@@ -61,13 +57,9 @@ So if we have a value for a pixel at coordinates (i,j) it should be projected in
 
 where c<sub>x</sub> and c<sub>y</sub> is the coordinates of the projection of the camera on the scene.
 
-Actually our projection screen, has been considered parallele
-to the scene for this simple version, we might want to add keep
-it perpendicular to the axis of the camera.
-
-With the value we used for our camera, the correcting factor was
-however neglectable (0.99 instead of 1).
-
+Actually here our projection screen has been considered parallele
+to the scene for this simple version, we might want to keep
+it perpendicular to the axis of the camera. With the value we used for our camera, the correcting factor was however neglectable (0.99 instead of 1).
 
 
 {% highlight coffeescript %}
@@ -112,17 +104,32 @@ the destination image. Yes that's a cheap algorithm, but we
 just run a small method to detect these gap pixels and fill them with
 an average of their neighbors.
 
-
-Results
---------------------
-
 Wiggle stereography typically use two pictures. Actually I found that the effect was much more efficient if we were rendering a lot of pictures, just turning around given point of view.
+
+Oh, and yeah, it works with <a href='javascript:loadWiggle("scarlett");'>boobs</a>.
 
 <script src='/js/wiggle/ready.min.js'></script>
 <script src='/js/wiggle/wiggle.js'></script>
 <script type='text/javascript'>
-domready(function() {
-    canvas = document.getElementById('wigglestereoscopy');
-    load_animation('/images/wiggle/finger', canvas);
-});
+
+(function() {
+
+  domready(function() {
+      loadWiggle('finger');
+  });
+
+  function loadWiggle(imgId) {
+      if (window.animation) {
+          window.animation.stop();
+          window.animation = null;
+      }
+      canvas = document.getElementById('wigglestereoscopy');
+      load_animation('/images/wiggle/' + imgId, canvas, function(animation) {
+        window.animation = animation;
+        animation.play(canvas, 24);
+      });
+  }
+  window.loadWiggle = loadWiggle;
+
+})();
 </script>

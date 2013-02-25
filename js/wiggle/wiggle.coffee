@@ -92,6 +92,8 @@ class Animation
         @stop()
         ctx = canvas.getContext '2d'
         frame_id = 0
+        canvas.width = @width()
+        canvas.height = @height()
         render_frame = =>
             frame_id = (frame_id + 1) % @frames.length
             ctx.putImageData @frames[frame_id], 0, 0    
@@ -117,20 +119,14 @@ camera_from_angle = (h, theta)->
 compute_animation = (img, depth, cameras)->
     new Animation( render_scene(img,depth,camera) for camera in cameras )
 
-load_animation = (animation_id, canvas)->
+load_animation = (animation_id, canvas, callback)->
     nb_frames = 12    
     h = 60.0
     thetas = ( Math.PI*2.0*i/nb_frames for i in [0...nb_frames] )
     cameras = ( camera_from_angle(h,theta) for theta in thetas )
-    #cameras = [ {x: 60, y:0, L: 2000}, {x: -60, y:0, L: 2000} ] 
     load_image_data (animation_id + '.png'), (img)->
         load_image_data (animation_id + '_depth.png'), (depth)->
-            animation?.stop()
-            animation = compute_animation img, depth, cameras
-            FPS=nb_frames*2
-            canvas.width = animation.width()
-            canvas.height = animation.height()
-            animation.play canvas, FPS
+            callback compute_animation(img, depth, cameras)
 
 # stuff we want to export
 @load_animation = load_animation

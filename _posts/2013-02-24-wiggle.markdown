@@ -5,9 +5,19 @@ category: posts
 ---
 
 
+
+Demo
+----------------
+Click to test any of those !<br/>
+<a href='javascript:loadWiggle("poulejapon");'>[ poulejapon ]</a>
+<a href='javascript:loadWiggle("scarlett");'>[ boobs ]</a>
+<a href='javascript:loadWiggle("finger");'>[ finger ]</a>
+<br/>
+<canvas id='wigglestereoscopy'></canvas>
+
 Wiggle Stereoscopy
 ---------------------------------------
-<canvas id='wigglestereoscopy'></canvas>
+
 
 Wiggle stereoscopy is probably the cheapest trick to give your brain a 3D feeling. While most technics try to take advantage of binocular vision by giving your left eye and your right eye different pictures, [wiggle stereoscopy](http://en.wikipedia.org/wiki/Wiggle_stereoscopy) is just about looping on a couple of pictures with a slight shift of point of view. Your brain will interpret the parallax and give you a sense of 3D. What's [parallax](http://en.wikipedia.org/wiki/Parallax) ? Imagine you're in the mountain driving in a car. You're looking out the window. Objects far away are moving slowly, objects closer seem to move very fast. 
 That's parallax! 
@@ -17,10 +27,9 @@ In this post, I'll show how to implement this effect with CoffeeScript, Canvas (
 
 Depth Map
 ------------------------
+But first, we need to be able to get a description of the 3D shape of our picture. **The three animation above have been created very simply from 2D-images.**. The 3D information has been added using a "depth map". A depth consists of an image of the same size of your original picture, but encoding the z-coordinates of each pixel. Basically it's encoding how close to us the pixel is supposed to be.
 
-But first, we need to be able to get a description of the 3D shape of our picture. To do so we will use a depth map. That's an image of the same size of your picture, but encoding the coordinates of each pixel, on the z-axis. Basically it's encoding how close to us the pixel is supposed to be.
-
-Just open your editor, create a new picture. Fill it with black. Black will be the background depth. Now just pain very roughly in grays shades the region you want to "pop out". The brighter it is, the closer it will feel. Don't try to be too accurate, 3 shades are probably sufficient.
+To create one, just open your favorite image editor, and create a new picture. Fill it with black. Black will be our background background. It is assumed to be far away. Now just pain very roughly in grays shades the region you want to "pop out". The brighter it is, the closer it will feel. Don't try to be too accurate, 3 shades are probably sufficient.
 
 ![Wiggle stereoscopy geometry](/images/wiggle/depthmap.png)
 
@@ -106,7 +115,8 @@ an average of their neighbors.
 
 Wiggle stereography typically use two pictures. Actually I found that the effect was much more efficient if we were rendering a lot of pictures, just turning around given point of view.
 
-Oh, and yeah, it works with <a href='javascript:loadWiggle("scarlett");'>boobs</a>.
+You can check out the final script on [github](https://github.com/poulejapon/wigglejs).
+
 
 <script src='/js/wiggle/ready.min.js'></script>
 <script src='/js/wiggle/wiggle.js'></script>
@@ -133,3 +143,4 @@ Oh, and yeah, it works with <a href='javascript:loadWiggle("scarlett");'>boobs</
 
 })();
 </script>
+

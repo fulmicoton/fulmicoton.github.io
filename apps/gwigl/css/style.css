@@ -8,7 +8,7 @@ html {
 }
 body {
   margin: 0 auto;
-  width: 900px;
+  width: 400px;
   padding: 20px;
 }
 h1 {
@@ -18,8 +18,8 @@ h1 {
 #editor,
 #result {
   display: block;
-  width: 450px;
-  height: 300px;
+  width: 300px;
+  height: 200px;
   margin: 0 auto;
 }
 div.info {
@@ -33,12 +33,12 @@ div.info {
 }
 div.toolbox {
   margin: 0 auto;
-  width: 450px;
+  width: 350px;
 }
 div.toolbox ul {
   float: left;
   list-style-type: none;
-  margin: 0px 30px;
+  margin: 0px 20px;
 }
 div.toolbox ul li {
   display: inline;
@@ -104,8 +104,8 @@ div.toolbox {
   position: absolute;
   top: 0;
   bottom: 0;
-  width: 450px;
-  height: 300px;
+  width: 300px;
+  height: 200px;
 }
 canvas {
   border: solid 1px #fff;

@@ -1,17 +1,19 @@
-NB_FRAMES = 10
+NB_FRAMES = 8
 FPS = 20
+W = 300
+H = 200
 
 runWiggle = ->
     window.animation?.stop()
     window.animation = createAnimation()
-    window.animation.play $("#result")[0], 20
+    window.animation.play $("#result")[0], FPS
 
 createAnimation = ->
     $image = $ "#editor > img"
     $canvas = $ "#editor > canvas" 
-    stackBlurCanvasRGB $canvas[0], 0, 0, 450, 300, 20.0
+    stackBlurCanvasRGB $canvas[0], 0, 0, W, H, 20.0
     img = wiggle.extract_image_data $image[0]
-    depth = $canvas[0].getContext('2d').getImageData 0,0,450,300
+    depth = $canvas[0].getContext('2d').getImageData 0,0,W,H
     thetas = ( Math.PI*2.0*i/NB_FRAMES for i in [0...NB_FRAMES] )
     cameras = ( wiggle.camera_from_angle(60.0,theta) for theta in thetas )
     wiggle.compute_animation img, depth, cameras
@@ -24,7 +26,7 @@ setupToolbox = ->
         [k,v] = $(this).attr('class').split("-")
         brush_attr[k] = v
         offset = brush_attr.brush / 2
-        cursor_url = "img/cursor_" + brush_attr.brush + "_" + brush_attr.color + ".png"
+        cursor_url = "../img/cursor_" + brush_attr.brush + "_" + brush_attr.color + ".png"
         cursor_css = "url('#{cursor_url}') #{offset} #{offset}, pointer"
         $("#editor canvas").css "cursor", cursor_css
 
@@ -54,11 +56,11 @@ download = ->
     encoder = new GIFEncoder()
     encoder.setRepeat 0
     encoder.setDelay 1000.0 / FPS
-    encoder.setSize 450,300
+    encoder.setSize W,H
     encoder.start()
     canvas = document.createElement 'canvas'
-    canvas.width = 450
-    canvas.height = 300
+    canvas.width = W
+    canvas.height = H
 
     ctx = canvas.getContext '2d'
     i = 0

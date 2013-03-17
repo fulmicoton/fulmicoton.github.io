@@ -197,7 +197,7 @@ Let's now take a look at our first example. Two possible values might be for ins
 
 The bayesian averages for the two books become
 
-    $$ {rating_{book~A}} = \frac{5 \times 3 + 5 \times }{ 5 + 1 } = 3.3 $$
+    $$ {rating_{book~A}} = \frac{5 \times 3 + 5 \times 1}{ 5 + 1 } = 3.3 $$
     $$ {rating_{book~B}} = \frac{5 \times 3 + 4.5 \times 50 }{ 5 + 50 } = 4.36 $$
 
 As expected, Book 2 has a better bayesian average than Book 1.

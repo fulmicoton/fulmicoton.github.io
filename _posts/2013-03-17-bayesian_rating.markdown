@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Of Bayesian rating
+title:  Of Bayesian average and star ratings
 category: posts
 ---
 

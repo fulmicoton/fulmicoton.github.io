@@ -21,6 +21,8 @@ A first simple answer, which would definitely be an improvement compared to sort
 
 A second answer you might come up to would be to choose an empirical scoring formula that seems to match our constraints.
 
+Most of the formulas out there rely on Bayesian estimation. Generally speaking, Bayesian estimation really shines on this kind of situation : you want to measure something, but you know you won't have enough data to reach a perfect estimation.
+
 If m is the mean of the ratings and n is the number of the ratings, we might consider something like :
     
     $$ rating(m, n) = {mn \over {n+K}} $$
@@ -31,8 +33,6 @@ This will probably work just fine. **Probably**... Still you have to choose the 
 
 Bayesian estimation crash course
 ------------------------------------------
-
-The usual formula is however a little different and relies on Bayesian estimation. Generally speaking, Bayesian estimation really shines on this kind of situation : you want to measure something, but you know you won't have enough data to reach a perfect estimation.
 
 The big idea is, rather than trying to directly compute our estimate, first we compute a probability distribution describing "what we know" of the value we want to estimate, and then (and only then) we can extract an estimate of this value that fits our purpose.
 
@@ -45,29 +45,24 @@ For instance, if I need to estimate the number of serums that a government needs
 A simple example
 ------------------------------------
 
-Let's assume you just discovered toxoplasmosis and you are in charge of finding the ratio $X$ of the people infected by a parasite called [toxoplasmosis](http://en.wikipedia.org/wiki/Toxoplasmosis).
+Let's assume you just discovered a parasite called toxoplasmosis and you want to estimate the ratio $X$ of the people infected by a parasite called [toxoplasmosis](http://en.wikipedia.org/wiki/Toxoplasmosis).
 
-Human patients infected by the parasite does not show any symptoms at all, so you pretty much no idea of the result you might find.
-We might describe your vision on the probability distribution of this value to be a uniform distribution. "As far as I know it could be anything."
+Human patients infected by the parasite does not show any symptoms at all, so you pretty as far as you know it could be anything. We might describe your vision on the probability distribution of this value to be a uniform distribution. .
 
-At this point a couple of things might feel a little bit weird. 
-First of all is it legitimate to talk about probability when we are estimating something a very tangible, non-random value. We are familiar about considering the result of dice roll as a random value, because it is a value that is not realized yet. Yet being random or not is really a matter of information. If you roll a dice blindfolded, the value of the dice does exist, but from your point of view its value is still a distribution of probability isn't it?
-And then still, this use of the word probability might seem a bit strange for an event that cannot be reproduced. 
-
-Then this use of the word probability distribution on a value that cannot be reproduced seems incompatible with our good old frequentist definition. Frequentist vs Bayesian definition probability is actually a long-lasting troll within statistician. 
-Being a software engineer and I don't have the pedigree to get into this fight nor comment on it, but in order to convince myself that there does exist some mathematical object in my mind, describing the likelihood of the outcome of an event, I usually consider what might happen if you had to bet something.  For instance, having no clue about the ratio of the population infected by toxoplasmosis, could translate into : If I had to be forced to bet 1000$ on whether this ratio below 50% or over 50%, I would probably coin flip that one. 
+Talking about probability here might feel a little bit weird. 
+First of all is it legitimate to talk about probability when we are estimating something a very tangible, non-random value? In term of Bayesian probability, a variable is random if you don't know its value exactly. It is a piece of information that sums up our knowledge about something.
 
 But let's get back to our problem. As you test people for toxoplasmosis, you will make **observations**.Each person will have a probability ``X`` to have toxoplasmosis, and you want to estimate this very X. Let's assume that after seing $n$ persons, you detected k people with toxoplasmosis.
 
-You started with a uniform prior probability, and each observation will bend your vision on X, and make you more accurate.
-This new vision on X is called its **posterior distribution**.
+You started with a uniform prior probability, and each observation will bend your vision on X, making it more and more accurate.
+This updated vision of X is called its **posterior distribution**.
 We call ``O`` (as in observation) the sequence of results of our N tests.
 
 Bayes delivers a little formula to compute it 
 
     $$ P(X | O) = { P( O | X) P(X) \over { P(O)} }$$
 
-$P(O)$ is the probability of observing what we observed. It is constant with X, and therefore of little interest. Likewise we choose our prior probability $P(X)$ to be uniform. It therefore does not vary with X. At the end of the day, we are only interested into the proportionality relation : 
+$P(O)$ is the probability of observing what we observed. It is constant with X, and therefore of little interest. Likewise we chose our prior probability $P(X)$ to be uniform and it therefore does not vary with X. We are only interested into the proportionality relation : 
 
     $$ P(X | O) \propto P( O | X) $$
 

@@ -86,9 +86,9 @@ It's interesting to see how the posterior probability evolves with the number of
 
 ![Posterior probabilities](https://docs.google.com/spreadsheet/oimg?key=0As3ux_ykgGX1dEk3LV9WQ1E0SE03RTMzbmlIbUFzbmc&oid=1&zx=2u5tfzvqm8zf)
 
-Now that we have the exact probability, we might consider computing any kind of estimates from this distribution. Arguably the most common output would be to compute a confidence interval : an interval [A,B] for which we can claim with a confidence of 90% our value is somewhere between a and b.
+Now that we have the exact probability, we might consider computing any kind of estimates from this distribution. Arguably the most common output would be to compute a confidence interval : an interval [a,b] for which we can claim with a confidence of 90% our value lies somewhere between a and b.
 
-Having computers and everything the simplest way today is probably to use the cumulative distribution function of this distribution. 
+Nowadays everybody has a computer and probably the simplest way to produce such a confidence interval is probably to compute the cumulative distribution function of this distribution. 
 
 A lot of statisticians also worked on finding very accurate confidence intervals for binomial distributions when the normal approximation does not hold. You might want to check for [this wikipedia page](http://en.wikipedia.org/wiki/Binomial_proportion_confidence_interval) if you want to use one of this formulas.
 

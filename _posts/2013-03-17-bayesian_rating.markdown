@@ -8,7 +8,7 @@ category: posts
 E-Commerce doing it wrong
 ------------------------------------
 
-Most e-commerce websites are offering you to search products and sort the results by customer ratings... And quite a lot are doing it wrong. Let's assume here I'm looking for a book about CSS. I want to get the best book money can buy, so I will definitely hit the sort by rating button. The website is offering two options
+Most e-commerce websites are offering you to sort your search results by customer ratings... and quite a lot are doing it wrong. Let's assume here I'm looking for a book about CSS. I want to get the best book money can buy, so I will definitely hit the sort by rating button. The website is offering two options
 
 - book A : 1 rating of 5. Average rating of 5.
 - book B : 50 ratings. Average rating of 4.5
@@ -28,27 +28,6 @@ If m is the mean of the ratings and n is the number of the ratings, we might con
 This will probably work just fine. **Probably**... Still you have to choose the right K without knowing to what physical values it relates. More importantly you will have to convince your coworker that this is the nice solution that will covers the edge cases perfectly.
 
 
-Starting simple
-------------------------------------
-
-Let's come back to the root. Why do we want to have book B coming first? My understanding is because we do not trust that the average we got for book A is a good estimate of the real average we would have obtained if we had the means to ask all of its readers.
-
-Let's consider X the number of stars some reader picked randomly would give to this book. We want to get a good conservative estimate of its expectancy m. Let V be the [variance of X](http://en.wikipedia.org/wiki/Variance). 
-
-If we pick a random sample of N people, its sample's mean itself will be a random variable too. Provided their evaluation are independent its expectancy is m as well, and its variance is ``V/N``.
-The standard deviation therefore is 
-
-    $$ \sigma = \sqrt{V \over N}$$
-
-A first approach might be to arbitrarily assume a standard deviation for the number of star, let's say 1, and consider a margin proportional to it in term of variance. For instance we may use as a formula for our corrected rating.
-
-    $$ rating(m,n) = m - {2 \over n}$$
-
-Ok, we chose once again a constant, but we have some kind of understanding of its meaning.
-
-
-
-
 
 Bayesian estimation crash course
 ------------------------------------------
@@ -57,9 +36,9 @@ The usual formula is however a little different and relies on Bayesian estimatio
 
 The big idea is, rather than trying to directly compute our estimate, first we compute a probability distribution describing "what we know" of the value we want to estimate, and then (and only then) we can extract an estimate of this value that fits our purpose.
 
-The separation of concern in that last bit is actually quite important. It is actually very common / and normal to consider different estimates for a same value. 
+The separation of concern in that last bit is actually quite important. Depending on your point of view you may consider very different value as estimates of a physical value. 
 
-For instance, if I need to estimate the number of serums that a government needs to buy in order to cope with an epidemic, I will want to deliver a figure for which I can say. I am sure at 90% that this will be sufficient. That figure can sometimes be very far away from [the mean](http://www.infowars.com/french-government-plans-mass-swine-flu-vaccination-program/). If I am actually working as in accounting in the company selling those serums, and I want to get an idea of a lower bound for my income for next month, I will probably take a totally different [quantile](http://en.wikipedia.org/wiki/Quantile).
+For instance, if I need to estimate the number of serums that a government needs to buy in order to cope with an epidemic, I will want to deliver a figure for which I can say : I am sure at 90% that this will be sufficient. That figure can sometimes [be very far away from the expectation](http://www.infowars.com/french-government-plans-mass-swine-flu-vaccination-program/). If I am actually working as in accounting in the company selling those serums, and I want to get an idea of a lower bound for my income for next month, I will probably take a totally different [quantile](http://en.wikipedia.org/wiki/Quantile).
 
 
 

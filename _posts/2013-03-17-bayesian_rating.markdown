@@ -5,8 +5,8 @@ category: posts
 ---
 
 
-E-Commerce doing it wrong
-------------------------------------
+E-Commerce (sometimes) doing it wrong
+--------------------------------------------
 
 Most e-commerce websites are offering you to sort your search results by customer ratings... and quite a lot are doing it wrong. Let's assume here I'm looking for a book about CSS. I want to get the best book money can buy, so I will definitely hit the sort by rating button. The website is offering two options
 

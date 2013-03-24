@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Of Intersecting linked list
+title:  Of Intersecting linked lists
 category: pythonistas
 ---
 
@@ -9,7 +9,6 @@ category: pythonistas
 
 The problem
 ---------------------------------------------
-
 
 You are given two linked list. Basically given a node, you can only access its successor. You know that they merge at one point. Find an algorithm to detect the merging point. Optimize for computational time first, and if possible, memory.
 

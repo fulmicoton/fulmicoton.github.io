@@ -1,4 +1,4 @@
-from itertools import izip_longest
+from itertools import izip_longest, izip
 
 class Node:
   
@@ -10,6 +10,9 @@ class Node:
     while cur is not None:
       yield cur
       cur = cur.next
+
+  def __len__(self,):
+    return sum(1 for el in self)
 
   def __repr__(self,):
     return "-".join(hex(id(x))[-4:] for x in self)
@@ -42,6 +45,24 @@ def find_intersection_left_and_right(left,right):
       visited.add(cur_right)
   return None
 
+def advance(it, n):
+  '''Advance an iterator by a given number of steps'''
+  for i in xrange(n):
+    next(it)
+
+def find_intersection_measure(left, right):
+  llen = len(left)
+  rlen = len(right)
+  li = iter(left)
+  ri = iter(right)
+  if llen > rlen:
+    advance(li, llen - rlen)
+  else:
+    advance(ri, rlen - llen)
+  for (l,r) in izip(left, right):
+    if l == r:
+      return l
+  return None
 
 def steps():
   c = 1
@@ -118,3 +139,4 @@ if __name__ == "__main__":
   print tests(find_intersection_simple)
   print tests(find_intersection_left_and_right)
   print tests(find_intersection_skipping)
+  print tests(find_intersection_measure)

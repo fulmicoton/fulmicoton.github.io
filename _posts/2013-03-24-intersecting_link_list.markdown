@@ -19,15 +19,18 @@ So a node of our linked list might be implemented as its first node, also named 
 {% highlight python %}
 
 class Node:
-    
-    def __init__(self,next=None):
-        self.next = next
+  
+  def __init__(self,next=None):
+      self.next = next
 
-    def __iter__(self,):
-        cur = self
-        while cur is not None:
-            yield cur
-            cur = cur.next
+  def __iter__(self,):
+      cur = self
+      while cur is not None:
+          yield cur
+          cur = cur.next
+
+  def __len__(self,):
+    return sum(1 for el in self)
 
 {% endhighlight %}
 
@@ -198,3 +201,76 @@ we are logarithmic in memory.
 - **time** : O(max(l,r))
 - **memory** : O(log(max(l,r))
 
+
+
+A simple and efficient solution (Added on March, Thursday the 26)
+----------------------------------------------------------------------------------------------------
+
+Several people came up with a elegant solution and told about it on reddit and my blog comments. Thanks especially to **Eric VW** and also **hraban** who went as far as posting an implementation of the algorithm!
+
+The principle is simple, measure the length of both list in linear time. Consume the longer list up to the difference in order to align them. We can them just walk in both of them until we meet the same element on both.
+
+Without further due, a slightly modified version of **hraban**'s code.
+
+{% highlight python %}
+
+from itertools import izip
+
+def advance(it, n):
+  '''Advance an iterator by a given number of steps'''
+  for i in xrange(n):
+    next(it)
+
+def find_intersection_measure(left, right):
+  llen = len(left)
+  rlen = len(right)
+  li = iter(left)
+  ri = iter(right)
+  if llen > rlen:
+    advance(li, llen - rlen)
+  else:
+    advance(ri, rlen - llen)
+  for (l,r) in izip(left, right):
+    if l == r:
+      return l
+  return None
+
+{% endhighlight %}
+
+
+Its complexity of such an algorithm :
+
+- **time** : O(max(L,R))
+- **memory** : O(1)
+
+
+Which is pretty neat as well.
+
+
+
+And then I got the best nerd burn ever...
+----------------------------------------------------------------------------------------------------
+
+
+Somebody from [Twisted Oak](http://twistedoakstudios.com/) posted on the company's [blog
+](http://twistedoakstudios.com/blog/Post3280_intersecting-linked-lists-faster) a simpler, better, faster, stronger solution to this puzzle. I will not post the implementation of this algorithm as he made [a great job](http://twistedoakstudios.com/blog/Post3280_intersecting-linked-lists-faster) explaining it .
+
+
+Somebody on [reddit](http://www.reddit.com/r/programming/comments/1b180m/intersecting_linked_lists_faster/) wondered (politely) why *people* (meaning me I guess) would go with such complicated solutions for a problem for which the best solution seemed so intuitive.
+
+First of all, I had no idea of this algorithm and I had no idea that such an algorithm could exist. I might have thought about that solution if I had been thinking about it after reading people's suggestion about measuring the list length. 
+
+But how incredible that may seem, I kind of thought that my solution 
+couldn't be improved. I fully understood how bold such a statement is and how stupid I may seem a posteriori, but that's actually the painful and shameful truth! Experimenting that is actually very enlightening. It also tells a lot about how getting other people's point of view as soon as possible is invaluable.
+
+Now let's talk about ** being intuitive**  . After knowing a problem's solution, when it is elegant and clean it always seems 
+pretty obvious... Almost shiny. But intuitive is all about having a simple path guiding your thought to the solution. The existence of 
+such a path really depends on your background, education, culture, work experience, etc.
+
+Today is the anniversary of the birth of a mathematician called Paul Erdos. And he happens to have a math theorem to his name which is extremely simple, and has many different proofs. My point is that the original proof is probably the one most people would come up with... But it is actually quite ugly. I would definitely call it the intuitive proof. 
+
+The best solution I know however is so elegant it will seem straight obvious when you read it.
+
+Here is the problem :
+
+101 people are in waiting in a line in a random order. Show that it is always possible to choose 11 of them so that if they remain in the very same order, those 11 people are sorted by size increasingly or decreasingly.

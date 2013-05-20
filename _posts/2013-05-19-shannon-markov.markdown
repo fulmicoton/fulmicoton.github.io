@@ -5239,8 +5239,7 @@ ever we went to the west country.
 
 </textarea>
 <center><a href='javascript:void(0)' id='run' style='font-size: 28px; font-weight: bold; font-family:sans-serif;'>Generate Text ! </a></center>
-<div id='result' style='margin-top: 10px; border: solid 1px; font-size: 18px; font-family: serif; width: 80%; background-color: white; padding: 16px;
-border-radius: 5px;'></div>
+<div id='result' style='margin-top: 10px; margin-bottom: 70px; border: solid 1px; font-size: 18px; font-family: serif; background-color: white; padding: 16px; border-radius: 5px;'></div>
 
 
 

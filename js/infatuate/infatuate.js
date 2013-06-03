@@ -23,7 +23,7 @@
     }
 
     DefaultDict.prototype.get = function(k) {
-      if (this.c[k] == null) {
+      if (!this.c.hasOwnProperty(k)) {
         this.c[k] = this.default_value();
       }
       return this.c[k];
@@ -137,6 +137,12 @@
       return " " + token;
     }
   };
+
+  this.triplet_counter = new DefaultDict((function() {
+    return new DefaultDict((function() {
+      return new Counter();
+    }));
+  }));
 
   count_triplets = function(tokens) {
     var start, tok1, tok2, tok3, triplet_counter, _i, _ref, _ref1;

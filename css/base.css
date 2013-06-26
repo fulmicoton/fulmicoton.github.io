@@ -278,14 +278,24 @@ section.discuss {
 
 pre {
   padding: 30px;
-  background-color: #322;
   font-size: 16px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   overflow: hidden;
   text-shadow: none;
-  color: #fff;
-  margin: 20px 0px;
+  color: #000;
+  margin: 20px 0px 10px 0px;
+  code {
+    display: block;
+    background-color: #322;
+    clear: both;  
+  }
+}
+
+
+
+code.has-jax {
+  /*font-size: 20px;*/
 }
 
 #idc-container .idc-head_action, #idc-container .idc-message {

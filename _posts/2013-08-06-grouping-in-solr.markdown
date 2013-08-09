@@ -30,21 +30,21 @@ What happens then when someone search for the ten most recent documents containi
 
 An important point here is that posting lists are sorted. The main benefit for that is that it makes computing the intersection or the union of two posting lists much easier. You just need to scan the two lists at the same time, and check for their first two elements. Here is the implementation of this algorithm in Python. The algorithm is linear in time and bounded in memory.
 
-{% highlight python %}
+    {% highlight python %}
 
-def intersection(left, right):
-    left_head = left.next()
-    right_head = right.next()
-    while True:
-        if left_head == right_head:
-            yield left_head
-            left_head = left.next()
-            right_head = right.next()
-        elif left_head < right_head:
-            left_head = left.next()
-        else:
-            right_head = right.next()
-{% endhighlight %}
+    def intersection(left, right):
+        left_head = left.next()
+        right_head = right.next()
+        while True:
+            if left_head == right_head:
+                yield left_head
+                left_head = left.next()
+                right_head = right.next()
+            elif left_head < right_head:
+                left_head = left.next()
+            else:
+                right_head = right.next()
+    {% endhighlight %}
 
 This simple scan makes it possible to keep correct performances even when your posting list is still on your hard disk.
 
@@ -65,9 +65,14 @@ Once the document have been selected, we can finally iterate on them, and fetch 
 
 ## Distributed search
 
+
+
 When your reached a big number of document, Solr makes it easy to cut your index and distribute it into different computers called shards.
 
-How does search works then? 
+The server receiving the request will play the role of a master for the request. It will dispatch relevant requests to the shards, 
+and merge their answers.
+
+A typical search query will be done in two rounds.
 
 ### Round 1
 The server receiving the query asks all of the shards for their ten best document ids, along with their score (here the date). 
@@ -85,6 +90,7 @@ As we did for a regular search, let's first consider the non-distributed case.
 
 ### Phase 1
 
+
 We fetch the list of document ids matching the query. Nothing different here.
 
 ### Phase 2
@@ -93,9 +99,48 @@ We loop on the document and fetch in some map living in RAM both
 the score and the grouping field value. Our collector is slightly
 more tricky here. Instead of keeping a data structure holding the ten best doc ids, we will keep the ten best group values.
 
-The collector implementation in Lucene is in [AbstractFirstPassGroupingCollector](https://github.com/apache/lucene-solr/search?q=AbstractFirstPassGroupingCollector&ref=cmdform) and maintains the list of the n-best groups until now implicitely sorted.
+The collector implementation in Lucene is in AbstractFirstPassGroupingCollector](https://github.com/apache/lucene-solr/search?q=AbstractFirstPassGroupingCollector&ref=cmdform) and maintains the list of the n-best groups until now implicitely sorted.
 
-Anyway, we are once again bounded in memory and linear in number of doc ids.
+We are once again bounded in memory and linear in number of doc ids.
+
+Below is a simple possible implementation of such a collector.
+Python doesn't come with any equivalent of a red-black tree. I used here the very nice bintree package that needs to be pip-installed. It basically acts as a dictionary for which items remains sorted by their keys.
+
+Lucene itself relies on Java's TreeMap.
+
+{% highlight python %}
+
+from bintrees import BinaryTree
+
+def collapsing_first_round_collector(docs, n_bests):
+    # we actually use it as an ordered set.
+    top_score_group = BinaryTree()
+    top_group_score = {}
+    for (doc_id, group_val, score) in docs:
+        if len(top_score_group) >= n_bests:
+            worst_score, worst_group = top_score_group.min_key()
+            if score <= worst_score:
+                # there is already n candidates and 
+                # not better than the worst of them
+                continue
+        if group_val in top_group_score:
+            former_score = top_group_score[group_val]
+            if score < former_score:
+                # we just need to update the score
+                # associated to the group
+                continue
+            del top_score_group[(former_score, group_val)] 
+        top_group_score[group_val] = score
+        top_score_group[(score, group_val)] = True
+        if len(top_score_group) == n_bests + 1:
+            # we need to erase one the extra element
+            (last_score, last_group) = top_score_group.pop_min()[0]
+            del top_group_score[last_group]
+    return list(reversed(list(top_score_group.keys())))
+
+
+{% endhighlight %}
+
 
 ### Phase 3
 
@@ -103,14 +148,22 @@ Once the groups to be returned are selected, we need to return the best `group.l
 
 Once again this will only be a matter of scanning through the doc ids, check if the group value belongs to the top 10 groups, and if so, append it to a dedicated collector. The sort used here to select the best hits belonging to a group can be completely different from the one used to select groups.
 
+
 ## Distributed Grouping queries
+
+
+The server receiving the request will play the role of a master for the request. It will dispatch relevant requests to the shards, 
+and merge their answers.
 
 Distributed grouping queries are done in three rounds.
 
+
 ### Round 1
 
-The server receiving the query asks all of the shards for their ten best group ids, along with their score (here the date). 
-He can then merge these lists and retrieve the ten best group ids in the whole index.
+The master asks all of the shards for their ten best group ids, along with their score (here the date).
+Each shard computes them by running phase 1 and 2 of the non-distributed case. They give back their local ten bests group values and their score.
+
+The master can then merge these lists and retrieve the ten best group ids in the whole index.
 
 ### Round 2
 
@@ -121,7 +174,6 @@ The server can then merge these results and deduce the best hits to be returned 
 ### Round 3
 
 The shard are requested for the documents.
-
 
 
 ## What can we deduce from that?

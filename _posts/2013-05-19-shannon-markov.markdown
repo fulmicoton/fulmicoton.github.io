@@ -3,6 +3,7 @@ layout: post
 title: Of generating random text using a Markov model
 category: posts
 published: true
+description: Generating random texts in CoffeeScript.
 ---
 
 Generating text using a markov model is a very old idea. In [ A mathematical theory of communication (1948)](http://cm.bell-labs.com/cm/ms/what/shannonday/shannon1948.pdf), Claude Shannon gives different samples of text generated from offers the same Markov recipe. 
@@ -50,6 +51,8 @@ The [project is available on github](https://github.com/poulejapon/bullshitator)
 In the end, given different famous books as a corpus,
 the following algorithm generated the following text :
 
+
+<!--googleoff: all-->
 ### Pride and Prejudice, Jane Austeen.
 
 >I do _not_. It is very much at Pemberley. The idea of their all walking out. I must acknowledge to you. When I do _not_ marry Mr Collins had promised herself. But you have the carriage might be copied. It would look odd to be proud. You are perfectly good. Elizabeth was at the sight of Miss Darcy was delighted. You have no objection to my charge. I know not. Lydia was urgent with the keenest of all. Mr Collins, you puzzle me exceedingly. But, my proposals will not go. To the rest. But, to much conversation, no traces of them.
@@ -62,11 +65,14 @@ the following algorithm generated the following text :
 
 >When you know her by sight. No, no doubt, but he's not a child. It's a very extraordinary question. We have never in my inferences. Thank you ! Now, Cartwright. It had not gone today it is ? I am. Mortimer has read to us in the Grimpen Mire. Here are twenty-three shillings. It was during these early days to Sherlock Holmes. But, hark, what do you say, Watson. It is Selden, in case I want you again. You know that he confided to anyone. I could look straight through the clouds. Is it, could object.
 
+<!--googleon: all-->
 
 ### Demo time
 
 You can test the algorithm by copy paste a long text below and click on the generate button. Don't be shy with the length of the text. The longer the better.
 
+
+<!--googleoff: all-->
 <textarea id='sample' rows="40" cols="80">
 Mr. Sherlock Holmes, who was usually very late in the mornings, save
 upon those not infrequent occasions when he was up all night, was seated
@@ -3688,8 +3694,9 @@ which I travelled.
 Good-day, Dr. Watson, cried he with unwonted good humour, you must
 really give your horses a rest and come in to have a glass of wine and
 to congratulate me.
-
 </textarea>
+<!--googleon: all-->
+
 <center><a href='javascript:void(0)' id='run' style='font-size: 28px; font-weight: bold; font-family:sans-serif;'>Generate Text ! </a></center>
 <div id='result' style='margin-top: 10px; margin-bottom: 70px; border: solid 1px; font-size: 18px; font-family: serif; background-color: white; padding: 16px; border-radius: 5px;'></div>
 

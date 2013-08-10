@@ -2,6 +2,7 @@
 layout: post
 title:  Of how much of a file is in RAM
 category: posts
+description: We discuss about minor/major page fault, mmap, and how to measure how much of a file is in page cache.
 ---
 
 # Memory my friend !

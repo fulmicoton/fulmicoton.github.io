@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  Of peeping on the page cache
+title:  Of how much of a file is in RAM
 category: posts
 ---
 

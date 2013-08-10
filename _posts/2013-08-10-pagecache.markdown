@@ -10,12 +10,12 @@ Nowadays RAM is so cheap, one is tempted to just rely on his database being
 in RAM to get the wanted performance. Disk is just the persistence thingy.
 Stackoverflow is full of questions on Solr, talking about the RAM directory, storing everything in tmpfs, and so on.
 
-But isn't your OS supposed to make sure that the stuff your accessing is page cache? Let's sree how we can measure how much of your index is in page cache.
+But isn't your OS supposed to make sure that the stuff your accessing is page cache? Let's see how we can measure how much of your db/index/data is in page cache.
 
 
 # What's page cache anyway?
 
-It takes from 5 to 10ms to read something in a random part of your hard disk. Accessing data in RAM on the other, takes between 50 ns and 100 ns. It is only natural whenever possible to make sure that the same data is not loaded twice if we can afford caching it in RAM. That's precisely the role of the page cache. 
+It takes from 5 to 10ms to read something from a random part of your hard disk. Accessing data in RAM on the other hand, takes between 50 ns and 100 ns. It is only natural whenever possible to make sure that the same data is not loaded twice if we can afford caching it in RAM. That's precisely the role of the page cache. 
 
 If you are on Linux or MacOS, here is a very simple experiment to see the page cache in action. Go find a fat and useless file sleeping on your hard disk. That DivX of `Beethoven 2` will do. Do not open it, just 
 run the following command twice
@@ -23,14 +23,12 @@ run the following command twice
 	time cat ./free-willy-2.mpg > /dev/null
 
 
-The second time, you should get a pretty nice performance improvement. And that's sequential access we're doing here?
-You can actually warmup files by cat'ing them to your good old `/dev/null`.
-
+The second time, you should get a pretty nice performance improvement. And that's sequential access we're doing here! This trick is actually pretty legit. You can actually warmup files by cat'ing them to your good old `/dev/null`.
 
 # pmap to the rescue
 
-Assuming your database is using MMAP, pmap will actually give a nice picture
-of what's in your virtual memory. The default parameters however won't be helpful to know how much of your files are in RAM. To know that, you need to stick it the `-x` param.
+Assuming your database is using memory mapping (mmap), pmap will actually give a nice picture
+of what's in your virtual memory and help you a bit about how much of your database file are in RAM. The default parameters however won't be helpful to know how much of your files are in RAM. To know that, you need to stick it the `-x` param.
 
 	pmap -x <pid>
 
@@ -60,11 +58,11 @@ You see here that shared library are mapped in your process just like the file t
 
 
 
-
 # Wait a minute... pmap showing its limits.
 
 Ok, let's check whether this figure is working out as expected
-by cat'ing `pkgcache.bin` and check with pmap that it is indeed in memory.
+by cat'ing `libsqlite3...` and check with pmap that it is indeed in memory.
+It is not a database, but a shared library but it will do the job.
 
 	cat /usr/lib/i386-linux-gnu/libsqlite3.so.0.8.6 > /dev/null
 	pmap -x 10988 | grep libsqlite
@@ -76,7 +74,7 @@ gives me back.
 	ae2fe000       4       4       4 rw---  libsqlite3.so.0.8.6
 
 
-This does not work as expected. Let's explain what happened.
+This does not work as expected. Why the hell did this happenLet's explain what happened.
 
 
 # Minor and major page faults
@@ -98,13 +96,13 @@ You can check for the number of page fault (minor and major) by using ps.
 
 
 
-# What can we do? Mincore to the rescue.
+# What can we do? mincore to the rescue.
 
-What can we do then? A database may mmap and munmap files or you may restart your process, or a process may mmap a file that have been just created by another process. In that case, `pmap` figures are not exactly reliable.
+A database may mmap and munmap files or you may restart your process, or a process may mmap a file that have been just created by another process. In that case, `pmap` figures are not exactly reliable.
 
-I don't know any linux command that answer this question, but `[mincore](http://man7.org/linux/man-pages/man2/mincore.2.html)` is a system call that makes it possible to give and accurate map of the page of your virtual memory that are resident.
+I don't know any linux command that answer this question directly, but `[mincore](http://man7.org/linux/man-pages/man2/mincore.2.html)` is a system call that makes it possible to give for any page whether it is resident or not.
 
-We can therefore, mmap a file, and ask mincore whether accessing each or each byte would trigger a major page fault or not.
+We can therefore mmap a file, and ask mincore whether accessing each or each byte would trigger a major page fault or not.
 
 I wrote a little utility doing that, and you can find it on [github](https://github.com/poulejapon/isresident).
 Let's use to take a look at our `libsqlite3` file.
@@ -114,3 +112,7 @@ Let's use to take a look at our `libsqlite3` file.
 	libsqlite3.so.0.8.6    696    696    100 %
 
 Hurray !
+
+You can run it on a directory as well.
+
+	$ ./isresident /usr/lib/*	

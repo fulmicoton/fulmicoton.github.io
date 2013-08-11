@@ -2,6 +2,7 @@
 layout: post
 title:  Of the pearl puzzle
 category: posts
+description: A solution to the pearl problem : finding a fake pearl with a minimum number of weighting.
 ---
 
 

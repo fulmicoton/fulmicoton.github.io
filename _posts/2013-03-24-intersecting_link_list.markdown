@@ -2,6 +2,7 @@
 layout: post
 title:  Of Intersecting linked lists
 category: pythonistas
+description: Algorithm to compute the common interesection of two linked lists.
 ---
 
 

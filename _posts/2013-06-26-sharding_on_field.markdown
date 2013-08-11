@@ -3,6 +3,7 @@ layout: post
 title: Of the risks of sharding on a field
 category: posts
 published: true
+description: Is it ok to partition your data along a field that is not unique?
 ---
 
 
@@ -38,3 +39,4 @@ You want to shard by a specific field. Let's define
 You can reasonably shard on your field if you have :
 
     $$ { \sqrt{ S \left({ \mu  } + {\sigma^2 \over {N}} \right)  \over N } } < 5 \% $$ 
+

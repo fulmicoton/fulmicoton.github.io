@@ -59,16 +59,25 @@ section.sidebar section.sections {
       padding: 3px 0;
       color: black;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 22px;
       display: block; }
       .sidebar .sections a:hover {
-        color: #227ce8; }
+        color: #444; }
     .sidebar .sections ul {
       margin: 0;
       padding: 0; }
     .sidebar .sections li {
       list-style: none;
       margin-bottom: 7px; }
+    .sidebar nav.social {
+        margin-top: 50px;
+    }
+    .sidebar nav.social img {
+       margin-top: 5px; 
+    }
+    .sidebar nav.sections {
+      margin-top: 50px;
+    }
 
 .content {
   margin-left: 120px;

@@ -39,45 +39,69 @@ You can find the pid of your process by running
 
 	ps -aux
 
+Let's take a look at a very cold Solr in which I just pushed 1M+ documents.
 
-For instance if you take a look at Chromium, you should see something like this.
+Address           Kbytes     RSS   Dirty Mode   Mapping
+0000000000400000       4       4       0 r-x--  java
+0000000000600000       4       4       4 rw---  java
+000000000234e000     132      12      12 rw---    [ anon ]
+00000006fae00000   56704   27564   27564 rw---    [ anon ]
+00000006fe560000    4800       0       0 -----    [ anon ]
+00000006fea10000   22464       0       0 rw---    [ anon ]
+0000000700000000  146304  144384  144384 rw---    [ anon ]
+0000000708ee0000   23744       0       0 -----    [ anon ]
+000000070a610000 2626176       0       0 rw---    [ anon ]
+00000007aaab0000 1398080 1387668 1387668 rw---    [ anon ]
+00007f6c071fe000     280       4       0 r--s-  _1.fdx
+00007f6c07244000   64492       4       0 r--s-  _1.fdt
+00007f6c0b13f000      36       4       0 r--s-  _1_nrm.cfs
+00007f6c0b148000    1460     540       0 r--s-  _1_Lucene40_0.tim
+00007f6c0b2b5000    3472       4       0 r--s-  _1_Lucene40_0.prx
+00007f6c0b619000    4732     184       0 r--s-  _1_Lucene40_0.frq
+00007f6c0bab8000     284       4       0 r--s-  _2.fdx
+00007f6c0baff000   66200       4       0 r--s-  _2.fdt
+00007f6c0fba5000      36       4       0 r--s-  _2_nrm.cfs
+00007f6c0fbae000    1392     488       0 r--s-  _2_Lucene40_0.tim
+00007f6c0fd0a000    3532       4       0 r--s-  _2_Lucene40_0.prx
+00007f6c1007d000    4892     164       0 r--s-  _2_Lucene40_0.frq
+00007f6c3f21f000     284       4       0 r--s-  _d.fdx
+00007f6c3f266000   69544       4       0 r--s-  _d.fdt
+00007f6c43650000   69224       4       0 r--s-  _e.fdt
+00007f6c479ea000     280       4       0 r--s-  _f.fdx
+00007f6c47a30000   68916       4       0 r--s-  _f.fdt
+00007f6c4bd7d000   68552       4       0 r--s-  _g.fdt
+00007f6c54f25000  705388       4       0 r--s-  _i.fdt
+00007f6c80000000     132       8       8 rw---    [ anon ]
+00007f6c80021000   65404       0       0 -----    [ anon ]
+00007f6d9789d000    1016     120     120 rw---    [ anon ]
+00007f6d9799b000      32      28       0 r-x--  libmanagement.so
+00007f6d979a3000    2044       0       0 -----  libmanagement.so
+00007f6d9c296000    1016      92      92 rw---    [ anon ]
+00007f6d9c394000      12      12       0 r--s-  lucene-highlighter-4.0.0.jar
 
-	Address   Kbytes     RSS   Dirty Mode   Mapping
-	ae125000     328     156       0 r-x--  libGL.so.1.2.0
-	ae177000       8       8       8 r----  libGL.so.1.2.0
-	ae179000      16      16       8 rwx--  libGL.so.1.2.0
-	ae17d000       4       4       4 rwx--    [ anon ]
-	ae17e000     392     324       0 r-x--  libnssckbi.so
-	ae1e0000      44      44      44 r----  libnssckbi.so
-	ae1eb000      24      24      24 rw---  libnssckbi.so
-	ae1f1000     360      88       0 r-x--  libfreebl3.so
-	ae24b000       4       4       4 r----  libfreebl3.so
-	ae24c000       4       4       4 rw---  libfreebl3.so
-	ae24d000      16       8       8 rw---    [ anon ]
-	ae251000     688     476       0 r-x--  libsqlite3.so.0.8.6
-	ae2fd000       4       4       4 r----  libsqlite3.so.0.8.6
-	...
 
-RSS stands for for resident memory. It's the part of your virtual memory that is actually sitting on your memory rather than on your file in your filesystem (for mmapped files) or your swap for anonymous memory.
+Anonymous is all the stuff that is not associated with a file, in this case
+your Java heap. You should see shared native libraries and jar. They indeed are mapped in your process virtual memory. At this point you need to locate which files are the actual data of your database. They may not appear here if you are using a database working mainly in anonymous space, or if your database does not rely on mmap to access the data. 
 
-You see here that shared library are mapped in your process just like the file that have been mmaped. It's one simple way to check which libraries a program is using.
+In my case, we see that the file of our index are mapped into memory. The so-called [posting lists](http://lucene.apache.org/core/4_0_0/core/org/apache/lucene/codecs/lucene40/Lucene40PostingsFormat.html#Termindex) are the file matching the _*_Lucene.(frq|tim|prx|tip).
 
+Let's check how much of these are in RAM.
+
+RSS stands for resident memory. It's the part of your virtual memory that is actually sitting on your actual physical memory rather than on your file in your filesystem (for mmapped files) or your swap for anonymous memory.
 
 
 # Wait a minute... pmap showing its limits.
 
-Ok, let's check whether this figure is working out as expected.
-If we cat `libsqlite3.so` to `/dev/null` we saw that it was loaded into RAM. Right now only 476 / 688 KBytes are in RAM, we should observe this figure to go 100%.
+Ok, let's check whether the RSS column is working out as expected.
 
-	cat /usr/lib/i386-linux-gnu/libsqlite3.so.0.8.6 > /dev/null
-	pmap -x 10988 | grep libsqlite
+If we cat `_2_Lucene40_0.prx` to `/dev/null` we saw that it was loaded into RAM. Right now only 476 / 688 KBytes are in RAM, we should observe this figure to go 100%.
+
+	cat _2_Lucene40_0.prx > /dev/null
+	pmap -x 10988 | grep _2_Lucene40_0.prx
 
 gives me back :
 
-	ae251000     688     476       0 r-x--  libsqlite3.so.0.8.6
-	ae2fd000       4       4       4 r----  libsqlite3.so.0.8.6
-	ae2fe000       4       4       4 rw---  libsqlite3.so.0.8.6
-
+	00007f6c0fd0a000    3532       4       0 r--s-  _2_Lucene40_0.prx
 
 This does not work as expected. Why the hell did this happen?
 
@@ -92,8 +116,7 @@ If at this moment, the file is actually in page cache, the OS just have to creat
 
 If however the page is not in page cache, we need to wait for the system to read the info from the disk and put it in page cache. This is the dreaded `major page fault`.
 
-If our process tried to access a segment not marked as in resident in libsqlite3 right now, this would result in a minor page fault.
-The OS would just have to map the virtual memory to the already filled page cache.
+If our process tried to access a segment not marked as in resident in our Lucene file right now, this would result in a minor page fault... but not a major page fault. The OS would just have to map the virtual memory to the already filled page cache.
 
 You can check for the number of page fault (minor and major) by using ps.
 	ps -o min_flt,maj_flt <PID>
@@ -110,11 +133,12 @@ I don't know any linux command that answer this question directly, but `[mincore
 We can therefore mmap a file, and ask mincore whether accessing each or each byte would trigger a major page fault or not.
 
 I wrote a little utility doing that, and you can find it on [github](https://github.com/poulejapon/isresident).
-Let's use it to take a look at our `libsqlite3` file again.
+Let's use it to take a look at our `_2_Lucene40_0.prx` file again.
 
-	$ ./isresident /usr/lib/i386-linux-gnu/libsqlite3.so.0.8.6
-                   FILE    RSS    SIZE   PERCT	
-	libsqlite3.so.0.8.6    696    696    100 %
+	$ isresident _2_Lucene40_0.prx
+
+             FILE    RSS    SIZE    PERCT
+_2_Lucene40_0.prx    3530   3530    100 %
 
 Hurray ! We indeed observe that the file is indeed completely in RAM.
 

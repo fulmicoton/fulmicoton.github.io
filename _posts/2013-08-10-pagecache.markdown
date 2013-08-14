@@ -41,43 +41,43 @@ You can find the pid of your process by running
 
 Let's take a look at a very cold Solr in which I just pushed 1M+ documents.
 
-Address           Kbytes     RSS   Dirty Mode   Mapping
-0000000000400000       4       4       0 r-x--  java
-0000000000600000       4       4       4 rw---  java
-000000000234e000     132      12      12 rw---    [ anon ]
-00000006fae00000   56704   27564   27564 rw---    [ anon ]
-00000006fe560000    4800       0       0 -----    [ anon ]
-00000006fea10000   22464       0       0 rw---    [ anon ]
-0000000700000000  146304  144384  144384 rw---    [ anon ]
-0000000708ee0000   23744       0       0 -----    [ anon ]
-000000070a610000 2626176       0       0 rw---    [ anon ]
-00000007aaab0000 1398080 1387668 1387668 rw---    [ anon ]
-00007f6c071fe000     280       4       0 r--s-  _1.fdx
-00007f6c07244000   64492       4       0 r--s-  _1.fdt
-00007f6c0b13f000      36       4       0 r--s-  _1_nrm.cfs
-00007f6c0b148000    1460     540       0 r--s-  _1_Lucene40_0.tim
-00007f6c0b2b5000    3472       4       0 r--s-  _1_Lucene40_0.prx
-00007f6c0b619000    4732     184       0 r--s-  _1_Lucene40_0.frq
-00007f6c0bab8000     284       4       0 r--s-  _2.fdx
-00007f6c0baff000   66200       4       0 r--s-  _2.fdt
-00007f6c0fba5000      36       4       0 r--s-  _2_nrm.cfs
-00007f6c0fbae000    1392     488       0 r--s-  _2_Lucene40_0.tim
-00007f6c0fd0a000    3532       4       0 r--s-  _2_Lucene40_0.prx
-00007f6c1007d000    4892     164       0 r--s-  _2_Lucene40_0.frq
-00007f6c3f21f000     284       4       0 r--s-  _d.fdx
-00007f6c3f266000   69544       4       0 r--s-  _d.fdt
-00007f6c43650000   69224       4       0 r--s-  _e.fdt
-00007f6c479ea000     280       4       0 r--s-  _f.fdx
-00007f6c47a30000   68916       4       0 r--s-  _f.fdt
-00007f6c4bd7d000   68552       4       0 r--s-  _g.fdt
-00007f6c54f25000  705388       4       0 r--s-  _i.fdt
-00007f6c80000000     132       8       8 rw---    [ anon ]
-00007f6c80021000   65404       0       0 -----    [ anon ]
-00007f6d9789d000    1016     120     120 rw---    [ anon ]
-00007f6d9799b000      32      28       0 r-x--  libmanagement.so
-00007f6d979a3000    2044       0       0 -----  libmanagement.so
-00007f6d9c296000    1016      92      92 rw---    [ anon ]
-00007f6d9c394000      12      12       0 r--s-  lucene-highlighter-4.0.0.jar
+	Address           Kbytes     RSS   Dirty Mode   Mapping
+	0000000000400000       4       4       0 r-x--  java
+	0000000000600000       4       4       4 rw---  java
+	000000000234e000     132      12      12 rw---    [ anon ]
+	00000006fae00000   56704   27564   27564 rw---    [ anon ]
+	00000006fe560000    4800       0       0 -----    [ anon ]
+	00000006fea10000   22464       0       0 rw---    [ anon ]
+	0000000700000000  146304  144384  144384 rw---    [ anon ]
+	0000000708ee0000   23744       0       0 -----    [ anon ]
+	000000070a610000 2626176       0       0 rw---    [ anon ]
+	00000007aaab0000 1398080 1387668 1387668 rw---    [ anon ]
+	00007f6c071fe000     280       4       0 r--s-  _1.fdx
+	00007f6c07244000   64492       4       0 r--s-  _1.fdt
+	00007f6c0b13f000      36       4       0 r--s-  _1_nrm.cfs
+	00007f6c0b148000    1460     540       0 r--s-  _1_Lucene40_0.tim
+	00007f6c0b2b5000    3472       4       0 r--s-  _1_Lucene40_0.prx
+	00007f6c0b619000    4732     184       0 r--s-  _1_Lucene40_0.frq
+	00007f6c0bab8000     284       4       0 r--s-  _2.fdx
+	00007f6c0baff000   66200       4       0 r--s-  _2.fdt
+	00007f6c0fba5000      36       4       0 r--s-  _2_nrm.cfs
+	00007f6c0fbae000    1392     488       0 r--s-  _2_Lucene40_0.tim
+	00007f6c0fd0a000    3532       4       0 r--s-  _2_Lucene40_0.prx
+	00007f6c1007d000    4892     164       0 r--s-  _2_Lucene40_0.frq
+	00007f6c3f21f000     284       4       0 r--s-  _d.fdx
+	00007f6c3f266000   69544       4       0 r--s-  _d.fdt
+	00007f6c43650000   69224       4       0 r--s-  _e.fdt
+	00007f6c479ea000     280       4       0 r--s-  _f.fdx
+	00007f6c47a30000   68916       4       0 r--s-  _f.fdt
+	00007f6c4bd7d000   68552       4       0 r--s-  _g.fdt
+	00007f6c54f25000  705388       4       0 r--s-  _i.fdt
+	00007f6c80000000     132       8       8 rw---    [ anon ]
+	00007f6c80021000   65404       0       0 -----    [ anon ]
+	00007f6d9789d000    1016     120     120 rw---    [ anon ]
+	00007f6d9799b000      32      28       0 r-x--  libmanagement.so
+	00007f6d979a3000    2044       0       0 -----  libmanagement.so
+	00007f6d9c296000    1016      92      92 rw---    [ anon ]
+	00007f6d9c394000      12      12       0 r--s-  lucene-highlighter-4.0.0.jar
 
 
 Anonymous is all the stuff that is not associated with a file, in this case

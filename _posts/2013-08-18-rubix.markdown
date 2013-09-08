@@ -394,7 +394,7 @@ search_step3_move()
 ## We gat da moves!
 
 
-The code is available [here](/code/rubix/rubix.py),
+[The code is available here](https://github.com/poulejapon/poulejapon.github.com/blob/master/code/rubix/rubix.py),
 and should take a couple of minutes to run on your computer.
 
 The output you should get is 

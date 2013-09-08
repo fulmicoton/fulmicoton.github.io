@@ -1,31 +1,31 @@
 ---
 layout: post
-title: Of solving the rubix from scratch [Python]
+title: Of solving the rubik's from scratch [Python]
 category: posts
 published: true
-description: Solving the rubix cube from scratch in python.
+description: Solving the rubik's cube from scratch in python.
 ---
 
-Internet is full of solution for the rubix cube. However, it is seldom described how these solutions were discovered. In this post I'll try to detail how one can solve the rubix cube from scratch.
+Internet is full of solution for the rubik's cube. However, it is seldom described how these solutions were discovered. In this post I'll try to detail how one can solve the rubik's cube from scratch.
 
-**Disclaimer : ** The solution presented here is by no mean the fastest... It is actually very long to solve the Rubix Cube using this algorithm. It is just the one I came up with, so I guess it is probably in some sense one of the simplest. Though I am very proud of having cracked it up, there isn't much to be proud about : it took me about a year to come up with a solution. At that time, I was always carrying a rubix cube and a notebook to search for the magic moves in the train like a lunatic.
+**Disclaimer : ** The solution presented here is by no mean the fastest... It is actually very long to solve the Rubix Cube using this algorithm. It is just the one I came up with, so I guess it is probably in some sense one of the simplest. Though I am very proud of having cracked it up, there isn't much to be proud about : it took me about a year to come up with a solution. At that time, I was always carrying a rubik's cube and a notebook to search for the magic moves in the train like a lunatic.
 
 At that time, I was kind of making a point of using a computer as little as possible. It was years ago and I forgot the moves I came up with. So in this post I try to find these moves again, but in python.
 
-## What is a rubix cube anyway?
+## What is a rubik's cube anyway?
 
 ### A fixed referential and six possible moves.
 
-I'm pretty sure you know what a rubix cube is.
+I'm pretty sure you know what a rubik's cube is.
 Let's still make a couple of obvious statements.
 
-We'll assuming that the rubix cube's faces center are
+We'll assuming that the rubik's cube's faces center are
 fixed, and that we never rotate the whole thing. Which such
-as setting, there is 6 atomic move you can make with a rubix cube. They each consists of turning one of its faces one way or the other.
+as setting, there is 6 atomic move you can make with a rubik's cube. They each consists of turning one of its faces one way or the other.
 
 Each operation will be named after the face that we are turning, and the sens of rotation will be the so-called positive sens, more commonly called counterclockwise.
 
-We will associate a 3D-referential to the rubix to 
+We will associate a 3D-referential to the rubik's to 
 easily code the rotation operations. The referential will be so-called direct. The normal vector for the right face, the upper face and the front face will respectively be `(1,0,0)`, `(0,1,0)`, and `(0,0,1)`.
 
 Clockwise turn can be obtained by repeating a turn three times.
@@ -36,14 +36,14 @@ Clockwise turn can be obtained by repeating a turn three times.
 
 <img src="/images/rubix/rubix2.png">
 
-The rubix cube is made of smaller blocks. Let alone the block at the very center of the rubix cube, and the center of the faces,
-we have ``3x3x3 - 1 - 6 = 20`` blocks. They are of two types. Corners (8 blocks) and side blocks (12 blocks), showing respectively 3 and 2 faces. While moving the rubix cube, corners will not become side blocks and side blocks will not become corner blocks
+The rubik's cube is made of smaller blocks. Let alone the block at the very center of the rubik's cube, and the center of the faces,
+we have ``3x3x3 - 1 - 6 = 20`` blocks. They are of two types. Corners (8 blocks) and side blocks (12 blocks), showing respectively 3 and 2 faces. While moving the rubik's cube, corners will not become side blocks and side blocks will not become corner blocks
 (obvious statements remember?). Everything happens as if they are living independant lives. That will be the root of the method I'm presenting here.
 
 
 ## What's the plan then?
 
-We will solve the rubix cube the following way. 
+We will solve the rubik's cube the following way. 
 
 **Step 1**
 
@@ -72,13 +72,13 @@ The trick to achieve step 2 will be to find some simple sequences of moves that 
 The trick to achieve step 3 will be to find some simple sequence of moves that leaves all blocks at the same place, but change the orientation of some of the corners.
 
 We also want to find movements that can generates all the possible positions
-of the rubix cube. 
+of the rubik's cube. 
 
 # A bit of math
 
 For step two we ideally would want to generate all permutations on the corner, while letting the side in place. However this is not quite reasonable. Let's proof that it is not possible to apply any permutation on corners, while letting sides unchanged.. 
 
-The proof relies on letting alone the orientations of the cube of the rubix cubes, and consider only the effect of the basic moves on the permutation of the side blocks on one hand, and the permutations of the corners on the other hand. The basic moves are a cycle of length 4 in both case. That's an odd signature. The identity has an even signature. In other words, any sequence of basic operation letting the sides untouched has an even number of operation. Hence, the permutations applied on the corners for any sequence of moves letting sides untouched must have an odd signature. A transposition for instance, is not possible.
+The proof relies on letting alone the orientations of the cube of the rubik's cubes, and consider only the effect of the basic moves on the permutation of the side blocks on one hand, and the permutations of the corners on the other hand. The basic moves are a cycle of length 4 in both case. That's an odd signature. The identity has an even signature. In other words, any sequence of basic operation letting the sides untouched has an even number of operation. Hence, the permutations applied on the corners for any sequence of moves letting sides untouched must have an odd signature. A transposition for instance, is not possible.
 
 **For step 2**, we'll be happy if we find a move that generates all the permutations with a odd signature. **A cycle of length 3 of corners belonging all on one face should do the trick.**
 
@@ -87,7 +87,7 @@ For similar reasons, it is not possible to turn only one corner as well.
 
 Let's bruteforce finding these movements.
 
-# Coding a rubix cube in python
+# Coding a rubik's cube in python
 
 
 We will need to be able to handle very simple geometry 
@@ -136,19 +136,19 @@ def rotate(axis, u):
 
 {% endhighlight %}
 
-Representing the rubix cube by a data structure is actually pretty tricky. To keep code small and cute, I chose to avoid implementing a rubix cube class, but instead represent the rubix cube state as a simple dictionary.
+Representing the rubik's cube by a data structure is actually pretty tricky. To keep code small and cute, I chose to avoid implementing a rubik's cube class, but instead represent the rubik's cube state as a simple dictionary.
 
 In order to solve step 2 or step 3, we will also need
-to be able to consider a rubix cube with only side cubes,
-a rubix cube with only corner cubes, a rubix cube for which corners are not oriented but are different one to each other (as if they had a number associated) and finally a full rubix cube.
+to be able to consider a rubik's cube with only side cubes,
+a rubik's cube with only corner cubes, a rubik's cube for which corners are not oriented but are different one to each other (as if they had a number associated) and finally a full rubik's cube.
 
-In the following piece of code, the rubix cube will just be a dictionary having for key coordinates in the 3x3x3 3D grid,
-and for value an object describe the part of the rubix cube associated (simply called cube in the code).
+In the following piece of code, the rubik's cube will just be a dictionary having for key coordinates in the 3x3x3 3D grid,
+and for value an object describe the part of the rubik's cube associated (simply called cube in the code).
 
 We use alternatively different implementation of a cube.
 One storing orientation information while the other does not.
 
-Note that it would have been possible to use much a much more abstract and efficient way to describe the rubix cube, but I prefer to keep things as explicit as possible here.
+Note that it would have been possible to use much a much more abstract and efficient way to describe the rubik's cube, but I prefer to keep things as explicit as possible here.
 
 {% highlight python %}
 
@@ -177,7 +177,7 @@ class OrientedCube(object):
 	def __ne__(self, other):
 		return self.orientation != other.orientation
 
-# The oriented rubix cube at its initial
+# The oriented rubik's cube at its initial
 # state. All blocks are oriented the same way.
 zero_oriented = {
 	coords: OrientedCube()
@@ -185,7 +185,7 @@ zero_oriented = {
 	if degree(coords) >= 2
 }
 
-# The oriented rubix cube at its initial
+# The oriented rubik's cube at its initial
 # state. Cube are not oriented. Only their position counts.
 zero_non_oriented = {
 	coords: NonOrientedCube()
@@ -193,7 +193,7 @@ zero_non_oriented = {
 	if degree(coords) >= 2
 }
 
-# Applying a basic operation on the rubix
+# Applying a basic operation on the rubik's
 # cube.
 #
 # Turning the face facing the direction
@@ -214,7 +214,7 @@ def turn(axis, rubix_cube):
 			parts[coord] = cube
 	return parts
 
-# Returns a partial rubix cube :
+# Returns a partial rubik's cube :
 # only the blocks with d faces visibles.
 def project(rubix, d):
 	return {
@@ -223,13 +223,13 @@ def project(rubix, d):
 		if degree(coords) == d
 	}
 
-# Returns a partial rubix cube :
+# Returns a partial rubik's cube :
 # only the side blocks
 def sides(rubix):
 	return project(rubix, 2)
 
 
-# Returns a partial rubix cube :
+# Returns a partial rubik's cube :
 # only the corner blocks
 def corners(rubix):
 	return project(rubix, 3)
@@ -266,7 +266,7 @@ OPERATIONS = [
 
 def sequence(seq, rubix):
 	for axis in seq:
-		rubix = turn(axis, rubix)
+		rubik's = turn(axis, rubix)
 	return rubix
 
 def differences(rubix_1, rubix_2):
@@ -302,16 +302,16 @@ def all_on_one_face(positions):
 	return False
 
 # Search within the orbit of an operation
-# for an operation that leaves fixed_rubix fix,
-# and has a diff with diff rubix of at most 3
+# for an operation that leaves fixed_rubik's fix,
+# and has a diff with diff rubik's of at most 3
 # elements, all from the same face. 
 def search_orbit(seq, fixed_rubix, diff_rubix, max_depth):
-	iter_fixed_rubix = fixed_rubix
-	iter_diff_rubix = diff_rubix
+	iter_fixed_rubik's = fixed_rubix
+	iter_diff_rubik's = diff_rubix
 	for i in range(1,max_depth+1): # we don't want to find moves 
 						 # that we repeat more than 6 times.
-		iter_fixed_rubix = sequence(seq, iter_fixed_rubix)
-		iter_diff_rubix = sequence(seq, iter_diff_rubix)
+		iter_fixed_rubik's = sequence(seq, iter_fixed_rubix)
+		iter_diff_rubik's = sequence(seq, iter_diff_rubix)
 		if not differences(fixed_rubix, iter_fixed_rubix):
 			diff = differences(diff_rubix, iter_diff_rubix)
 			if not diff:
@@ -423,11 +423,11 @@ The output you should get is
 	[(-1, 1, 1), (-1, -1, 1), (1, 1, 1)]
 
 
-Let's what these operation look like when applied on a resolved rubix cube.
+Let's what these operation look like when applied on a resolved rubik's cube.
 
 <img src="/images/rubix/initial.jpg">
 
-The operation returned for step 2 is permuting 3 cubes on the back of the rubix cube.
+The operation returned for step 2 is permuting 3 cubes on the back of the rubik's cube.
 
 <img src="/images/rubix/step2.jpg">
 

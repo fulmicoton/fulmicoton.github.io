@@ -1,0 +1,436 @@
+---
+layout: post
+title: Of solving the rubix from scratch [Python]
+category: posts
+published: true
+description: Solving the rubix cube from scratch in python.
+---
+
+Internet is full of solution for the rubix cube. However, it is seldom described how these solutions were discovered. In this post I'll try to detail how one can solve the rubix cube from scratch.
+
+**Disclaimer : ** The solution presented here is by no mean the fastest... It is actually very long to solve the Rubix Cube using this algorithm. It is just the one I came up with, so I guess it is probably in some sense one of the simplest. Though I am very proud of having cracked it up, there isn't much to be proud about : it took me about a year to come up with a solution. At that time, I was always carrying a rubix cube and a notebook to search for the magic moves in the train like a lunatic.
+
+At that time, I was kind of making a point of using a computer as little as possible. It was years ago and I forgot the moves I came up with. So in this post I try to find these moves again, but in python.
+
+## What is a rubix cube anyway?
+
+### A fixed referential and six possible moves.
+
+I'm pretty sure you know what a rubix cube is.
+Let's still make a couple of obvious statements.
+
+We'll assuming that the rubix cube's faces center are
+fixed, and that we never rotate the whole thing. Which such
+as setting, there is 6 atomic move you can make with a rubix cube. They each consists of turning one of its faces one way or the other.
+
+Each operation will be named after the face that we are turning, and the sens of rotation will be the so-called positive sens, more commonly called counterclockwise.
+
+We will associate a 3D-referential to the rubix to 
+easily code the rotation operations. The referential will be so-called direct. The normal vector for the right face, the upper face and the front face will respectively be `(1,0,0)`, `(0,1,0)`, and `(0,0,1)`.
+
+Clockwise turn can be obtained by repeating a turn three times.
+
+
+
+### Two different sets of blocks 
+
+<img src="/images/rubix/rubix2.png">
+
+The rubix cube is made of smaller blocks. Let alone the block at the very center of the rubix cube, and the center of the faces,
+we have ``3x3x3 - 1 - 6 = 20`` blocks. They are of two types. Corners (8 blocks) and side blocks (12 blocks), showing respectively 3 and 2 faces. While moving the rubix cube, corners will not become side blocks and side blocks will not become corner blocks
+(obvious statements remember?). Everything happens as if they are living independant lives. That will be the root of the method I'm presenting here.
+
+
+## What's the plan then?
+
+We will solve the rubix cube the following way. 
+
+**Step 1**
+
+Place the side blocks at the correct position with their correct orientation.
+
+<img src="/images/rubix/rubix1.jpg">
+
+**Step 2**
+
+Place the corners blocks at their correct location regardless of their orientation.
+
+<img src="/images/rubix/rubix2.jpg">
+
+** Step 3 **
+Fix the orientation of the corners.
+
+<img src="/images/rubix/rubix3.jpg">
+
+Reaching step 1 is a very nice and cute puzzle that does not 
+require much crunching. I will not detail its solution here.
+
+Step 2 and step 3 however are very difficult. 
+
+The trick to achieve step 2 will be to find some simple sequences of moves that makes it possible to move corner blocks without moving the side blocks.
+
+The trick to achieve step 3 will be to find some simple sequence of moves that leaves all blocks at the same place, but change the orientation of some of the corners.
+
+We also want to find movements that can generates all the possible positions
+of the rubix cube. 
+
+# A bit of math
+
+For step two we ideally would want to generate all permutations on the corner, while letting the side in place. However this is not quite reasonable. Let's proof that it is not possible to apply any permutation on corners, while letting sides unchanged.. 
+
+The proof relies on letting alone the orientations of the cube of the rubix cubes, and consider only the effect of the basic moves on the permutation of the side blocks on one hand, and the permutations of the corners on the other hand. The basic moves are a cycle of length 4 in both case. That's an odd signature. The identity has an even signature. In other words, any sequence of basic operation letting the sides untouched has an even number of operation. Hence, the permutations applied on the corners for any sequence of moves letting sides untouched must have an odd signature. A transposition for instance, is not possible.
+
+**For step 2**, we'll be happy if we find a move that generates all the permutations with a odd signature. **A cycle of length 3 of corners belonging all on one face should do the trick.**
+
+For similar reasons, it is not possible to turn only one corner as well.
+**For step 3, the move we will be looking for is a move that changes the orientation of at most 3 corners belonging to the same face**.
+
+Let's bruteforce finding these movements.
+
+# Coding a rubix cube in python
+
+
+We will need to be able to handle very simple geometry 
+operations. Considering numpy as a bit overkill, let's just recode a couple of 3D vector operation.
+
+{% highlight python %}
+
+# The six directions
+DIRECTIONS = (
+	( 1,  0,  0), #right
+	( 0,  1,  0), #up
+	( 0,  0,  1), #front 
+	(-1,  0,  0), #left
+	( 0, -1,  0), #down
+	( 0,  0, -1)  #back
+)
+
+DIRECTIONS_NAME = dict(zip(DIRECTIONS, "rufldb"))
+
+def cross(axis,direction):
+	# cross product
+	return (axis[1]*direction[2] - axis[2]*direction[1],
+         	axis[2]*direction[0] - axis[0]*direction[2],
+         	axis[0]*direction[1] - axis[1]*direction[0])
+
+def dot(va,vb):
+	# dot product
+	return sum(a*b for (a,b) in zip(va,vb))
+
+def scale(alpha, v):
+	# scaling a vector
+	(x,y,z) = v
+	return (alpha*x, alpha*y, alpha*z)
+
+def add(u,v):
+	# adding two vectors
+	return (u[0] + v[0], u[1] + v[1], u[2] + v[2])
+
+def rotate(axis, u):
+	# rotation by a quarter in the
+	# positive sense around a normal vector.
+	axis_projection = scale(dot(axis,u), axis)
+	ortho_projection = cross(axis, u)
+	return add(axis_projection, ortho_projection)
+
+
+{% endhighlight %}
+
+Representing the rubix cube by a data structure is actually pretty tricky. To keep code small and cute, I chose to avoid implementing a rubix cube class, but instead represent the rubix cube state as a simple dictionary.
+
+In order to solve step 2 or step 3, we will also need
+to be able to consider a rubix cube with only side cubes,
+a rubix cube with only corner cubes, a rubix cube for which corners are not oriented but are different one to each other (as if they had a number associated) and finally a full rubix cube.
+
+In the following piece of code, the rubix cube will just be a dictionary having for key coordinates in the 3x3x3 3D grid,
+and for value an object describe the part of the rubix cube associated (simply called cube in the code).
+
+We use alternatively different implementation of a cube.
+One storing orientation information while the other does not.
+
+Note that it would have been possible to use much a much more abstract and efficient way to describe the rubix cube, but I prefer to keep things as explicit as possible here.
+
+{% highlight python %}
+
+
+def degree(coords):
+	# Given the position of a block
+	# return the number of faces that
+	# that are visible.
+	return sum(map(abs,coords))
+
+class NonOrientedCube(object):
+	def rotate(self, axis):
+		return self
+
+class OrientedCube(object):
+	__slots__=("orientation")	
+	def __init__(self, orientation=DIRECTIONS[:2]):
+		self.orientation = orientation
+	def rotate(self, axis):
+		return OrientedCube(
+			tuple(rotate(axis,u)
+			for u in self.orientation)
+		)
+	def __eq__(self, other):
+		return self.orientation == other.orientation
+	def __ne__(self, other):
+		return self.orientation != other.orientation
+
+# The oriented rubix cube at its initial
+# state. All blocks are oriented the same way.
+zero_oriented = {
+	coords: OrientedCube()
+	for coords in product(*([(-1,0,1)]*3))
+	if degree(coords) >= 2
+}
+
+# The oriented rubix cube at its initial
+# state. Cube are not oriented. Only their position counts.
+zero_non_oriented = {
+	coords: NonOrientedCube()
+	for coords in product(*([(-1,0,1)]*3))
+	if degree(coords) >= 2
+}
+
+# Applying a basic operation on the rubix
+# cube.
+#
+# Turning the face facing the direction
+# axis by a quarter in the positive sense.
+# (counter clockwise)
+def turn(axis, rubix_cube):
+	parts = {}
+	for (coord, cube) in rubix_cube.items():
+		if any( x==y!=0 for x,y in zip(axis, coord)):
+			# this cube is on the face rotating,
+			# let's rotate it and register it to
+			# its destination.
+			new_cube = cube.rotate(axis)
+			new_coord = rotate(axis, coord)
+			parts[new_coord] = new_cube
+		else:
+			# this cube is not on the face that is rotating.
+			parts[coord] = cube
+	return parts
+
+# Returns a partial rubix cube :
+# only the blocks with d faces visibles.
+def project(rubix, d):
+	return {
+		coords:v 
+		for (coords,v) in rubix.items()
+		if degree(coords) == d
+	}
+
+# Returns a partial rubix cube :
+# only the side blocks
+def sides(rubix):
+	return project(rubix, 2)
+
+
+# Returns a partial rubix cube :
+# only the corner blocks
+def corners(rubix):
+	return project(rubix, 3)
+
+
+{% endhighlight %}
+
+
+## Finding your own magic move
+
+<img src="/images/rubix/magic_move.jpg">
+
+
+All the difficulty left here is to find a **magic move** which leaves sides untouched and yet have some effect on the corners. Let's call such a combination a magic move!
+
+When trying to find a magic move, especially without a computer, a good trick is to test many moves and consider for each of them what happens if you repeat this moves over and over. The images obtained by repeating the operation is also called an orbit.
+
+When doing that by hand, it can be tested very rapidly by representing the underlying permutations as a union of cycles. 
+
+But with a computer we can do all this very simply.
+
+
+
+{% highlight python %}
+
+# Possible moves
+# we add clockwise quater turn (counterclockwise * 3)
+# and half turn (counterclockwise * 2)
+OPERATIONS = [
+	[ direction ]*i
+	for direction in DIRECTIONS
+	for i in range(1,4)
+]
+
+def sequence(seq, rubix):
+	for axis in seq:
+		rubix = turn(axis, rubix)
+	return rubix
+
+def differences(rubix_1, rubix_2):
+	return [
+		k
+		for k in rubix_1.keys()
+		if rubix_1[k] != rubix_2[k]
+	]
+
+# yields all possible tuples of size n 
+# of a given set of elements
+def browse_with_length(els, n):
+	if n==0:
+		yield []
+	else:
+		for head in els:
+			for tail in browse_with_length(els, n-1):
+				yield head + tail
+
+# yields all possible tuples of a
+# given set of elements
+def browse_tuples(els):
+	for n in count(1):
+		for seq in browse_with_length(els, n):
+			yield seq
+
+# Returns true if all the position given 
+# belong to the same face
+def all_on_one_face(positions):
+	for els in zip(*positions):
+		if len(set(els)) == 1:
+			return True
+	return False
+
+# Search within the orbit of an operation
+# for an operation that leaves fixed_rubix fix,
+# and has a diff with diff rubix of at most 3
+# elements, all from the same face. 
+def search_orbit(seq, fixed_rubix, diff_rubix, max_depth):
+	iter_fixed_rubix = fixed_rubix
+	iter_diff_rubix = diff_rubix
+	for i in range(1,max_depth+1): # we don't want to find moves 
+						 # that we repeat more than 6 times.
+		iter_fixed_rubix = sequence(seq, iter_fixed_rubix)
+		iter_diff_rubix = sequence(seq, iter_diff_rubix)
+		if not differences(fixed_rubix, iter_fixed_rubix):
+			diff = differences(diff_rubix, iter_diff_rubix)
+			if not diff:
+				break # we ran through a full orbit.
+			elif all_on_one_face(diff) and len(diff) <= 3:
+				return (seq, i, diff)
+
+DIRECTIONS_NAME = dict(zip(DIRECTIONS,
+	["right",
+	 "up",
+	 "front",
+	 "left",
+	 "down",
+	 "back" ]))
+
+def operation_to_string(seq):
+	return "-".join([ DIRECTIONS_NAME[axis]
+		for axis in seq ])
+
+print """
+
+Step 2
+
+Searching for a move letting sides
+untouched, letting all but three corners belonging to the
+same face at the same place.
+
+"""
+
+def search_step2_move():
+	for seq in browse_tuples(OPERATIONS):
+		seq = [DIRECTIONS[0]] + seq
+		if len(seq) % 2 == 0:
+			magic_move = search_orbit(seq,
+				sides(zero_oriented),
+				corners(zero_non_oriented), 4)
+			if magic_move:
+				(operation, repeat, dist)=magic_move
+				print operation_to_string(operation),
+				print "x" +str(repeat),
+				print dist
+				break
+
+search_step2_move()
+
+print "\n---------------\n"
+def search_step3_move():
+	for seq in browse_tuples(OPERATIONS):
+		seq = [DIRECTIONS[0]] + seq
+		if len(seq) %2 == 0:
+			corners_non_oriented = dict(
+				zero_oriented,
+				**corners(zero_non_oriented))
+			magic_move = search_orbit(seq,
+				corners_non_oriented,
+				corners(zero_oriented),
+				6)
+			if magic_move:
+				(operation, repeat, dist)=magic_move
+				print operation_to_string(operation),
+				print "x" +str(repeat),
+				print dist
+				break
+
+
+print """
+Step 3
+
+Searching a sequence that only change the orientation
+of three corners.
+"""
+
+search_step3_move()
+
+
+{% endhighlight %}
+
+
+
+## We gat da moves!
+
+
+The code is available [here](/code/rubix/rubix.py),
+and should take a couple of minutes to run on your computer.
+
+The output you should get is 
+
+
+	Step 2
+
+	Searching for a move letting sides
+	untouched, letting all but three corners belonging to the
+	same face at the same place.
+
+
+	right-left-left-up-down-down x4
+	[(-1, 1, 1), (-1, -1, 1), (1, -1, 1)]
+
+
+	---------------
+
+
+	Step 3
+
+	Searching a sequence that only change the orientation
+	of three corners.
+
+	right-up-right-right-right-front-front-up-up-up x6
+	[(-1, 1, 1), (-1, -1, 1), (1, 1, 1)]
+
+
+Let's what these operation look like when applied on a resolved rubix cube.
+
+<img src="/images/rubix/initial.jpg">
+
+The operation returned for step 2 is permuting 3 cubes on the back of the rubix cube.
+
+<img src="/images/rubix/step2.jpg">
+
+The operation returned for step 3 is changing the orientation on 3 cubes on the front face.
+
+<img src="/images/rubix/step3.jpg">

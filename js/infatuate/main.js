@@ -4,6 +4,9 @@
     var model;
 
     model = null;
+    $.get("/js/infatuate/baskerville.txt", {}, function(data) {
+      return $('#sample').val(data);
+    });
     return $("#run").click(function() {
       var text;
 

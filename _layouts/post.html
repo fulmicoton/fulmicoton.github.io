@@ -3,12 +3,14 @@ layout: layout
 ---
 
 <section class="content">
-  <h1>
+  <h1 class='title'>
     {{ page.title }}
   </h1>
 
   <section class="byline">
+    <time itemprop="startDate" datetime="{{ page.date | date: "%Y-%m-%d" }}">
     {{ page.date | date: "%B %e, %Y" }}
+    </time>
   </section>
 
   {{ content }}

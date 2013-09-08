@@ -2,6 +2,7 @@
 layout: post
 title:  Of Bayesian average and star ratings
 category: posts
+description: The math behind the formulas used for computing star-rating.
 ---
 
 

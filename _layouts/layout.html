@@ -2,18 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
 <head>
   <meta charset="utf-8">
-  <title>
-    
-    {{ site.name }}
-  </title>
+  <title>{{ page.title }}</title>
   <meta name="viewport" content="width=600">
   <meta name="author" content="Paul Masurel" />
   {% if page.description %}
-  <meta name="description" content="{{ page.description }}" />
+  <meta name="description" content="Fulmicoton - {{ page.description }}" />
   {% endif %}
 
   <link rel="alternate" type="application/rss+xml" href="/atom.xml" />
-  
   <link media="(min-width:800px)" rel="stylesheet" href="/css/base.css" type="text/css"/>
   <link media="(max-width:800px)" href="/css/phone.css" type="text/css" rel="stylesheet"/>
 
@@ -39,20 +35,29 @@
     </section>
 
     <section class="meta">
-      <a href="https://github.com/{{ site.github }}" target="_blank"><img src="/images/github.png" /></a>
+
+
+
+      <!--<a href="https://github.com/{{ site.github }}" target="_blank"><img src="/images/github.png" /></a>
       <a href="https://twitter.com/{{ site.twitter }}" target="_blank"><img src="/images/twitter.png"></a>
       <a href="/atom.xml"><img src="/images/rss.png" /></a>
-    </section>
-
-    <section class="sections">
-      <h1>blog</h1>
+      <a href="https://plus.google.com/106830395024961735687" rel="publisher">Find us on Google+</a>-->
+     </section>
+  
+        <nav class="sections">
       <ul>
         <li><a href="https://www.vizify.com/paul-masurel/">about</a></li>
         <li><a href="/">posts</a></li>
       </ul>
-    </section>
-  
+    </nav>
 
+
+      <nav class="social">
+        <a href="/atom.xml"><img src="/images/rss.png" /></a>
+      <a href="https://twitter.com/{{ site.twitter }}" target="_blank"><img src="/images/twitter.png"></a>
+            <!--<a href="http://fr.linkedin.com/in/paulmasurel"><img src="/images/linkedin.png" /></a>-->
+      <a href="https://plus.google.com/106830395024961735687" target="_blank" rel="publisher"><img src="/images/google+.png" /></a>
+      </nav>
 
     <!--
     <section class="sections projects">

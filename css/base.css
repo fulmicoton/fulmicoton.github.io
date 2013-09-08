@@ -59,29 +59,43 @@ section.sidebar section.sections {
       padding: 3px 0;
       color: black;
       font-weight: bold;
-      font-size: 12px;
+      font-size: 22px;
       display: block; }
       .sidebar .sections a:hover {
-        color: #227ce8; }
+        color: #444; }
     .sidebar .sections ul {
       margin: 0;
       padding: 0; }
     .sidebar .sections li {
       list-style: none;
       margin-bottom: 7px; }
+    .sidebar nav.social {
+        margin-top: 50px;
+    }
+    .sidebar nav.social img {
+       margin-top: 5px; 
+    }
+    .sidebar nav.sections {
+      margin-top: 50px;
+    }
 
 .content {
   margin-left: 120px;
   width: 650px;
   margin-bottom: 50px; }
+  .content h1.title {
+    font-size: 50px;
+    margin-top: 20px;
+    margin-bottom: 15px; 
+  }
   .content h1 {
     color: #333;
     font-family: "Yanone Kaffeesatz", Helvetica, sans-serif;
-    font-weight: 400; }
+    font-weight: 400;}
   .content h1 a {
     color: #111;
     text-decoration: none; }
-  .content h2 {
+  .content h2{
     color: #333;
     font-family: "Yanone Kaffeesatz", Helvetica, sans-serif;
     font-weight: 400;
@@ -107,8 +121,8 @@ section.sidebar section.sections {
   .content h1 {
     font-size: 36px;
     margin: 18px 0 5px 0; }
-  .content h2 {
-    margin-top: 80px;
+  .content h2, .content h1  {
+    margin-top: 50px;
     font-size: 30px;
     margin-bottom: 15px; }
   .content h3 {

@@ -1,5 +1,7 @@
 $ ->
     model = null
+    $.get "/js/infatuate/baskerville.txt", {}, (data)->
+        $('#sample').val data
     $("#run").click ->
         text = $('#sample').val()
         $('#sample').change ->

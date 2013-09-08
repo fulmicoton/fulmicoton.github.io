@@ -3,6 +3,7 @@ layout: post
 title: Of collapsing in Solr
 category: posts
 published: true
+description: The method used by Solr to perform grouping/collapsing queries.
 ---
 
 

@@ -306,12 +306,12 @@ def all_on_one_face(positions):
 # and has a diff with diff rubik's of at most 3
 # elements, all from the same face. 
 def search_orbit(seq, fixed_rubix, diff_rubix, max_depth):
-	iter_fixed_rubik's = fixed_rubix
-	iter_diff_rubik's = diff_rubix
+	iter_fixed_rubix = fixed_rubix
+	iter_diff_rubix = diff_rubix
 	for i in range(1,max_depth+1): # we don't want to find moves 
 						 # that we repeat more than 6 times.
-		iter_fixed_rubik's = sequence(seq, iter_fixed_rubix)
-		iter_diff_rubik's = sequence(seq, iter_diff_rubix)
+		iter_fixed_rubix = sequence(seq, iter_fixed_rubix)
+		iter_diff_rubix = sequence(seq, iter_diff_rubix)
 		if not differences(fixed_rubix, iter_fixed_rubix):
 			diff = differences(diff_rubix, iter_diff_rubix)
 			if not diff:

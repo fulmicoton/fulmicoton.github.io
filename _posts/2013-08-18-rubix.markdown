@@ -78,9 +78,9 @@ of the rubik's cube.
 
 For step two we ideally would want to generate all permutations on the corner, while letting the side in place. However this is not quite reasonable. Let's proof that it is not possible to apply any permutation on corners, while letting sides unchanged.. 
 
-The proof relies on letting alone the orientations of the cube of the rubik's cubes, and consider only the effect of the basic moves on the permutation of the side blocks on one hand, and the permutations of the corners on the other hand. The basic moves are a cycle of length 4 in both case. That's an odd signature. The identity has an even signature. In other words, any sequence of basic operation letting the sides untouched has an even number of operation. Hence, the permutations applied on the corners for any sequence of moves letting sides untouched must have an even signature. A transposition for instance, is not possible.
+The proof relies on letting alone the orientations of the cube of the rubik's cubes, and consider only the effect of the basic moves on the permutation of the side blocks on one hand, and the permutations of the corners on the other hand. The basic moves are a cycle of length 4 in both case. That's an odd signature. The identity has an even signature. In other words, any sequence of basic operation letting the sides untouched has an even number of operation. Hence, the permutations applied on the corners for any sequence of moves letting sides untouched must have an ven signature. A transposition for instance, is not possible.
 
-**For step 2**, we'll be happy if we find a move that generates all the permutations with a odd signature. **A cycle of length 3 of corners belonging all on one face should do the trick.**
+**For step 2**, we'll be happy if we find a move that generates all the permutations with a even signature. **A cycle of length 3 of corners belonging all on one face should do the trick.**
 
 For similar reasons, it is not possible to turn only one corner as well.
 **For step 3, the move we will be looking for is a move that changes the orientation of at most 3 corners belonging to the same face**.

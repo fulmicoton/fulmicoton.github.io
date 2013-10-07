@@ -92,7 +92,7 @@ def memoize(f):
     # dictionaries are not hashable,
     # we transform kargs in a tuple
     # of (k,v) items.
-    k = (args, tuple(kargs.items()) )
+    k = (args, tuple(sorted(kargs.items())) )
     if k not in cache:
       cache[k] = f(*args, **kargs)
     return cache[k]

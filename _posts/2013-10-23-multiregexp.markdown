@@ -14,9 +14,7 @@ I  changed job ! I recently joined [Dataiku](http://www.dataiku.com/). We're cre
 
 Back to today's subject. Last week I was discussing with a colleague at work about the painful lack in Java for an equivalent of [re2](https://code.google.com/p/re2/). 
 
-re2 is regular expression matching library open sourced by Google and it is blazing fast. How fast? It is so fast, that it makes V8 javascript engine appear 6 times faster than java on the `regex-dna` benchmark of [this website](http://attractivechaos.github.io/plb/).
-
-And it also makes it possible to compile several regular expression together, which we might have a use for at Dataiku.
+re2 is regular expression matching library open sourced by Google and it is blazing fast. It also makes it possible to compile several regular expression together, which we might have a use for at Dataiku.
 Basically matching N patterns against a string of length L has a complexity linear in L with `re2`. Yes you read that well. It is theoretically independant from the number of the patterns.
 
 (A friend pointed me out a library)[https://twitter.com/sylvainutard/status/390378369168461824] to manipulate finite state deterministic automaton in Java : [dk.brics.automaton](http://www.brics.dk/automaton/). So guess what I did last week-end? I implemented the part that compiles several patterns together. You can get it and use it (MIT License) on [github](https://github.com/poulejapon/multiregexp).
@@ -110,6 +108,10 @@ Once relabelled, automaton for .*ab looks like this
 And the deterministic automaton matching both `a.*b` and `.*ab` looks as follows. 
 
 ![Deterministic automaton matching both a.*b and .*ab](/images/regexp/merge_automaton.png)
+
+-------
+
+*Thanks to [evmar](http://www.reddit.com/r/programming/comments/1pbuab/of_running_multiple_regexp_at_once/) for correcting me : V8 does not use re2.*
 
 
 

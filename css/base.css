@@ -248,7 +248,7 @@ section.discuss {
 
 @media(max-width:965px) {
   section.amazon, section.google-ads {
-    display: none !important;
+    width: 165px;
   }
 }
 

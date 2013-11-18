@@ -71,7 +71,7 @@ assert(obj2.transientProp.age === 53,
     "transientProp should not be shared between objects")
 
 assert(JSON.parse(JSON.stringify(obj)).someProp !== undefined,
-    "transientProp should still be serialized")
+    "someProp should still be serialized")
 
 assert(JSON.parse(JSON.stringify(obj)).transientProp === undefined, 
     "transientProp should not be serialized")
@@ -97,7 +97,7 @@ When looking for an object's property via ``obj.myattr`` or ``obj["myattr"]``, a
 
 This mechanism is mostly used for inheritance purposes. In that case, instances' prototype are poiting to their class prototype, while classes on the other hand are pointing to their mother class.
 
-But there are other uses to the prototype chain. For instance it brilliantly backs up the concept of child-scope in [angularJS](angularjs.org/).
+But there are other uses to the prototype chain. For instance it brilliantly backs up the concept of child-scope in [angularJS](http://angularjs.org/).
 
 In our problem, we use it to dynamically add an extra prototype layer to host the transient properties of our object. This layer will be unique for each instance of the object, which is kind of unusual.
 

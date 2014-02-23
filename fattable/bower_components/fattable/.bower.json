@@ -1,0 +1,37 @@
+{
+  "name": "fattable",
+  "main": "fattable.js",
+  "homepage": "https://github.com/poulejapon/fattable",
+  "authors": [
+    "Paul Masurel <paul.masurel@gmail.com>"
+  ],
+  "description": "Infinite table with column headers. No dependancy. VanillaJS all the way.",
+  "keywords": [
+    "infinite",
+    "table"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "*.coffee",
+    "*.less",
+    "Makefile",
+    "closure",
+    ".readymade"
+  ],
+  "_release": "master",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "5cceb19ca45858506b0e27f8271adf54cd421355"
+  },
+  "_source": "git@github.com:poulejapon/fattable.git",
+  "_target": "*",
+  "_originalSource": "git@github.com:poulejapon/fattable.git",
+  "_direct": true
+}

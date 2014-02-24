@@ -28,7 +28,7 @@
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "031561045285416a047c37ac5a74f93b74226764"
+    "commit": "f5fd5a569d5ca81265e1c787e7854526a29cc633"
   },
   "_source": "git@github.com:poulejapon/fattable.git",
   "_target": "*",

@@ -24,11 +24,11 @@
     "closure",
     ".readymade"
   ],
-  "_release": "c6d43eea57",
+  "_release": "master",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "c6d43eea57ef51dcbbe3eb754c4c6f8b94432ceb"
+    "commit": "36d5a8c0852dbe6cca7a0226292afb38f66aaa04"
   },
   "_source": "git@github.com:fulmicoton/fattable.git",
   "_target": "*",

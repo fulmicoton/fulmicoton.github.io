@@ -28,7 +28,7 @@
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "36d5a8c0852dbe6cca7a0226292afb38f66aaa04"
+    "commit": "2742581fec840952821900301ec9ae4a15410239"
   },
   "_source": "git@github.com:fulmicoton/fattable.git",
   "_target": "*",

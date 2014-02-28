@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>reveal.js - The HTML Presentation Framework</title>
+
+		<meta name="author" content="Paul Masurel">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/solarized.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/solarized.css">
+
+		<!-- If the query includes 'print-pdf', use the PDF print sheet -->
+		<script>
+			document.write( '<link rel="stylesheet" href="css/print/' + ( window.location.search.match( /print-pdf/gi ) ? 'pdf' : 'paper' ) + '.css" type="text/css" media="print">' );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+
+				<section>
+					<img src="logo.png" style="border: none; width: 40%;">
+					<h1>Data Science Studio</h1>
+					<h2>Challenge participant talk</h2>
+					<h3>WSCD 2014</h3>
+				</section>
+
+				<section>
+					<h2>Dataiku?</h2>
+					<img src="kidlab.jpg" style="border: none; width: 40%;">
+					<h3>DSS: A Data Science Studio</h3>
+					<p>A good opportunity to test our product for team work</p>
+					<p>No result expectations.</p>
+					<p>Also nothing to hide : feel free to ask anything</p>
+					<aside class="notes">
+						Search DNA?
+					</aside>
+				</section>
+
+				<section>
+					<h2> &ldquo; Oh great a 25mn commercial !!! &rdquo;</h2>
+					<img src="ads.jpg">
+					<h3>Not gonna happen. Bug me after the presentation if you want a demo of the product.</h3>
+				</section>
+
+				<section>
+					<h2>A team of 4</h2>
+					<br/>
+					<ul>
+						<li>Kenji Lefevre - Pure Math</li>
+						<li>Christophe Bourguignat - Eng. / Signal Processing</li>
+						<li>Mathieu Scordia - Data Scientist</li>
+						<li>Me (Paul Masurel) - Softw. / Signal Processing</li>
+					</ul>
+					<br/><br/>
+					<p>No researcher.<br/>
+					No experience in reranking.<br/>
+					Not much experience in ML for most of us.<br/>
+					Not exactly our job.
+					No expectations.</p>
+					<aside class="notes">At best we followed Andrew Ng's Coursera ML course.</aside>
+				</section>
+
+				<section>
+					<img src="hobbits.jpg" style="border: none; width: 40%;">
+					<h2> At this point,</h2>
+					<h2><b>We are but hobbits</b></h2>
+					<aside class="notes">
+					</aside>
+				</section>
+								
+				<section>
+					<img src="Francis_Bacon.jpg" style="float:right">
+					<h2>Also, it is only a contest for us</h2>
+					<h2><b>Disclaimer</b></h2>
+					<h2>We did not respect scientific method</h2>
+					<aside class="notes">
+						Disclaimer
+					</aside>
+				</section>
+						
+
+				<section>
+					<h1>Making it supervized learning</h1>
+				</section>
+
+				<section>
+					<h2>Making it supervized learning</h2>
+					<p>We split 27 days of the train dataset 24 + 3 days, 
+						and select test queries just like Yandex.</p>
+				</section>
+
+
+
+				<section>
+					<h2>Where is my X, where is my y?</h2>
+					<p>For all train sessions, for each of the 10 urls to re-rank, we compute a set of feature <b>X</b>.</p>
+					<p>The outcome of the url display y will be whether we reached a satisfaction of 0, 1, or 2.</p>
+					<h2>And we want to rerank in a way that optimizes NDCG</h2>
+				</section>
+
+				<section>
+					<p><img src="flow-annotated.png"/></p>
+				</section>
+
+				<section>
+					<h2>Point-wise</b> approach</h2>
+					<ul>
+						<li>simple</li>
+						<li>in our toolbox</li>
+					</ul>
+				</section>
+
+
+				<section>
+					<h2>Regression / classification?</h2>
+					<ul>
+						<li><b>regression</b> : we keep the hierarchy between the classes, but optimizing NDCG is cookery.</li>
+						<li><b>classification</b> : we lose the hierarchy but we can optimize the NDCG (more and that later)</li>
+					</ul>
+				</section>
+
+				<section>
+					<b>According to</b> 
+
+					<p>
+					P. Li, C. J. C. Burges, and Q. Wu. Mcrank: Learning
+					to rank using multiple classification and gradient
+					boosting. In NIPS, 2007.</p>
+					<p>
+					Classification outperforms regression.
+					</p>
+					<aside class="notes">
+					Perf compared to lambdamart, computing power 3 classifier, distribuable...
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>How do we proceed</h2>
+					<p>We use classification techniques to predict the outcome of each url display
+					independantly.</p>
+				</section>
+
+
+				<section>
+					<h2>How do we proceed</h2>
+					<p>We use classification techniques to output the probabilities of the 
+					different classes. (SVM forbidden here!)</p>
+				</section>
+
+
+				<section>
+					<h2>We sort urls by the value of </h2>
+					<p>p(relevancy=1) + 3 p(relevancy=2)</p>
+					<br/>
+					<h2>Where is this 3 coming from?</h2>
+				</section>
+
+				<section>
+					<h2>Given a Bayes classifier</h2>
+					<p>We want to optimize</p>
+						<img src='ndcg-1.png' style="width:800px">
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<h2>Given a Bayes classifier</h2>
+					<p>The point-wise approach is degenerating that into</p>
+						<img src='ndcg-2.png' style="width:800px">
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<h2>Given a Bayes classifier</h2>
+					<p>We therefore need to order urls by decreasing</p>
+						<img src='ndcg-3.png' style="width:500px">
+					<p>Hence</p>
+					<p>p(relevancy=1) + 3 p(relevancy=2)</p>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<h2>By the way</h2>
+					<p>
+					P. Li, C. J. C. Burges, and Q. Wu. Mcrank: Learning
+					to rank using multiple classification and gradient
+					boosting. In NIPS, 2007.</p>
+					<p>get slightly better results with linear weighting.</p>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section> 
+					<h2>Settled for Random Tree Forests</h2>
+				</section>
+
+				<section>
+					<h2>Hyperparameter fitting</h2>
+					<p>We are not doing typical classification here.
+					It is extremely important to perform grid search
+					directly against NDCG final score.</p>
+
+					<aside class="notes">
+					Random Tree Forest Gold section search. 
+					</aside>
+				</section>
+
+				<section>
+					<h1>Features</h1>
+				</section>
+
+
+				<section>
+					<h2>First of all the rank</h2>
+					<p>In this contest, it is both</p>
+					<h3>the display rank</h3>
+					<p>The rank that has been displayed to the user</p>
+					<h3>the non-personalized rank</h3>
+					<p>The rank that is computed by Yandex using PageRank, non-personalized log analysis?, TF-IDF, etc.</p>
+					</ul>
+				</section>
+
+				<section>
+					<h1>&lt;APARTE&gt;</h1>
+					<h1>The problem</h1>
+					<h2>with reranking</h2>
+					<aside class="notes">
+					</aside>
+				</section>
+				
+				<section>
+					<h2>
+					53% of the competitors could not improve the baseline
+					</h2>
+					<h1><b>Why?</b></h1>
+				</section>
+				
+				<section>
+					<h2>ideal workbench</h2>
+					<ol>
+						<li>compute non-personalized rank</li>
+						<li>select 10 bests hits and serves them in order</li>	
+						<li>re-rank using log analysis. </li>
+						<li>put new ranking algorithm in prod (yeah right!)</li>
+						<li>compute NDCG on new logs</li>
+					</ol>
+					<aside class="notes">
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>What you/yandex can afford</h2>
+					<ol>
+						<li>compute non-personalized rank</li>
+						<li>select 10 bests hits</li>
+						<li>serve 10 bests hits ranked in order</li>	
+						<li>re-rank using log analysis</li>
+						<li>compute score against <b>the log</b> with the former rank</li>
+					</ol>
+					<aside class="notes">
+					</aside>
+				</section>
+				
+				<section>
+					<h2>The problem here?</h2>
+					<b>Users tend to click on the first few urls.</b>
+					<ol>
+						<li>User satisfaction metric is influenced by the display rank. Our score is not aligned with our goal.</li>
+						<li>We cannot discriminate the effect of the signal of the non-personalized rank from effect of the display rank</li>
+					</ol>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<h2>This workflow promotes over <b>conservative</b> re-ranking policy</h2>
+					<p>Even if we know for sure that the url with rank 9 would be clicked by the user
+						if it was presented at rank 1, it would be probably a bad idea to rerank it to rank 1
+						in this contest.</p>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<h2>Size of the biggest jump in a reranked session</h2>
+					<img src="jump.png">
+					<h2></h2>
+				</section>
+
+				<section>
+					<h2>In advertising,</h2>
+					<p>People can afford displaying random stuff. They can (and do) :</p>
+					<ol>
+						<li>compute non-personalized rank</li>
+						<li>select 10 bests hits</li>
+						<li>serve 10 bests hits ranked in random order</li>	
+						<li>learn a ranker using log analysis</li>
+						<li><b>rank by setting all display rank to 0</b></li>
+					</ol>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<h1>&lt;/APARTE&gt;</h1>
+					<aside class="notes">
+					</aside>
+				</section>
+				
+				<section>
+					<h1>The other features</h1>
+					<ul>
+						<li>The meat : informative features</li>
+						<li>When to rerank : promoting / inhibiting features</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>Informative features (unexpected)</h1>
+					<ul>
+						<li>Revisits (at least 30%)</li>
+						<li>(Document, user clicks) distance. SVD. failure (why?)</li>
+						<li>(Document, user query history) distance : tfidf, not finished on time. LDA dropped attempt a bit fast.</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Revisits</h2>
+					<p>
+						In the past, when the user was displayed <b>this url</b>, with the <b>exact same query</b>, it ended up by
+						<ul>
+							<li>0 satisfaction 2</li>
+							<li>1 satisfaction 1</li>
+							<li>0 satisfaction 0</li>
+							<li>0 miss</li>
+							<li>2 skipped</li>
+						</ul>
+					</p>
+				</section>
+
+				<section>
+					<h2>Revisits</h2>
+					We use additive smoothing to make it
+					<ul>
+						<li>0 / (3+1) = 0% satisfaction 2</li>
+						<li>1 / (3+1) = 25% satisfaction 1</li>
+						<li>0 / (3+1) = 0% satisfaction 0</li>
+						<li>(0+1) / (3+1) = 25% miss</li>
+						<li>2 / (3+1) = 50% skipped</li>
+					</ul>
+					<h2>... rudimentary but does the job.</h2>
+				</section>
+
+				<section>
+					<h2>Revisits</h2>
+					That's already five feature. We add
+					<ul>
+						<li>1 An overall counter of display</li>
+						<li>4 mean reciprocal rank (kind of the harmonic mean of the rank)</li>
+						<li>1 snippet quality score : twisted formula</li>
+					</ul>
+					<h2>11 features</h2>
+				</section>
+
+				<section>
+					<h2>Many variations</h2>
+					<p>
+						<ul>
+							<li>(In the past|within the same sesssion),</li>
+							<li>when (user/anyone)</li>
+							<li>(with this very query | whatever query | a subquery | a super query)</li>
+							<li>and was offered (this url/this domain)</li>
+						</ul>
+					</p>
+					A LOT of possibilities !
+					We investigated 165 of them.
+				</section>
+
+				<section>
+					<h2>Query features</h2>
+					<p>
+						<ul>
+							<li>number of time it has been queried for</li>
+							<li>number of terms</li>
+							<li>average position within in session</li>
+							<li>average number of occurence in a session</li>
+							<li>MRR of its clicks</li>
+						</ul>
+					</p>
+				</section>
+
+				<section>
+					<h2>User click habits</h2>
+					<ul>
+						<li>Click entropy</li>
+						<li>User click rank counters</li>
+						<li>Average number of terms</li>
+						<li>Average number of different terms in a session</li>
+						<li>Total number of queries issued by the user</li>
+					</ul>
+					<aside class="notes">
+					</aside>
+				</section>
+
+
+				<section>
+					<h2>Seasonality</h2>
+					<ul>
+						<li>clicked on weekend and we're a Monday</li>
+					</ul>
+					<aside class="notes">
+					</aside>
+				</section>
+
+				<section>
+					<h4>Long story short, point-wise approach Random tree forests</h4>
+					<h2>Bonsai model, 30 features - 5th place...</h2>
+					<h4>... and then LambdaMART (90 features)</h4>
+					<h2>2nd place</h2>
+				</section>
+ 
+				<section>
+					<h2>No regrets we didn't use first, though</h2>
+					<ul>
+						<li>LambdaMART : 2 days of learning</li>
+						<li>Random Tree Forest : 30 minutes, including hyperparameter optimization</li>
+					</ul>
+				</section>				
+				
+
+				<section>
+					<h1>The human story</h1>
+				</section>
+
+				<section>
+					<h2>A LOT of work</h2>
+					<ul>
+						<li>960+ emails</li>
+						<li>360+ features</li>
+						<li>Kenji pretty much full time in the end</li>
+						<li>Me spending my nights on this</li>
+						<li>Setting up alarm clocks at 3:00 to 
+							chain the training of another model</li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Kaggle makes "machine learning a sport"</h2>
+					<h2>What kind of sport?</h2>
+				</section>
+				
+				<section>
+					<h2>Trial and Error</h2>
+					<h3>Working on this kind of problem is a Random walk</h3>
+					<h3>Seasoned datascientist may stride, and choose directions
+						slightly better.</h3>
+					<h2>At 4, we <b>bruteforced</b> it.</h2>
+					<h3>And learnt a lot on the way</h3>
+				</section>
+
+
+				<section>
+					<h2>Team work worked out great</h2>
+					<h3>Yet no "we complete each other".</h3>
+					<ul>
+						<li>Mates can fix your code / ideas</li>
+						<li>4 people will miss less things</li> 
+						<li>Split the hard work</li>
+						<li><b>Motivation</b></li>
+					</ul>
+				</section>
+
+				<section>
+					<h2>Emulation</h2>
+					<ul>
+						<li>pampampam pulled the leaderboard up</li>
+						<li>totally different score distribution than I would have expected</li>
+						<li>leaderboard not stalling... more time, better results</li>
+					</ul>
+				</section>
+
+				<section>
+					<h1>The End</h1>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+
+		<script>
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

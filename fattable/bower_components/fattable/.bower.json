@@ -1,7 +1,7 @@
 {
   "name": "fattable",
   "main": "fattable.js",
-  "homepage": "https://github.com/poulejapon/fattable",
+  "homepage": "https://github.com/fulmicoton/fattable",
   "authors": [
     "Paul Masurel <paul.masurel@gmail.com>"
   ],
@@ -24,14 +24,14 @@
     "closure",
     ".readymade"
   ],
-  "_release": "master",
+  "_release": "4aecfa8f7a",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "2742581fec840952821900301ec9ae4a15410239"
+    "commit": "4aecfa8f7a1c0ff8519e7654bfcbbf4aca95c3ef"
   },
-  "_source": "git@github.com:fulmicoton/fattable.git",
+  "_source": "https://github.com/poulejapon/fattable.git",
   "_target": "*",
-  "_originalSource": "git@github.com:fulmicoton/fattable.git",
+  "_originalSource": "https://github.com/poulejapon/fattable.git",
   "_direct": true
 }

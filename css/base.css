@@ -272,7 +272,6 @@ section.discuss {
 }
 
 .highlight {
-  margin: 0;
   background-color: #322;
   font-size: 16px;
   padding: 0px 15px;
@@ -282,6 +281,7 @@ section.discuss {
   text-shadow: none;
   color: #111;
   margin: 20px 0px;
+  margin-right: -150px;
 }
 
 section.discuss {

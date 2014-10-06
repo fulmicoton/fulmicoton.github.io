@@ -34,49 +34,43 @@ Let aside the weird little story involving aliens coding in C.
 You need to decode message that have been encoded using the following program.
 The website gives you a few unit test to test your program.
 
-    READ size
-    READ size / 16 integers in array a
-    WRITE size / 16 zeros in array b
-
-    For i from 0 to size - 1:
-        For j from 0 to size - 1:h
-             b[(i+j)/32] ^= ((a[i/32] >> (i%32)) & (a[j/32 + size/32] >> (j%32)) & 1) << ((i+j)%32)
-
-    PRINT b
-
-or if you prefer it in C++:
-
 
 {% highlight c++ %}
 
-    #include <iostream>
+#include <iostream>
 
-    using namespace std;
+using namespace std;
 
-    int main()
-    {
-      int size;
-      cin >> size;
-     
-      unsigned int* a = new unsigned int[size / 16]; // <- input tab to encrypt
-      unsigned int* b = new unsigned int[size / 16]; // <- output tab
-     
-      for (int i = 0; i < size / 16; i++) {   // Read size / 16 integers to a
-        cin >> hex >> a[i];
-      }
+int main()
+{
+  int size;
+  cin >> size;
+  
+  // <- input tab to encrypt
+  unsigned int* a = new unsigned int[size / 16];
+   // <- output tab
+  unsigned int* b = new unsigned int[size / 16];
+ 
+  // Read size / 16 integers to a
+  for (int i = 0; i < size / 16; i++) {
+    cin >> hex >> a[i];
+  }
 
-      for (int i = 0; i < size / 16; i++) {   // Write size / 16 zeros to b
-        b[i] = 0;
-      } 
-     
-      for (int i = 0; i < size; i++)
-        for (int j = 0; j < size; j++)
-          b[(i + j) /32] ^= ( (a[i / 32] >> (i % 32)) &
-                   (a[j / 32 + size / 32] >> (j % 32)) & 1 ) << ((i + j) % 32);
-      for(int i = 0; i < size / 16; i++)
-        cout << hex << b[i] << " ";       // print result
-      return 0;
-    }
+  // Write size / 16 zeros to b
+  for (int i = 0; i < size / 16; i++) {
+    b[i] = 0;
+  } 
+ 
+  for (int i = 0; i < size; i++)
+  for (int j = 0; j < size; j++) {
+      b[(i+j)/32] ^= ( (a[i/32] >> (i%32)) &
+                       (a[j/32 + size/32] >> (j%32)) & 1 ) << ((i+j)%32);
+  }
+  
+  for(int i = 0; i < size / 16; i++)
+    cout << hex << b[i] << " ";       // print result
+  return 0;
+}
 
 {% endhighlight %}
 
@@ -220,184 +214,185 @@ Note that I assume that the multiplicity of the prime factor in decomposition of
 {% highlight python %}
 
 def bits_to_int(bits,):
-    n = 0
-    for b in bits[::-1]:
-        n *= 2
-        n += b
-    return n
+  n = 0
+  for b in bits[::-1]:
+    n *= 2
+    n += b
+  return n
 
 
 def zeros_matrix(N):
-    return [[0] * N for i in range(N)]
+  return [[0] * N for i in range(N)]
 
 
 def eye_matrix(N):
-    res = zeros_matrix(N)
-    for i in range(N):
-        res[i][i] = 1
-    return res
+  res = zeros_matrix(N)
+  for i in range(N):
+    res[i][i] = 1
+  return res
 
 
 def format_hex(bits):
-    return hex(bits_to_int(bits))[2:].replace("L", "").rjust(8, "0")
+  return hex(bits_to_int(bits))[2:].replace("L", "").rjust(8, "0")
 
 
 class Polynomial(object):
 
-    def __init__(self, bits):
-        bits = tuple(bits)
-        max_weight = max([-1] + [bit_id for (bit_id, bit) in enumerate(bits) if bit == 1])
-        self.bits = bits[:max_weight + 1]
-        self.degree = len(self.bits) - 1
+  def __init__(self, bits):
+    bits = tuple(bits)
+    max_weight = max([-1] + [bit_id
+             for (bit_id, bit) in enumerate(bits) if bit == 1])
+    self.bits = bits[:max_weight + 1]
+    self.degree = len(self.bits) - 1
 
-    def to_hexs(self, nb_ints):
-        bits = self.bits + (0,) * (32 * nb_ints - len(self.bits))
-        return " ".join(
-            format_hex(bits[i * 32:(i + 1) * 32])
-            for i in range(nb_ints)
-        )
+  def to_hexs(self, nb_ints):
+    bits = self.bits + (0,) * (32 * nb_ints - len(self.bits))
+    return " ".join(
+      format_hex(bits[i * 32:(i + 1) * 32])
+      for i in range(nb_ints)
+    )
 
-    @staticmethod
-    def from_hexs(s):
-        bits = []
-        for number in s.split(" "):
-            assert len(number) == 8
-            n = int(number, 16)
-            for i in range(32):
-                bits.append(n & 1)
-                n /= 2
-        return Polynomial(bits)
+  @staticmethod
+  def from_hexs(s):
+    bits = []
+    for number in s.split(" "):
+      assert len(number) == 8
+      n = int(number, 16)
+      for i in range(32):
+        bits.append(n & 1)
+        n /= 2
+    return Polynomial(bits)
 
-    def __mul__(self, other):
-        I = len(self.bits)
-        J = len(other.bits)
-        bits = [0] * (I + J)
-        for i in range(I):
-            for j in range(J):
-                bits[i + j] ^= self.bits[i] & other.bits[j]
-        return Polynomial(bits)
+  def __mul__(self, other):
+    I = len(self.bits)
+    J = len(other.bits)
+    bits = [0] * (I + J)
+    for i in range(I):
+      for j in range(J):
+        bits[i + j] ^= self.bits[i] & other.bits[j]
+    return Polynomial(bits)
 
-    def __eq__(self, other):
-        return self.bits == other.bits
+  def __eq__(self, other):
+    return self.bits == other.bits
 
-    def __add__(self, other):
-        if self.degree < other.degree:
-            return other + self
-        other_bits = other.bits + (0,) * (self.degree - other.degree)
-        return Polynomial(a ^ b for (a, b) in zip(self.bits, other_bits))
+  def __add__(self, other):
+    if self.degree < other.degree:
+      return other + self
+    other_bits = other.bits + (0,) * (self.degree - other.degree)
+    return Polynomial(a ^ b for (a, b) in zip(self.bits, other_bits))
 
-    def __mod__(self, q):
-        qbits = q.bits
-        Q = len(qbits)
-        v = list(self.bits)
-        while True:
-            d = len(v)
-            if d == 0:
-                return ZERO
-            if d < Q:
-                return Polynomial(v)
-            n = d - Q
-            for i in range(Q):
-                v[i + n] ^= qbits[i]
-            for i in range(d - 1, -1, -1):
-                if v[i]:
-                    break
-                v.pop()
-            assert len(v) < d
+  def __mod__(self, q):
+    qbits = q.bits
+    Q = len(qbits)
+    v = list(self.bits)
+    while True:
+      d = len(v)
+      if d == 0:
+        return ZERO
+      if d < Q:
+        return Polynomial(v)
+      n = d - Q
+      for i in range(Q):
+        v[i + n] ^= qbits[i]
+      for i in range(d - 1, -1, -1):
+        if v[i]:
+          break
+        v.pop()
+      assert len(v) < d
 
-    def __div__(self, q):
-        if q.degree > self.degree:
-            return ZERO
-        return X(self.degree - q.degree) + (self + q * X(self.degree - q.degree)) / q
+  def __div__(self, q):
+    if q.degree > self.degree:
+      return ZERO
+    return X(self.degree - q.degree) +\
+         (self + q * X(self.degree - q.degree)) / q
 
-    def find_kernel_vec(self,):
-        N = self.degree + 1
-        M = zeros_matrix(N)
-        for d in range(N):
-            monome = X(d)
-            square_monome = (monome * monome) % self
-            image = square_monome.bits
-            for i in range(len(image)):
-                M[i][d - 1] = image[i]
-            M[d - 1][d - 1] ^= 1
-        shadow = eye_matrix(N)
-        frozen_cols = 0
-        for pivot_row in range(N):
-            pivot_col = 0
-            for j in range(frozen_cols, N):
-                if M[pivot_row][j]:
-                    break
-            pivot_col = j
-            pivot_val = M[pivot_row][pivot_col]
-            if pivot_val == 0:
-                continue
-            else:
-                for i in range(N):
-                    (M[i][frozen_cols], M[i][pivot_col]) = (M[i][pivot_col], M[i][frozen_cols])
-                    (shadow[i][frozen_cols], shadow[i][pivot_col]) = (shadow[i][pivot_col], shadow[i][frozen_cols])
-            for j in range(frozen_cols + 1, N):
-                if M[pivot_row][j]:
-                    for i in range(N):
-                        M[i][j] = ((M[i][j]) ^ M[i][frozen_cols])
-                        shadow[i][j] = (shadow[i][j] ^ shadow[i][frozen_cols])
-            frozen_cols += 1
-        for j in range(N - 1, -1, -1):
-            if sum(M[i][j] for i in range(N)) == 0:
-                yield [shadow[i][j] for i in range(N)]
-            else:
-                break
+  def find_kernel_vec(self,):
+    N = self.degree + 1
+    M = zeros_matrix(N)
+    for d in range(N):
+      monome = X(d)
+      square_monome = (monome * monome) % self
+      image = square_monome.bits
+      for i in range(len(image)):
+        M[i][d - 1] = image[i]
+      M[d - 1][d - 1] ^= 1
+    # shadow matrix
+    S = eye_matrix(N)
+    frozen_cols = 0
+    for row in range(N):
+      pivot = 0
+      for pivot in range(frozen_cols, N):
+        if M[row][pivot]:
+          break
+      pivot_val = M[row][pivot]
+      if pivot_val == 0:
+        continue
+      else:
+        for i in range(N):
+          (M[i][frozen_cols], M[i][pivot]) = (M[i][pivot], M[i][frozen_cols])
+          (S[i][frozen_cols], S[i][pivot]) = (S[i][pivot], S[i][frozen_cols])
+      for j in range(frozen_cols + 1, N):
+        if M[row][j]:
+          for i in range(N):
+            M[i][j] = ((M[i][j]) ^ M[i][frozen_cols])
+            S[i][j] = (S[i][j] ^ S[i][frozen_cols])
+      frozen_cols += 1
+    for j in range(N - 1, -1, -1):
+      if sum(M[i][j] for i in range(N)) == 0:
+        yield [S[i][j] for i in range(N)]
+      else:
+        break
 
-    def factorize(self,):
-        for v in self.find_kernel_vec():
-            F = Polynomial(v)
-            for C in [ZERO, ONE]:
-                if F.degree >= 1:
-                    factor = gcd(Polynomial(v) + C, self)
-                    if not factor == ONE and factor.degree < self.degree:
-                        return factor.factorize() + (self / factor).factorize()
-        return [self]
+  def factorize(self,):
+    for v in self.find_kernel_vec():
+      F = Polynomial(v)
+      for C in [ZERO, ONE]:
+        if F.degree >= 1:
+          factor = gcd(Polynomial(v) + C, self)
+          if not factor == ONE and factor.degree < self.degree:
+            return factor.factorize() + (self / factor).factorize()
+    return [self]
 
 
 def X(k):
-    return Polynomial((0,) * k + (1,))
+  return Polynomial((0,) * k + (1,))
 
 ZERO = Polynomial(())
 ONE = X(0)
 
 def gcd(a, b):
-    if a.degree < b.degree:
-        return gcd(b, a)
-    r = a % b
-    if r == ZERO:
-        return b
-    else:
-        return gcd(b, r)
+  if a.degree < b.degree:
+    return gcd(b, a)
+  r = a % b
+  if r == ZERO:
+    return b
+  else:
+    return gcd(b, r)
 
 
 def iter_splits(l):
-    if not l:
-        yield ONE, ONE
-    else:
-        head, tail = l[0], l[1:]
-        for (left, right) in iter_splits(tail):
-            yield left * head, right
-            yield left, right * head
+  if not l:
+    yield ONE, ONE
+  else:
+    head, tail = l[0], l[1:]
+    for (left, right) in iter_splits(tail):
+      yield left * head, right
+      yield left, right * head
 
 
 def iter_solutions(l, n_bits):
-    for (left, right) in iter_splits(l):
-        if left.degree < n_bits and right.degree < n_bits:
-            yield " ".join([left.to_hexs(n_bits / 32), right.to_hexs(n_bits / 32)])
+  for (left, right) in iter_splits(l):
+    if left.degree < n_bits and right.degree < n_bits:
+      yield " ".join([left.to_hexs(n_bits / 32), right.to_hexs(n_bits / 32)])
 
 
 if __name__ == "__main__":
-    n_bits = int(raw_input())
-    P = Polynomial.from_hexs(raw_input())
-    factors = list((P).factorize())
-    for sol in sorted(set(iter_solutions(factors, n_bits))):
-        print sol
+  n_bits = int(raw_input())
+  P = Polynomial.from_hexs(raw_input())
+  factors = list((P).factorize())
+  for sol in sorted(set(iter_solutions(factors, n_bits))):
+    print sol
 
 main()
-
 
 {% endhighlight %}

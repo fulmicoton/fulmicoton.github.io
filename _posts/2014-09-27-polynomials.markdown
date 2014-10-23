@@ -2,7 +2,7 @@
 layout: post
 title:  Of Berlekamp factorization algorithm  
 category: posts
-description: Solving the nintendo/codingames puzzle.
+description: Solving a math puzzle
 published: true
 ---
 
@@ -16,9 +16,9 @@ Just this year I spent maybe
 - 150 hours on Yandex's kaggle competition. 
 - 15 hours on Kaggle's criteo competition
 - 30 hours on Google Hash code's problems
-- and lately I spent around 8 hours to crack a cute little programming puzzle on codingames I could talk about on this blog.
+- and lately I spent around 8 hours to crack a cute little programming puzzle I could talk about on this blog.
 
-This puzzle is sponsored by Nintendo Europe, and they use to attract and select candidates.
+This puzzle is sponsored by a major video game company, and they use to attract and select candidates.
 I could not care less about this prize as I just got hired and will relocate back to Japan very soon.
 
 I understand that people get very passionnate about the practise of using programming puzzles 
@@ -28,11 +28,11 @@ Such puzzles are just not likely to select candidates who is good for the job, n
 
 # The puzzle
 
-Ok so the puzzle I am about to tell you about is available on [codingames](http://www.codingame.com/ide/4523915178f42d7a43e66eeb76473edf66859a). Big shoutout to them for the terrific job they are doing on this website ; and sorry in advance for spoiling the puzzle.
+**I had the chance to chat a little with the guys hosting the challenge. They were concerned that 
+spoiling out the answer was counterproductive for their customer (it is used for recruiting). I therefore offered to get rid of their name / reference in this blog post, in order to make this page stealthier to people googling for the solution.**
 
-Let aside the weird little story involving aliens coding in C.
 You need to decode message that have been encoded using the following program.
-The website gives you a few unit test to test your program.
+The website is giving you a few unit test to test your program.
 
 
 {% highlight c++ %}
@@ -46,9 +46,9 @@ int main()
   int size;
   cin >> size;
   
-  // <- input tab to encrypt
+  // <- input
   unsigned int* a = new unsigned int[size / 16];
-   // <- output tab
+   // <- output
   unsigned int* b = new unsigned int[size / 16];
  
   // Read size / 16 integers to a
@@ -68,7 +68,7 @@ int main()
   }
   
   for(int i = 0; i < size / 16; i++)
-    cout << hex << b[i] << " ";       // print result
+    cout << hex << b[i] << " ";
   return 0;
 }
 

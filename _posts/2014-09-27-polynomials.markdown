@@ -181,7 +181,7 @@ The idea of the algorithm is that, once we found a polynomial B, we are certain 
 # Finding a berlekamp polynomial
 
 Now how do we find such a polynomial B? First you 
-need to notice that the squaring application $q$ is linear.
+need to notice that the squaring application $q$ for polynomials with binary coefficients is linear.
 
 You can get convince about that easily by developing :
 

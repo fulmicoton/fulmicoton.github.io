@@ -150,18 +150,16 @@ Note that if the problem had been to factorize two 256 bits integers,
 it would have been equivalent to asking you to crack a 256 bits RSA key.
 
 Interestingly, polynomials with coefficients in $\mathbb{Z}/2 \mathbb{Z}$ share a lot of property with integers.
-The complexity of factorization, 
+The complexity of factorization, on the other hand, is much simpler.
 
 A bit of googling will convince you that the problem is well studied.
 
-I settled up studying an [Berlekamp's algorithm](http://en.wikipedia.org/wiki/Berlekamp's_algorithm).
+I settled up studying [Berlekamp's algorithm](http://en.wikipedia.org/wiki/Berlekamp's_algorithm).
 
 # Outline of the algorithm
 
 Ok assuming we want to factorize a polynomial P in $\mathbb{Z}/2 \mathbb{Z}$.
-For the sake of simplicity we will assume that this polynomial has a prime decomposition  
-for which all factors have a multiplicity of 1. (You can easily extract factors with a greater multiplicity 
-by computing the $gcd(P, P')$.
+For the sake of simplicity we will assume that this polynomial has a prime decomposition for which all factors have a multiplicity of 1. (You can easily extract factors with a greater multiplicity by computing the $gcd(P, P')$.
 
 The big idea, is to first find a polynomial $B$ for which we have :
 We will see how the 

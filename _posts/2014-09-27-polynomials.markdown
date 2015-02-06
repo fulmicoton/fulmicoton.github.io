@@ -165,7 +165,7 @@ The big idea, is to first find a polynomial $B$ for which we have :
 
     $$  B^2 - B \equiv 0[P]  $$
 
-The chinese reminder theorem, we then know that for each prime factor $F_k$,
+By applying the chinese reminder theorem, we then know that for each prime factor $F_k$,
 we have :
 
 

@@ -162,8 +162,6 @@ Ok assuming we want to factorize a polynomial P in $\mathbb{Z}/2 \mathbb{Z}$.
 For the sake of simplicity we will assume that this polynomial has a prime decomposition for which all factors have a multiplicity of 1. (You can easily extract factors with a greater multiplicity by computing the $gcd(P, P')$.
 
 The big idea, is to first find a polynomial $B$ for which we have :
-We will see how the 
-
 
     $$  B^2 - B \equiv 0[P]  $$
 

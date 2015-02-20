@@ -5,6 +5,15 @@ div.perspecto div.perspecto-face {
   float: left;
   margin: 20px;
 }
+textarea {
+  background-color: #444;
+  color: #37d3b4;
+  width: 100%;
+  height: 300px;
+}
+textarea.invalid {
+  background-color: #7C2121;
+}
 .perspecto-cube {
   stroke: rgba(151, 147, 147, 0.28) !important;
 }
@@ -25,7 +34,8 @@ circle.handle {
   stroke-width: 2px;
 }
 button.big-button {
-  margin: 3px;
+  border-radius: 5px;
+  margin: 5px;
   background-color: #987d44;
   color: white;
   display: block;
@@ -36,8 +46,8 @@ button.big-button {
   border: none;
 }
 button.big-button.ok {
-  background-color: #447598;
+  background-color: #419EE0;
 }
 button.big-button.cancel {
-  background-color: #984744;
+  background-color: #AC6176;
 }

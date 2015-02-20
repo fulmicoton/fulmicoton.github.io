@@ -12,6 +12,17 @@ div.perspecto {
 	}
 }
 
+textarea {
+	background-color: #444;
+	color: rgb(55, 211, 180);
+	width: 100%;
+	height: 300px;
+
+	&.invalid {
+		background-color: #7C2121;
+	}
+}
+
 .perspecto-cube {
 	stroke: rgba(151, 147, 147, 0.28) !important;
 }
@@ -40,13 +51,14 @@ circle.handle {
 
 button.big-button {
 	&.ok {
-		background-color: #447598;
+		background-color: #419EE0;
 	}
 
 	&.cancel {
-		background-color: #984744;
+		background-color: #AC6176;
 	}
-	margin: 3px;
+	border-radius: 5px;
+	margin: 5px;
 	background-color: rgb(152, 125, 68);
 	color: white;
 	display: block;

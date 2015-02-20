@@ -1,0 +1,43 @@
+body {
+  background-color: #333;
+}
+div.perspecto div.perspecto-face {
+  float: left;
+  margin: 20px;
+}
+.perspecto-cube {
+  stroke: rgba(151, 147, 147, 0.28) !important;
+}
+g.perspecto-rail .rail {
+  stroke: #D6D5D5;
+  stroke-width: 2px;
+}
+g.perspecto-rail .candidate {
+  stroke-width: 4px;
+}
+circle.handle {
+  fill: white;
+  stroke: black;
+  stroke-width: 3px;
+}
+.perspecto-line {
+  stroke: #D1D476;
+  stroke-width: 2px;
+}
+button.big-button {
+  margin: 3px;
+  background-color: #987d44;
+  color: white;
+  display: block;
+  padding: 10px;
+  text-align: center;
+  font-size: 30px;
+  width: 100%;
+  border: none;
+}
+button.big-button.ok {
+  background-color: #447598;
+}
+button.big-button.cancel {
+  background-color: #984744;
+}

@@ -3,7 +3,7 @@ body {
 }
 div.perspecto div.perspecto-face {
   float: left;
-  margin: 20px;
+  margin: 0px;
 }
 textarea {
   background-color: #444;

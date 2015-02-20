@@ -18,9 +18,11 @@ class PerspectoStore extends fulmicoton.Store
             @onNewLine(line)
         actions.resolve.bind (line) =>
             @onResolve(line)
+        actions.edit.bind (data) =>
+            @onEdit data
 
-    init: ->
-        @lines = [
+    getCube: ->
+        [
             {'points': [[1,1,1],[-1,1,1]], 'side': 'l', 'className': 'perspecto-cube'},
             {'points': [[1,1,1],[1,-1,1]], 'side': 'l', 'className': 'perspecto-cube'},
             {'points': [[1,1,1],[1,1,-1]], 'side': 'l', 'className': 'perspecto-cube'},
@@ -34,10 +36,20 @@ class PerspectoStore extends fulmicoton.Store
             {'points': [[1,1,-1],[ 1,-1,-1]], 'side': 'l', 'className': 'perspecto-cube'},
             {'points': [[1,1,-1],[-1, 1,-1]], 'origin': 'right', 'className': 'perspecto-cube'},
         ]
+
+    init: ->
+        @lines = []
         @incompleteLine = null
     
+    getData: ->
+        lines: @lines
+
+    getJSON: ->
+        data = @getData()
+        JSON.stringify data, null, 4
+
     getLines:->
-        @lines
+        @getCube().concat(@lines)
 
     getFaceState: (faceId)->
         if @incompleteLine?
@@ -63,9 +75,13 @@ class PerspectoStore extends fulmicoton.Store
         @events.change.trigger()
 
     onResolve: (line)->
-        console.log "line", line
         @incompleteLine = undefined
         @lines.push line
+        @events.change.trigger()
+
+    onEdit: (data)->
+        @incompleteLine = undefined
+        @lines = data.lines
         @events.change.trigger()
 
 

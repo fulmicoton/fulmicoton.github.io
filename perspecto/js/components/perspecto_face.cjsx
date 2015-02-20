@@ -86,7 +86,7 @@ PerspectoFace = React.createClass
         @setState {"resolvedPoints": resolvedPoints}
 
     renderLastLine: ->
-        if @props.noLastLine
+        if @props.viewOnly
             return null
         if not @state.incompleteLine?
             points = @state.points
@@ -116,6 +116,8 @@ PerspectoFace = React.createClass
         @setState({"points": []})
 
     getButtons: (faceState)->
+        if @props.viewOnly
+            return null
         if faceState == states.RESOLVE
             <button className="big-button ok" onClick={@onClickResolve}>OK</button>
         else if (faceState == states.INPUT)
@@ -137,7 +139,7 @@ PerspectoFace = React.createClass
         lastLine = @renderLastLine()
         faceState = @getFaceState()
         buttons = @getButtons faceState
-        className = "perspecto " + "perspecto-" + faceState.toLowerCase()
+        className = "perspecto " + "perspecto-" + faceState?.toLowerCase()
         <div className='perspecto-face'>
             <svg onClick={@onClick} className=className height={@props.size} width={@props.size}>
                 {lines}

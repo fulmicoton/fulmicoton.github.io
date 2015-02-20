@@ -7,25 +7,34 @@ Vec = geometry.Vec
 Panoramic = React.createClass
     
     getInitialState: ->
-        {
-            angle: 0.0,
-            angleSpeed: 0.1
-        }
-    
+        t: 0.0
+        angle: 0.0,
+        
     componentDidMount: ->
-        @timer = window.setInterval @updateAngle, 100
+        @timer = window.setInterval @updateAngle, 50
 
     updateAngle: ->
-        angle = @state.angle
-        angleSpeed = @state.angleSpeed
-        angle += angleSpeed
-        if angle > Math.PI / 2
-            angleSpeed = -Math.abs(angleSpeed)
-        if angle < 0
-            angleSpeed = Math.abs(angleSpeed)
-        @setState 
+        t = @state.t
+        t += 0.1
+        if t > 2*Math.PI
+            t -= 2*Math.PI
+        cos = Math.cos(t)
+        angle = Math.PI / 4.0 + (Math.PI / 2.5)*Math.cos(t)
+        if angle > Math.PI/2.0
+            angle = Math.PI/2.0
+        else if angle < 0
+            angle = 0
+        # angle = @state.angle
+        # angleSpeed = @state.angleSpeed
+        # angle += angleSpeed
+        # if angle > Math.PI / 2
+        #     angleSpeed = -Math.abs(angleSpeed)
+        # if angle < 0
+        #     angleSpeed = Math.abs(angleSpeed)
+        @setState
+            t: t
             angle: angle
-            angleSpeed: angleSpeed
+        
 
     componentWillUnmount: ->
         console.log @timer
@@ -35,7 +44,7 @@ Panoramic = React.createClass
         cx = 2.5*Math.cos @state.angle
         cy = 2.5*Math.sin @state.angle
         camera = new Camera(new Vec [cx, cy, 0])
-        <PerspectoFace camera=camera size=@props.size noLastLine />
+        <PerspectoFace camera=camera size=@props.size viewOnly />
 
 
 module.exports = Panoramic

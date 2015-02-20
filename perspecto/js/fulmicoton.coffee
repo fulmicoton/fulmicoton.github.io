@@ -1,7 +1,3 @@
-
-
-
-
 removeEl = (arr, el, n=1)->
     # Remove the n first occurrences of el in array arr.
     # Removes all the occurences if given -1.

@@ -3,4 +3,4 @@ React = require 'react'
 store = require './store.coffee'
 
 $ ->
-	React.render <PerspectoScene size="400" store={store}/>, $(".perspecto")[0]
+	React.render <PerspectoScene size="300" store={store}/>, $(".perspecto")[0]

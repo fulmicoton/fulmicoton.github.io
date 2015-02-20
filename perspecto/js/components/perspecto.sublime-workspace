@@ -1,0 +1,1251 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"rating",
+				"rating_val"
+			],
+			[
+				"att",
+				"attrs"
+			],
+			[
+				"attr",
+				"attrName"
+			],
+			[
+				"voca",
+				"vocabulary"
+			],
+			[
+				"seri",
+				"serialize_model"
+			],
+			[
+				"bias",
+				"biases_shape"
+			],
+			[
+				"set_",
+				"set_biases"
+			],
+			[
+				"filter",
+				"filter_proto"
+			],
+			[
+				"abs",
+				"abs_rel_error"
+			],
+			[
+				"salar",
+				"salary_normalizer"
+			],
+			[
+				"bow_filter",
+				"bow_filter_copy"
+			],
+			[
+				"bow",
+				"bow_filter_copy"
+			],
+			[
+				"proto",
+				"proto_deeplearning"
+			],
+			[
+				"salary",
+				"salary_normalizer"
+			],
+			[
+				"dataset",
+				"dataset_col"
+			],
+			[
+				"data",
+				"dataset"
+			],
+			[
+				"weight",
+				"weights_shape"
+			],
+			[
+				"weigh",
+				"weights_shape"
+			],
+			[
+				"model",
+				"model_path"
+			],
+			[
+				"ya",
+				"yaml_tmpl_path"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "/home/pmasurel/indeed/perspecto/web/js/fulmicoton.coffee",
+			"settings":
+			{
+				"buffer_size": 2384,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/pmasurel/indeed/perspecto/web/js/geometry.coffee",
+			"settings":
+			{
+				"buffer_size": 1465,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/pmasurel/indeed/perspecto/web/js/actions.coffee",
+			"settings":
+			{
+				"buffer_size": 98,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "perspecto_face.cjsx",
+			"settings":
+			{
+				"buffer_size": 4031,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "perspecto.cjsx",
+			"settings":
+			{
+				"buffer_size": 570,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/pmasurel/indeed/perspecto/web/css/style.less",
+			"settings":
+			{
+				"buffer_size": 282,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/pmasurel/indeed/perspecto/web/js/store.coffee",
+			"settings":
+			{
+				"buffer_size": 1311,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"command_palette":
+	{
+		"height": 75.0,
+		"selected_items":
+		[
+			[
+				"install package",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"install packag",
+				"Package Control: Install Package"
+			],
+			[
+				"java",
+				"Set Syntax: Java"
+			],
+			[
+				"INSTALL P",
+				"Package Control: Install Package"
+			],
+			[
+				"sort",
+				"Sort Lines"
+			],
+			[
+				"lower",
+				"Convert Case: Lower Case"
+			],
+			[
+				"packa",
+				"Preferences: Browse Packages"
+			],
+			[
+				"git diff",
+				"Git: Diff Current File"
+			],
+			[
+				"indent",
+				"Indentation: Convert to Spaces"
+			],
+			[
+				"git diff curr",
+				"Git: Diff Current File"
+			],
+			[
+				"json",
+				"Pretty JSON: Format (Pretty Print) JSON"
+			],
+			[
+				"pretty",
+				"Pretty JSON: Format (Pretty Print) JSON"
+			],
+			[
+				"pyl",
+				"Pep8 Python Lint"
+			],
+			[
+				"python",
+				"Set Syntax: Python"
+			],
+			[
+				"PEP8",
+				"Pep8 Python Lint"
+			],
+			[
+				"pep8",
+				"Pep8 Python Lint"
+			],
+			[
+				"prett",
+				"Pretty JSON: Format (Pretty Print) JSON"
+			],
+			[
+				"instalc",
+				"Package Control: Install Package"
+			],
+			[
+				"rub",
+				"Set Syntax: Ruby"
+			],
+			[
+				"pep",
+				"Preferences: Package Control Settings – Default"
+			],
+			[
+				"yaml",
+				"Set Syntax: YAML"
+			],
+			[
+				"ruby",
+				"Set Syntax: Ruby"
+			],
+			[
+				"installp",
+				"Package Control: Install Package"
+			],
+			[
+				"mark",
+				"Set Syntax: Markdown"
+			],
+			[
+				"set syntaxpig",
+				"Set Syntax: Pig"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 139.0
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"file_history":
+	[
+		"/home/pmasurel/indeed/perspecto/web/js/store.coffee",
+		"/home/pmasurel/indeed/perspecto/web/css/style.less",
+		"/home/pmasurel/indeed/perspecto/web/js/geometry.coffee",
+		"/home/pmasurel/indeed/imhotep/pom.xml",
+		"/home/pmasurel/indeed/lucy/a.py",
+		"/home/pmasurel/Desktop/a.py",
+		"/home/pmasurel/indeed/imhotep/imhotep-server/src/main/native/GenerateTables.java",
+		"/home/pmasurel/indeed/imhotep/imhotep-server/src/main/native/metricregroup.c",
+		"/home/pmasurel/indeed/imhotep/imhotep-server/src/main/native/metricregroup.h",
+		"/home/pmasurel/indeed/imhotep/imhotep-server/src/main/native/testpageboundaries.c",
+		"/home/pmasurel/indeed/imhotep/imhotep-server/src/main/native/varintdecode.c",
+		"/home/pmasurel/indeed/imhotep/imhotep-server/src/main/native/varintdecode.h",
+		"/home/pmasurel/indeed/imhotep/imhotep-server/src/main/native/libdivide.h",
+		"/home/pmasurel/indeed/imhotep/imhotep-server/src/main/native/com_indeed_flamdex_simple_NativeDocIdBuffer.c",
+		"/home/pmasurel/indeed/javadev/build/libraries.properties.default",
+		"/home/pmasurel/indeed/javadev/libraries.properties",
+		"/home/pmasurel/indeed/docstore/src/resources/DocStoreSuite-Dev-complete.xml",
+		"/home/pmasurel/scripts/restoreDocstore",
+		"/home/pmasurel/scripts/restoreOceania",
+		"/home/pmasurel/scripts/updateOceania",
+		"/home/pmasurel/git/multiregexp/README.md",
+		"/home/pmasurel/indeed/multiregexp/pom.xml",
+		"/home/pmasurel/lucy.md",
+		"/home/pmasurel/indeed/javadev/bin/mvn",
+		"/etc/fstab",
+		"/home/pmasurel/indeed/javadev/build/common-build.xml",
+		"/home/pmasurel/indeed/javadev/maven/conf/settings.xml",
+		"/home/pmasurel/indeed/javadev/maven/bin/m2.conf",
+		"/usr/local/lib/python2.7/dist-packages/spacy/en/__init__.py",
+		"/home/pmasurel/documents/feedbridge/timings.tsv",
+		"/home/pmasurel/documents/feedbridge/feedbridge.log",
+		"/home/pmasurel/documents/feedbridge/analyze.py",
+		"/home/pmasurel/indeed/sentiment/corpus1000.json",
+		"/home/pmasurel/git/dinette/dinette/dinetteQt/graph.cpp",
+		"/home/pmasurel/git/dinette/dinette/moc_dinette.cpp",
+		"/home/pmasurel/git/dinette/dinette/dinetteQt/sprite.h",
+		"/home/pmasurel/git/dinette/dinette/dinette.pro",
+		"/home/pmasurel/git/dinette/dinette/Makefile",
+		"/home/pmasurel/git/dinette/dinette/main.cpp",
+		"/home/pmasurel/git/dinette/dinette/dinetteQt/global.h",
+		"/home/pmasurel/git/dinette/dinette/dinetteQt/dinette.h",
+		"/home/pmasurel/git/dinette/dinette/dinetteQt/graph.h",
+		"/home/pmasurel/git/dinette/dinette/dinetteQt/dinette.cpp",
+		"/home/pmasurel/git/dinette/dinette/dinetteQt/sprite.cpp",
+		"/home/pmasurel/git/dinette/dinette/dinette.h",
+		"/home/pmasurel/indeed/javadev/apache-tomcat-7.0.8/servicewebapps/jobsearchservice/JobSearchService-US-JobIndex.xml",
+		"/home/pmasurel/apache-tomcat-7.0.57/conf/context.xml",
+		"/home/pmasurel/webapps/jasx/conf/catalina.policy",
+		"/home/pmasurel/webapps/jasx/conf/catalina.properties",
+		"/home/pmasurel/indeed/salary/salaryservice/src/resources/nlp/keywords.txt",
+		"/home/pmasurel/indeed/salary/salaryservice/class.prop",
+		"/home/pmasurel/indeed/extraction-studio/pom.xml",
+		"/home/pmasurel/indeed/extraction-proto/lexer.py",
+		"/home/pmasurel/indeed/salary-common/src/java/com/indeed/salarycommon/SalaryInfoUtil.java",
+		"/home/pmasurel/indeed/salary/qa-tools_old/src/resources/scripts/extraction/pvaltest.py",
+		"/home/pmasurel/indeed/extractor/doc/Makefile",
+		"/home/pmasurel/indeed/extraction-proto/main.py",
+		"/home/pmasurel/indeed/salary/qa-tools/src/resources/scripts/extraction/test_salary_extraction.sh",
+		"/home/pmasurel/indeed/salary/salaryservice/src/java/com/indeed/salaryservice/extraction/utils/SalaryInfoUtil.java",
+		"/home/pmasurel/indeed/salary/qa-tools/src/resources/scripts/extraction/SalaryExtractionB.pig",
+		"/home/pmasurel/indeed/salary/qa-tools/src/resources/scripts/extraction/common.pig",
+		"/home/pmasurel/indeed/extraction-proto/US.txt",
+		"/home/pmasurel/indeed/extractor/doc/extraction.tex",
+		"/home/pmasurel/indeed/salary/qa-tools/src/resources/scripts/extraction/SalaryExtractionA.pig",
+		"/home/pmasurel/scripts/glog",
+		"/home/pmasurel/indeed/fuzzyextractor/fuzzy.py",
+		"/home/pmasurel/indeed/salaryservice/build.xml",
+		"/home/pmasurel/indeed/salaryservice/build.properties.default",
+		"/home/pmasurel/indeed/salary/qa-tools/build.xml",
+		"/home/pmasurel/indeed/salary/qa-tools/build/classes/scripts/extraction/pig_1417581634245.log",
+		"/home/pmasurel/indeed/salaryservice/src/resources/salary/fr_FR/extractor.properties",
+		"/home/pmasurel/indeed/salary/qa-tools/build/classes/scripts/extraction/test_salary_extraction.sh",
+		"/home/pmasurel/indeed/salary/qa-tools/build/classes/scripts/extraction/SalaryExtractionA.pig",
+		"/home/pmasurel/indeed/salary/qa-tools/src/java/com/indeed/salary/qa/pigutil/ExtractSalary.java",
+		"/home/pmasurel/indeed/salaryservice/build/classes/salary/fr_FR/numberformats.map",
+		"/home/pmasurel/indeed/javadev/bin/ant",
+		"/home/pmasurel/indeed/salaryservice/build/classes/salary/fr_CA/extractor.properties",
+		"/home/pmasurel/salarydata/data/test.csv",
+		"/home/pmasurel/salarydata/utils.py",
+		"/home/pmasurel/indeed/imhotep-teambuilders/src/java/com/indeed/imhotep/teambuilders/acme/acmereviewmod/AcmeReviewModerationDocumentParser.java",
+		"/home/pmasurel/salarydata/train.py",
+		"/home/pmasurel/salarydata/main.py",
+		"/home/pmasurel/indeed/imhotep-teambuilders/src/java/com/indeed/imhotep/teambuilders/acme/acmereviewmod/AcmeReviewModerationFlamdexBuilder.java",
+		"/home/pmasurel/indeed/salary-tools/src/python/worker/worker.py",
+		"/home/pmasurel/Desktop/python.output",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/preprocessing/preprocessor.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/test/test_main.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/postprocessing/mlp_convert.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/deep_learning/evaluate.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/feat2.txt",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/preprocessing/transform.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/trainer/train_relative_error.py",
+		"/home/pmasurel/indeed/salary-tools/test/python/estimation/test_bowfilter.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/trainer/train_relative_error2.py",
+		"/home/pmasurel/Desktop/error.tsv",
+		"/home/pmasurel/Desktop/java.output",
+		"/home/pmasurel/indeed/salary-tools/src/python/feat.txt",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/conf/pylearn/l1.yaml",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/conf/pylearn/l2.yaml",
+		"/home/pmasurel/indeed/salary-tools/src/protobuf/mlp.proto",
+		"/home/pmasurel/indeed/salary-tools/src/python/build/lib.linux-x86_64-2.7/estimation/preprocessing/onehotfilter.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/utils/hyper_params.py",
+		"/home/pmasurel/indeed/salary-tools/test/python/estimation/test_transform.py",
+		"/home/pmasurel/indeed/salary-tools/provisioning/worker/README.md",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/proto/deeplearning_pb2.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/master/conf/hyperparameter.yml",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/preprocessing/__init__.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/preprocessing/store_dataset.py",
+		"/home/pmasurel/indeed/salary-tools/provisioning/master/README.md",
+		"/home/pmasurel/indeed/salary-tools/src/python/build/lib.linux-x86_64-2.7/estimation/preprocessing/transform.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/build/lib.linux-x86_64-2.7/estimation/preprocessing/bowfilter.py",
+		"/home/pmasurel/indeed/salary-tools/test/python/estimation/test_onehotfilter.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/preprocessing/bowfilter.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/preprocessing/onehotfilter.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/proto/filter_pb2.py",
+		"/home/pmasurel/indeed/salary-tools/src/protobuf/filter.proto",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/proto/Makefile",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/conf/pylearn/error.yaml",
+		"/home/pmasurel/indeed/salary-common/src/protobuf/mlp.proto",
+		"/home/pmasurel/indeed/salary-common/src/protobuf/deeplearning.proto",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/deep_learning/test.py",
+		"/home/pmasurel/indeed/data/parse.py",
+		"/home/pmasurel/indeed/salary-tools/provisioning/worker/Vagrantfile",
+		"/home/pmasurel/indeed/salary-tools/build.xml",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/conf/pylearn/mlp.yaml",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/data/tsv_loader.py",
+		"/home/pmasurel/indeed/salary-tools/src/python/estimation/preprocessing/filter.py",
+		"/home/pmasurel/indeed/boxcar/tmpl.iml"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 0.0,
+		"where_history":
+		[
+			"/home/pmasurel/git/dinette/dinette/dinetteQt",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"Locus",
+			"vectors",
+			"make6table",
+			"demeter",
+			"latest.integration",
+			"integration",
+			"demeter",
+			"thirdPartyIaData",
+			"delete",
+			"QExpRulesStore",
+			"poulejapon",
+			"txt",
+			"LinearRegression",
+			"jobs written to db",
+			"thread",
+			"286",
+			"Processed 286 job queue entries",
+			"draw_roundbox",
+			"cairo",
+			"img",
+			"Searching 21 files for \"Sprite\" (regex)\nSearching 21 files for \"Sprite\" (regex)\nimg",
+			"Searching 21 files for \"Sprite\" (regex)\nimg",
+			"Sprite",
+			"img",
+			"objects",
+			"_draw",
+			"paint",
+			"animate",
+			"refresh",
+			"onrefresh",
+			"onerefresh",
+			"onRefresh",
+			"main",
+			"class Universe",
+			"Universe",
+			"add_link",
+			"eigen/",
+			"master_lucenepath",
+			"publickey,password",
+			"master_hostname",
+			"SSH_program",
+			"ssh -f",
+			"PATH_SSHUSERCONF",
+			"SSH_program",
+			"hostname",
+			"lucenemaster",
+			"lucenemaster.indeed.dev",
+			"lockfile",
+			"log",
+			"align",
+			"currency",
+			"prior",
+			"evenue\nrevenue",
+			"evenue\n",
+			"qa-tools.jar",
+			"API_JAR",
+			"rawJobArchive",
+			"INDEED_PROJECT_DIR",
+			":",
+			"check-test-sources",
+			"\"test\"",
+			"test",
+			"/",
+			"com.indeed.salaryservice.\\S+",
+			"com.indeed.salaryservice.",
+			"\ncom.indeed.",
+			"\ncom.indeed.salaryservice",
+			"\ncom.indeed.salaryservice[\\.a-z]+",
+			"com.indeed.salaryservice[\\.a-z]+",
+			"test",
+			"JobSalary",
+			"JobSalaryExtract",
+			"bank",
+			"investment",
+			"T^",
+			"8",
+			"exp",
+			"modRecord",
+			"read_csv",
+			"salary_model",
+			"build_mlp_from_proto",
+			"application",
+			"+",
+			"build_mlp_from_proto",
+			"MLP",
+			"build_mlp_from_proto",
+			"------",
+			"X_preprocessed",
+			"print",
+			"diff",
+			"from_proto",
+			"4.",
+			"4.2",
+			"4.",
+			"0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n0.0\n1.0\n4.",
+			"4.",
+			"preprocessing_mlp",
+			"evaluate",
+			"get_biases",
+			"transform_autoencoder",
+			"get_weights",
+			"predict",
+			"build_mlp_from_proto",
+			"print ",
+			"data_size",
+			"preprocess_and_write_hdf5",
+			"42375",
+			"build_mlp_from_proto",
+			"\"MAE\"",
+			"MAE",
+			"ProtoDeepLearning",
+			"from_proto",
+			"print",
+			"transform_dataset",
+			"from_proto",
+			"transform_dataset",
+			"store_h5",
+			"transform_dataset",
+			"load_from_tsv",
+			"preprocess_and_write_hdf5",
+			"build_mlp_from_proto",
+			"cmp",
+			"bow_filter_original",
+			".vocabulary_",
+			"LANGUAGE_MAP",
+			"deseria",
+			"deserioa",
+			"def deserialize"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"\\n",
+			".",
+			"",
+			"}\n"
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 3,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "/home/pmasurel/indeed/perspecto/web/js/fulmicoton.coffee",
+					"settings":
+					{
+						"buffer_size": 2384,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 277.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/home/pmasurel/indeed/perspecto/web/js/geometry.coffee",
+					"settings":
+					{
+						"buffer_size": 1465,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								944,
+								944
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "/home/pmasurel/indeed/perspecto/web/js/actions.coffee",
+					"settings":
+					{
+						"buffer_size": 98,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								98,
+								98
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "perspecto_face.cjsx",
+					"settings":
+					{
+						"buffer_size": 4031,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								216,
+								216
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ReactJS/syntax/jsx-coffee/CoffeeScript (JSX).tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		},
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 4,
+					"file": "perspecto.cjsx",
+					"settings":
+					{
+						"buffer_size": 570,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								570,
+								570
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ReactJS/syntax/jsx-coffee/CoffeeScript (JSX).tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "/home/pmasurel/indeed/perspecto/web/css/style.less",
+					"settings":
+					{
+						"buffer_size": 282,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								204,
+								204
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/LESS/LESS.tmLanguage",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "/home/pmasurel/indeed/perspecto/web/js/store.coffee",
+					"settings":
+					{
+						"buffer_size": 1311,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1310,
+								1310
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/CoffeeScript/CoffeeScript.tmLanguage",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 34.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			],
+			[
+				1,
+				0,
+				2,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			0.5,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.git":
+	{
+		"height": 112.0
+	},
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+			[
+				"store",
+				"js/store.coffee"
+			],
+			[
+				"style",
+				"css/style.less"
+			],
+			[
+				"sprite",
+				"dinetteQt/sprite.h"
+			],
+			[
+				"fr_fr",
+				"build/classes/salary/fr_FR/numberformats.map"
+			],
+			[
+				"fr_fr/extractor.properties",
+				"src/resources/salary/fr_FR/extractor.properties"
+			],
+			[
+				"extractor",
+				"build/classes/salary/fr_CA/extractor.properties"
+			],
+			[
+				"bow",
+				"src/python/build/lib.linux-x86_64-2.7/estimation/preprocessing/bowfilter.py"
+			],
+			[
+				"train",
+				"src/python/trainer/train_relative_error2.py"
+			],
+			[
+				"processor",
+				"src/python/estimation/preprocessing/preprocessor.py"
+			],
+			[
+				"l2",
+				"src/python/estimation/conf/pylearn/l2.yaml"
+			],
+			[
+				"l1",
+				"src/python/estimation/conf/pylearn/l1.yaml"
+			],
+			[
+				"evalute",
+				"src/python/estimation/deep_learning/evaluate.py"
+			],
+			[
+				"hyper",
+				"src/python/master/conf/hyperparameter.yml"
+			],
+			[
+				"test_m",
+				"src/python/estimation/test/test_main.py"
+			],
+			[
+				"mlp_convert",
+				"src/python/estimation/postprocessing/mlp_convert.py"
+			],
+			[
+				"train_",
+				"src/python/trainer/train_relative_error.py"
+			],
+			[
+				"proce",
+				"src/python/estimation/preprocessing/preprocessor.py"
+			],
+			[
+				"test_main.py",
+				"src/python/estimation/test/test_main.py"
+			],
+			[
+				"readme",
+				"provisioning/worker/README.md"
+			],
+			[
+				"readm",
+				"provisioning/master/README.md"
+			],
+			[
+				"bowf",
+				"src/python/build/lib.linux-x86_64-2.7/estimation/preprocessing/bowfilter.py"
+			],
+			[
+				"one",
+				"src/python/build/lib.linux-x86_64-2.7/estimation/preprocessing/onehotfilter.py"
+			],
+			[
+				"test_on",
+				"test/python/estimation/test_onehotfilter.py"
+			],
+			[
+				"oneho",
+				"src/python/build/lib.linux-x86_64-2.7/estimation/preprocessing/onehotfilter.py"
+			],
+			[
+				"pb2",
+				"src/python/estimation/proto/deeplearning_pb2.py"
+			],
+			[
+				"test_oneho",
+				"test/python/estimation/test_onehotfilter.py"
+			],
+			[
+				"test_transform",
+				"test/python/estimation/test_transform.py"
+			],
+			[
+				"prepro",
+				"src/python/estimation/preprocessing/preprocessor.py"
+			],
+			[
+				"test_",
+				"test/python/estimation/test_bowfilter.py"
+			],
+			[
+				"proto",
+				"src/protobuf/filter.proto"
+			],
+			[
+				"preprocessor",
+				"src/python/estimation/preprocessing/preprocessor.py"
+			],
+			[
+				"transform",
+				"src/python/estimation/preprocessing/transform.py"
+			],
+			[
+				"onehotf",
+				"src/python/estimation/preprocessing/onehotfilter.py"
+			],
+			[
+				"test_bo",
+				"test/python/estimation/test_bowfilter.py"
+			],
+			[
+				"transfor",
+				"src/python/estimation/preprocessing/transform.py"
+			],
+			[
+				"trans",
+				"src/python/estimation/preprocessing/transform.py"
+			],
+			[
+				"test_trans",
+				"test/python/estimation/test_transform.py"
+			],
+			[
+				"test_one",
+				"test/python/estimation/test_onehotfilter.py"
+			],
+			[
+				"oneo",
+				"src/python/estimation/preprocessing/onehotfilter.py"
+			],
+			[
+				"bowe",
+				"src/python/estimation/preprocessing/bowfilter.py"
+			],
+			[
+				"tsv",
+				"src/python/estimation/data/tsv_loader.py"
+			],
+			[
+				"onehot",
+				"src/python/estimation/preprocessing/onehotfilter.py"
+			],
+			[
+				"prep",
+				"src/python/estimation/preprocessing/preprocessor.py"
+			],
+			[
+				"test_main",
+				"src/python/estimation/test/test_main.py"
+			],
+			[
+				"read",
+				"provisioning/worker/README.md"
+			],
+			[
+				"prepr",
+				"src/python/estimation/preprocessing/preprocessor.py"
+			],
+			[
+				"main.py",
+				"src/python/estimation/test/test_main.py"
+			],
+			[
+				"va",
+				"provisioning/worker/Vagrantfile"
+			],
+			[
+				"tsv_lo",
+				"src/python/estimation/data/tsv_loader.py"
+			],
+			[
+				"trainerror",
+				"src/python/trainer/train_relative_error.py"
+			],
+			[
+				"tsv_loader",
+				"src/python/estimation/data/tsv_loader.py"
+			],
+			[
+				"ivy",
+				"ivy.xml"
+			],
+			[
+				"filter",
+				"src/python/estimation/preprocessing/bowfilter.py"
+			],
+			[
+				"mlp_",
+				"src/python/estimation/proto/mlp_pb2.py"
+			],
+			[
+				"mlp_conv",
+				"src/python/estimation/postprocessing/mlp_convert.py"
+			],
+			[
+				"makefile",
+				"src/python/estimation/proto/Makefile"
+			],
+			[
+				"evalut",
+				"src/python/estimation/deep_learning/evaluate.py"
+			],
+			[
+				"hyerp",
+				"src/python/master/hyper_param.py"
+			],
+			[
+				"test",
+				"src/python/estimation/deep_learning/test.py"
+			],
+			[
+				"yaml",
+				"src/python/estimation/conf/pylearn/mlp.yaml"
+			],
+			[
+				"l2.",
+				"src/python/estimation/conf/pylearn/l2.yaml"
+			],
+			[
+				"l1.yaml",
+				"src/python/estimation/conf/pylearn/l1.yaml"
+			],
+			[
+				"hyperparameter",
+				"src/python/master/conf/hyperparameter.yml"
+			],
+			[
+				"eval",
+				"src/python/evaluator/evaluators.py"
+			],
+			[
+				"writers",
+				"src/python/writer/writers.py"
+			],
+			[
+				"evaluator",
+				"src/python/evaluator/evaluators.py"
+			],
+			[
+				"mon",
+				"src/python/conf/mongodb.yml"
+			],
+			[
+				"rabbit",
+				"src/python/conf/rabbitmq.yml"
+			],
+			[
+				"mongo",
+				"src/python/conf/mongodb.yml"
+			],
+			[
+				"salary_",
+				"src/python/estimation/conf/salary_estimation.yaml"
+			],
+			[
+				"trainers.py",
+				"src/python/trainer/trainers.py"
+			],
+			[
+				"worker",
+				"src/python/worker/worker.py"
+			],
+			[
+				"loader.",
+				"src/python/estimation/conf/loader.py"
+			],
+			[
+				"err",
+				"src/python/estimation/conf/pylearn/error.yaml"
+			],
+			[
+				"error_",
+				"src/python/estimation/deep_learning/error_estimation.py"
+			],
+			[
+				"loader",
+				"src/python/estimation/conf/loader.py"
+			],
+			[
+				"test_ma",
+				"src/python/estimation/test/test_main.py"
+			],
+			[
+				".yaml",
+				"src/python/estimation/conf/pylearn/l1.yaml"
+			],
+			[
+				"master.py",
+				"src/python/master/master.py"
+			],
+			[
+				"master",
+				"src/python/master/master.py"
+			],
+			[
+				"add_mon",
+				"provisioning/master/chef-repo/site-cookbooks/mongodb/files/default/add_mongousers.js"
+			],
+			[
+				"mongodb/recipes/",
+				"provisioning/master/chef-repo/site-cookbooks/mongodb/recipes/default.rb"
+			],
+			[
+				"base/def",
+				"provisioning/master/chef-repo/site-cookbooks/base/recipes/default.rb"
+			],
+			[
+				"evaluate",
+				"src/python/estimation/deep_learning/evaluate.py"
+			],
+			[
+				"mongodb.",
+				"src/python/conf/mongodb.yml"
+			],
+			[
+				"error",
+				"src/python/estimation/conf/pylearn/error.yaml"
+			],
+			[
+				"_pb2.py",
+				"src/python/estimation/proto/mlp_pb2.py"
+			],
+			[
+				"deep_",
+				"src/python/estimation/proto/deeplearning_pb2.py"
+			],
+			[
+				".proto",
+				"src/protobuf/mlp.proto"
+			],
+			[
+				"mlp",
+				"src/python/estimation/conf/pylearn/mlp.yaml"
+			],
+			[
+				"error_estimation",
+				"src/python/estimation/deep_learning/error_estimation.py"
+			],
+			[
+				"err.yml",
+				"src/python/estimation/conf/pylearn/error.yaml"
+			],
+			[
+				"yml",
+				"src/python/estimation/conf/pylearn/mlp.yaml"
+			],
+			[
+				"re",
+				"README"
+			],
+			[
+				"error.ya",
+				"src/python/estimation/conf/pylearn/error.yaml"
+			],
+			[
+				"mlp.",
+				"src/python/estimation/conf/pylearn/mlp.yaml"
+			],
+			[
+				"sdamodelbuilder",
+				"src/python/estimation/deep_learning/sda_model_builder.py"
+			],
+			[
+				"preparerb",
+				"provisioning/worker/chef-repo/site-cookbooks/prepare/recipes/aws.rb"
+			],
+			[
+				"site-cookb",
+				"provisioning/master/chef-repo/site-cookbooks/base/metadata.rb"
+			],
+			[
+				"aws",
+				"provisioning/worker/chef-repo/site-cookbooks/prepare/recipes/aws.rb"
+			],
+			[
+				"worker.py",
+				"src/python/worker/worker.py"
+			],
+			[
+				"mlp.y",
+				"estimation/conf/pylearn/mlp.yaml"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 198.0,
+	"status_bar_visible": true
+}

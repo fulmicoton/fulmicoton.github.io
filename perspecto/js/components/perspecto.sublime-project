@@ -1,0 +1,10 @@
+{
+	"folders":
+	[
+		{
+			"path": "/home/pmasurel/indeed/perspecto/web",
+			"folder_exclude_patterns": [".readymade"],
+    		"file_exclude_patterns": ["*.js"]
+		}
+	]
+}

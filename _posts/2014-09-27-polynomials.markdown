@@ -3,7 +3,7 @@ layout: post
 title:  Of Berlekamp factorization algorithm  
 category: posts
 description: Solving a math puzzle
-published: true
+published: false
 ---
 
 

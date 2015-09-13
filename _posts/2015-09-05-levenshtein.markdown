@@ -104,14 +104,13 @@ It's been such a long time since my last post, and so much have happened. I move
 
 Earlier this year, Jules Jacob wrote an awesome blog post titled [**Levenshtein automata can be simple and fast**](http://julesjacobs.github.io/2015/06/17/disqus-levenshtein-simple-and-fast.html). While reading it, you might notice that it is kind of a rebuke against the convoluted language of the original paper : [Correction with Levenshtein-Automata](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.652) by Klaus Schulz and Stoyan Mihov. I read this paper, and I have to agree its style is rather abstract and opaque. 
 
-Jules's blog post on the other hand wield great pedagogy, and walks the reader step-by-step through building such automata,
-using a simple algorithm.
+Jules's blog post on the other hand wield great pedagogy, and walks the reader step-by-step through a simpler algorithm to build Levenshtein automata.
 
 While I love this blogpost, I am afraid that I disagree with Jules, when he claims : **After a bit of tinkering I had a working Levenshtein automaton in just a handful of lines of code with the same time complexity as the paper claims to have.**
 
-Jules's algorithm complexity is indeed linear in the number of characters. However, if you consider the complexity in the maximum edit distance supported, the algorithm does not do that well. The blog post dismisses it by saying that we will only consider edit distance < 2 anyway, so why not consider it constant. I would counter argue that at distance 2, the algorithm described here is already too slow to be usable in practise to build an autocomplete system.
+Jules's algorithm complexity is indeed linear in the number of characters. However, if you consider the complexity in the maximum edit distance supported, the algorithm does not do that well. The blog post dismisses it by saying that we will only consider edit distance < 2 anyway, so why not consider it constant. I would counter argue that at distance 2, the algorithm described here is already too slow to be usable in practise to build a search autocomplete system.
 
-Moreover, the paper actually describes in ``Chapter 6`` a way to avoid computing the DFA at all... so calling it ** same time complexity ** is a bit of a stretch?
+Moreover, the paper actually describes in ``Chapter 6`` a way to avoid computing the DFA at all... so isn't calling it ** same time complexity ** a bit of a stretch?
 
 In this blog post I will try to take the subject where Jules left it, and explain the actual algorithm in the article. I will also explain some specificities about Lucene's implementation.
 
@@ -119,20 +118,18 @@ In this blog post I will try to take the subject where Jules left it, and explai
 
 
 
-I recently got interested in building an autocomplete service. You probably are familiar with those : the user start typing a query, and is offered a bunch of suggestions before he has even finished typing.
+I recently got interested in building an autocomplete service. You probably are familiar with those : the user starts typing a query, and is offered a bunch of suggestions before he has even finished typing.
 
 Imagine you had to implement one of these...  
 As a first shot, you might consider building a trie with 
 a list of suggestions. For each of the suggestions, you also probably want to store some kind of score. When a request comes, you can then use the trie to list up the suggestions which admit the user input as a prefix, and serve back the top 10 best entries.
 
-But users make typos, and sometimes they don't actually know how to spell the thing that they are search for. So you might want to relax the prefix constraint and start considering entries that have a prefix that is at an edit distance of up to 2 from the user query. Now how are we going to be able to do that?
-
-The [paper](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.652) precisely explains how to search rapidly in a dictionary which entries are an edit distance lower than k from a query. I will leave the "prefix" part of the problem for a next blog post.
+But users make typos, and sometimes they don't actually know how to spell the thing that they are search for. So you might want to relax the prefix constraint and allow for spelling mistake. The [paper](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.652) precisely explains how to search rapidly in a dictionary which entries are at an edit distance lower than k from a query. I will leave the "prefix" part of the problem for a next blog post.
 
 
-So the main idea of the paper is to build a Levenshtein Automaton for the user query. It is a Deterministic Finite Automaton ([DFA](https://en.wikipedia.org/wiki/Deterministic_finite_automaton)) which has the property matching strings that are at a edit distance of at most D from the query.
+The solution starts by building a so-called Levenshtein Automaton for the user query. It is a Deterministic Finite Automaton ([DFA](https://en.wikipedia.org/wiki/Deterministic_finite_automaton)) which has the property matching strings that are at a edit distance of at most D from the query.
 
-Now, if our dictionary is also stored in a trie (or a transducer), the problem consists in running the automaton on the trie. This operation is called an intersection and is rather straightforward.
+Now, if our dictionary is also stored in a trie (or a transducer, or any kind of automaton), the problem consists in running the automaton over the trie. This operation is called an intersection and is rather straightforward.
 
 The construction of such a DFA on the other hand is a bit tricky. Building it fast is quite a challenge. In this blog post, I will precisely describe the algorithm described in the paper. I will also talk about the specifics about Lucene's implementation.
 
@@ -352,7 +349,7 @@ The most striking thing to notice here, is that the set of states that are activ
 
 It is actually pretty simple : after n characters, you cannot reach any state with an offset of more than `n + D` (that would mean that you have inserted more than D characters). The same applies with states with an offset of less than `n - D` as it would require to delete more than d characters.
 
-In other words, at one point of time, you know that all of the active state will lie between `n - D` and `n + D`.
+In other words, at one point of time, you know that all of the active state will lie between the offset `n - D` and `n + D`.
 
 At this point, our upper bound for the complexity of the number of set of states in the DFA and its computation time is
 
@@ -448,7 +445,7 @@ class LevenshteinNFA(NFA):
 
 This will not necessarily make our automaton minimal, but it is already much less hairy.
 
-The new complexity for th enumber of state in our automaton is something like
+The new complexity for the number of states in our automaton is
 
     $$ O \left( D^2 N \right)$$
 

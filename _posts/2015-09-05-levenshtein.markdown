@@ -2,7 +2,9 @@
 layout: post
 title: Of Levenshtein Automata implementations
 category: posts
-published: false
+published: true
+draft: true
+tags: draft
 style: |
   
     <style type="text/css">
@@ -94,10 +96,11 @@ style: |
 ---
 
 
+# Back to Japan
+
+It's been such a long time since my last post, and so much have happened. I moved to Tokyo in November 2014 and started working for Indeed Japan. I'm still kind of foreign to the dev community in Japan, so if you are also in Tokyo and you have some good tips about tech/startup event of anykind in Tokyo, drop me a message!
 
 # Reacting to another blog post
-
-
 
 Earlier this year, Jules Jacob wrote an awesome blog post titled [**Levenshtein automata can be simple and fast**](http://julesjacobs.github.io/2015/06/17/disqus-levenshtein-simple-and-fast.html). While reading it, you might notice that it is kind of a rebuke against the convoluted language of the original paper : [Correction with Levenshtein-Automata](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.652) by Klaus Schulz and Stoyan Mihov. I read this paper, and I have to agree its style is rather abstract and opaque. 
 
@@ -666,7 +669,11 @@ First the result of the preprocessing is directly serialized, and written direct
 Also, the parametric levenshtein automaton, is not used directly but is rather used to construct a DFA. This is also the approach that I take in my current project.
 But this DFA works on unicode characters, while there dictionary structure is encoded in UTF-8. Rather than converting utf-8 on the fly, they prefer to convert the DFA to utf-8. That's actually pretty neat isn't it?
 
-So where is the quirk? Well the algorithm used to build the automaton is very bad.
+So where is the quirk? Well the algorithm used to build the automaton is very strange. 
+
+Rather than just browsing the reachable states of the parametric automaton,  it shoves all of the parametric states and all of their transitions.
+This is hurting performance pretty badly, but I assume 
+automaton creation is already fast enough for most client's need.
 
 
 <script src='/js/levenshtein/demo.js'></script>

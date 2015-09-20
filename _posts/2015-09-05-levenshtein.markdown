@@ -3,7 +3,6 @@ layout: post
 title: Of Levenshtein Automata implementations
 category: posts
 published: true
-draft: true
 tags: draft
 style: |
   

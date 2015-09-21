@@ -200,7 +200,7 @@ def levenshtein(s1, s2, D=2):
             # substitution
             return True
     # assuming s1[0] is used to build s2
-    for d in range(min(D, len(s2))):
+    for d in range(min(D+1, len(s2))):
         # d is the position where s1[0]
         # might be used.
         # it is also the number of character
@@ -234,7 +234,7 @@ def levenshtein(s1, s2, D=2, i1=0, i2=0):
             if aux(i1 + 1, i2 + 1, D - 1):
                 # substitution
                 return True
-        for d in range(min(D, len(s2) - i2)):
+        for d in range(min(D + 1, len(s2) - i2)):
             if s1[i1] == s2[i2 + d]:
                 # d insertion, followed
                 # by a character match.
@@ -268,11 +268,11 @@ def levenshtein(s1, s2, D=2):
             yield i2, D - 1
             # substitution
             yield i2 + 1, D - 1
-        for d in range(min(D, len(s2) - i2)):
+        for d in range(min(D + 1, len(s2) - i2)):
             if c == s2[i2 + d]:
                 # d insertions followed by a
                 # character match
-                yield d + 1, D - d
+                yield i2 + d + 1, D - d
 
     current_args = {(0, D)}
     for c in s1:
@@ -281,7 +281,6 @@ def levenshtein(s1, s2, D=2):
             for next_arg in aux(c, i2, d):              
                 next_args.add(next_arg)
         current_args = next_args
-    
     for (i2, D) in current_args:
         if len(s2) - i2 <= D:
             return True
@@ -328,7 +327,7 @@ class LevenshteinAutomaton(NFA):
         if D > 0:
             yield (offset, D - 1)
             yield (offset + 1, D - 1)
-        for d in range(min(D, len(self.query) - offset)):
+        for d in range(min(D + 1, len(self.query) - offset)):
             if c == self.query[offset + d]:
                 yield offset + d + 1, D - d
 
@@ -339,7 +338,6 @@ class LevenshteinAutomaton(NFA):
     def initial_states(self,):
         return {(0, self.max_D)}
 
-# Our automaton can be used as follows
 def levenshtein(s1, s2, D=2):
     return LevenshteinAutomaton(s2, D).eval(s1)
 
@@ -440,7 +438,7 @@ class LevenshteinNFA(NFA):
         if d > 0:
             yield (offset, d - 1)
             yield (offset + 1, d - 1)
-        for k in range(min(d, len(self.query) - offset)):
+        for k in range(min(d + 1, len(self.query) - offset)):
             if c == self.query[offset + k]:
                 yield offset + k + 1, d - k
 
@@ -470,7 +468,6 @@ class LevenshteinNFA(NFA):
             return True
         
         return filter(is_useful, states)
-
 
 {% endhighlight %}
 

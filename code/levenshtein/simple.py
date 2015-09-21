@@ -25,7 +25,8 @@ def levenshtein(s1, s2, D=2):
         ))
 
 assert levenshtein("abc", "a")
-
+assert levenshtein("abcd", "acd", D=1)
+assert levenshtein("acd", "abcd", D=1)
 
 # ------------------------------------
 # Snippet 2
@@ -49,7 +50,7 @@ def levenshtein(s1, s2, D=2):
             # substitution
             return True
     # assuming s1[0] is used to build s2
-    for d in range(min(D, len(s2))):
+    for d in range(min(D+1, len(s2))):
         # d is the position where s1[0]
         # might be used.
         # it is also the number of character
@@ -65,7 +66,7 @@ assert levenshtein("a", "abc")
 assert not levenshtein("a", "abcd")
 assert not levenshtein("abcd", "a")
 assert levenshtein("abc", "a")
-
+assert levenshtein("abcd", "acd", D=1)
 print "----"
 
 # ------------------------------------
@@ -87,7 +88,7 @@ def levenshtein(s1, s2, D=2, i1=0, i2=0):
             if aux(i1 + 1, i2 + 1, D - 1):
                 # substitution
                 return True
-        for d in range(min(D, len(s2) - i2)):
+        for d in range(min(D + 1, len(s2) - i2)):
             if s1[i1] == s2[i2 + d]:
                 # d insertion, followed
                 # by a character match.
@@ -99,6 +100,7 @@ def levenshtein(s1, s2, D=2, i1=0, i2=0):
 assert levenshtein("a", "abc")
 assert not levenshtein("a", "abcd")
 assert not levenshtein("abcd", "a")
+assert levenshtein("abcd", "acd", D=1)
 assert levenshtein("abc", "a")
 
 # --------
@@ -119,11 +121,11 @@ def levenshtein(s1, s2, D=2):
             yield i2, D - 1
             # substitution
             yield i2 + 1, D - 1
-        for d in range(min(D, len(s2) - i2)):
+        for d in range(min(D + 1, len(s2) - i2)):
             if c == s2[i2 + d]:
                 # d insertions followed by a
                 # character match
-                yield d + 1, D - d
+                yield i2 + d + 1, D - d
 
     current_args = {(0, D)}
     for c in s1:
@@ -132,7 +134,6 @@ def levenshtein(s1, s2, D=2):
             for next_arg in aux(c, i2, d):              
                 next_args.add(next_arg)
         current_args = next_args
-    
     for (i2, D) in current_args:
         if len(s2) - i2 <= D:
             return True
@@ -141,155 +142,11 @@ def levenshtein(s1, s2, D=2):
 assert levenshtein("a", "abc")
 assert not levenshtein("a", "abcd")
 assert not levenshtein("abcd", "a")
+assert levenshtein("acd", "abcd", D=1)
+assert levenshtein("abcd", "acd", D=1)
 assert levenshtein("abc", "a")
 
 
-def levenshtein(query, n=2):
-    """
-    Returns a function that test
-    if a string is at an edit distance 
-    lesser or equal to n.
-    """
-    def transitions(c, state):
-        (offset, n) = state
-        yield (offset, n - 1)
-        yield (offset + 1, n - 1)
-        for d in range(min(n + 1, len(query) - offset)):
-            if c == query[offset + d]:
-                yield offset + d + 1, n - d
-
-    def accept(state):
-        (offset, n) = state
-        return len(query) - offset <= n
-
-    initial_state = {(0, n)}
-
-    def close_to_query(s):
-        states = initial_state
-        for c in s:
-            next_states = set()
-            for state in states:
-                for next_state in transitions(c, state):            
-                    next_states.add(next_state)
-            states = next_states
-        for state in states:
-            if accept(state):
-                return True
-
-    return close_to_query
-
-
-def levenshtein(query, n=2):
-    """
-    Returns a function that test
-    if a string is at an edit distance 
-    lesser or equal to n.
-    """
-    def transitions(c, state):
-        (offset, n) = state
-        yield (offset, n - 1)
-        yield (offset + 1, n - 1)
-        for d in range(min(n + 1, len(query) - offset)):
-            if c == query[offset + d]:
-                yield offset + d + 1, n - d
-
-    def accept(state):
-        (offset, n) = state
-        return len(query) - offset <= n
-
-    initial_state = {(0, n)}
-
-    def implies(state1, state2):
-        """
-        Returns true, if state1 implies state2
-        """
-        (offset, n) = state1
-        (offset2, n2) = state2
-        if n2 < 0:
-            return True
-        return n - n2 >= abs(offset2 - offset)
-
-    def simplify(states):
-        def is_useful(s):
-            for s2 in states:
-                if s != s2 and implies(s2, s):
-                    return False
-            return True
-        return filter(is_useful, states)
-
-    def close_to_query(s):
-        states = initial_state
-        for c in s:
-            next_states = set()
-            for state in states:
-                next_states |= set(transitions(c, state))    
-            states = simplify(next_states)
-        for state in states:
-            if accept(state):
-                return True
-
-    return close_to_query
-
-
-
-def levenshtein(query, n=2):
-    """
-    Returns a function that test
-    if a string is at an edit distance 
-    lesser or equal to n.
-    """
-    def characteristic(c, offset):
-        return [
-            d
-            for d in range(n + 1)
-            if offset + d < len(query) and query[offset + d] == c
-        ]
-
-    def transitions(chi, state):
-        (offset, n) = state
-        yield (offset, n - 1)
-        yield (offset + 1, n - 1)
-        for d in chi:
-            yield offset + d + 1, n - d
-
-    def accept(state):
-        (offset, n) = state
-        return len(query) - offset <= n
-
-    initial_state = {(0, n)}
-
-    def implies(state1, state2):
-        """
-        Returns true, if state1 implies state2
-        """
-        (offset, n) = state1
-        (offset2, n2) = state2
-        if n2 < 0:
-            return True
-        return n - n2 >= abs(offset2 - offset)
-
-    def simplify(states):
-        def is_useful(s):
-            for s2 in states:
-                if s != s2 and implies(s2, s):
-                    return False
-            return True
-        return filter(is_useful, states)
-
-    def close_to_query(s):
-        states = initial_state
-        for c in s:
-            next_states = set()
-            for state in states:
-                offset = state[0]
-                chi = characteristic(c, offset) 
-                next_states |= set(transitions(chi, state))    
-            states = simplify(next_states)
-        for state in states:
-            if accept(state):
-                return True
-
-    return close_to_query
 
 #---------------------
 
@@ -326,7 +183,7 @@ class LevenshteinAutomaton(NFA):
         if D > 0:
             yield (offset, D - 1)
             yield (offset + 1, D - 1)
-        for d in range(min(D, len(self.query) - offset)):
+        for d in range(min(D + 1, len(self.query) - offset)):
             if c == self.query[offset + d]:
                 yield offset + d + 1, D - d
 
@@ -343,6 +200,8 @@ def levenshtein(s1, s2, D=2):
 
 assert levenshtein("a", "abc")
 assert not levenshtein("a", "abcd")
+assert levenshtein("acd", "abcd", D=1)
+assert levenshtein("abcd", "acd", D=1)
 assert not levenshtein("abcd", "a")
 assert levenshtein("abc", "a")
 
@@ -394,7 +253,7 @@ class LevenshteinNFA(NFA):
         if d > 0:
             yield (offset, d - 1)
             yield (offset + 1, d - 1)
-        for k in range(min(d, len(self.query) - offset)):
+        for k in range(min(d + 1, len(self.query) - offset)):
             if c == self.query[offset + k]:
                 yield offset + k + 1, d - k
 
@@ -434,6 +293,9 @@ assert levenshtein("a", "abc")
 assert not levenshtein("a", "abcd")
 assert not levenshtein("abcd", "a")
 assert levenshtein("abc", "a")
+
+assert levenshtein("acd", "abcd", D=1)
+assert levenshtein("abcd", "acd", D=1)
 
 
 #-------------------
@@ -644,6 +506,8 @@ def levenshtein(query, n=2):
 
 # ---------------
 levenshtein("abc", 2)("abd")
+assert levenshtein("acd", 1)("abcd")
+assert levenshtein("abcd", 1)("acd")
 # --------------
 
 
@@ -740,13 +604,14 @@ def levenshtein(query, n=2):
             new_states = nfa.step(chi, norm_states)
             (min_offset, norm_states) = normalize(new_states)
             global_offset += min_offset
-            print norm_states
         for (offset, c) in norm_states:
             if len(query) - offset - global_offset <= n:
                 return True
         return False
 
     return eval
+
+
 
 # ---------------------------------------------
 
@@ -950,12 +815,15 @@ class LevenshteinParametricDFA(object):
                 return True
         return False
 
-levenshtein_parametric = LevenshteinParametricDFA()
+levenshtein_parametric = LevenshteinParametricDFA(n=1)
 print levenshtein_parametric.eval("flees", "flyes")
 print levenshtein_parametric.eval("fleys", "flyes")
 
 
+assert levenshtein_parametric.eval("acd", "abcd")
+assert levenshtein_parametric.eval("abcd", "acd")
 
+# -------------------
 
 class LevenshteinNFA(NFA):
 
@@ -1021,6 +889,13 @@ assert levenshtein("a", "abc")
 assert not levenshtein("a", "abcd")
 assert not levenshtein("abcd", "a")
 assert levenshtein("abc", "a")
+
+
+assert levenshtein("abcd", "acd", D=1)
+assert levenshtein("acd", "abcd", D=1)
+
+assert levenshtein("abcd", "acd", D=1)
+assert levenshtein("acd", "abcd", D=1)
 
 # ------------
 
@@ -1089,6 +964,7 @@ class LevenshteinParametricDFA(object):
                     yet_to_visit.append(norm_states)
                 state_transitions[chi] = (min_offset, norm_states)
             dfa[norm_states] = state_transitions
+        print len(dfa)
         self.dfa = dfa
 
     def initial_states(self,):
@@ -1112,9 +988,13 @@ class LevenshteinParametricDFA(object):
     def step_all(self, query, s):
         (global_offset, norm_states) = self.normalize(self.initial_states())
         for c in s:
+            print "-----", c
             chi = self.characteristic(query, c, global_offset)
+            print "before", global_offset,  norm_states
             (shift_offset, norm_states) = self.dfa[norm_states][chi]
+            print "shift_offset", shift_offset
             global_offset += shift_offset
+            print "after", global_offset,  norm_states
         return (global_offset, norm_states)
 
     def eval(self, query, input_string):
@@ -1131,10 +1011,15 @@ param_dfa = LevenshteinParametricDFA(D=2)
 def levenshtein(query, input_string):
     return param_dfa.eval(query, input_string)
 
-assert levenshtein("a", "abc")
-assert not levenshtein("a", "abcd")
-assert not levenshtein("abcd", "a")
-assert levenshtein("abc", "a")
+# assert levenshtein("a", "abc")
+# assert not levenshtein("a", "abcd")
+# assert not levenshtein("abcd", "a")
+# assert levenshtein("abc", "a")
+
+
+#assert levenshtein("acd", "abcd")
+assert levenshtein("bcd", "cd")
+#assert levenshtein("abd", "abcd")
 
 # assert levenshtein("c")("abc")
 #assert levenshtein("flier")("flyer")

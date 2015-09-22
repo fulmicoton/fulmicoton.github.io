@@ -95,7 +95,7 @@ style: |
 ---
 
 
-*Thanks to Ken H. for kindly taking a lot of  time to read and fix countless errors in this blog post!*
+*Thanks to Ken Hironaka for kindly taking a lot of  time to read and fix countless errors in this blog post!*
 
 
 # Back to Tokyo

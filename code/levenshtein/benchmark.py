@@ -1,4 +1,3 @@
-
 class Index(object):
     def __init__(self,):
         self.idx_to_val = []
@@ -18,7 +17,6 @@ class Index(object):
         new_idx = len(self.idx_to_val)
         self.idx_to_val.append(val)
         self.val_to_idx[val] = new_idx
-
 
 class LevenshteinParametricDFA(object):
 
@@ -80,6 +78,7 @@ class LevenshteinParametricDFA(object):
         chi_values = list(enumerate_chi_values(width))
         (global_offset, norm_states) = self.normalize(self.initial_states())
         dfa = []
+        self.index.val_to_idx[()] = -1
         self.index.allocate_id(norm_states)
         yet_to_visit = [norm_states]
         self.accept_values = []
@@ -144,15 +143,11 @@ class LevenshteinParametricDFA(object):
             return False
 
 
-MAXIMUM_DISTANCE = 2
-PARAM_DFA = [
-    LevenshteinParametricDFA(D=D)
-    for D in range(MAXIMUM_DISTANCE + 1)
-]
+MAXIMUM_DISTANCE = 4
+PARAM_DFA = []
 
 
-
-class DeterministicAutomaton:
+class Automaton:
 
     def initial_state(self,):
         raise NotImplementedError()
@@ -163,18 +158,16 @@ class DeterministicAutomaton:
     def step(self, state, c):
         raise NotImplementedError()
 
-    def accept(self, state):
+    def can_match(self, state):
         raise NotImplementedError()
 
-
-class ParametricAutomaton(DeterministicAutomaton):
+class ParametricAutomaton(Automaton):
     # Not really a DFA as it is not technically
     # finite.
-
     def __init__(self, query, D=2):
         assert D <= MAXIMUM_DISTANCE
         self.max_D = D
-        self.w = 2*D + 1
+        self.w = 2 * D + 1
         self.len_query = len(query)
         param_dfa = PARAM_DFA[D]
         self.dfa = param_dfa.dfa
@@ -187,6 +180,9 @@ class ParametricAutomaton(DeterministicAutomaton):
                 for c in query_letters
             })
 
+    def can_match(self, (offset, norm_state)):
+        return norm_state >= 0
+
     def initial_state(self,):
         return (0, 0)
 
@@ -197,12 +193,55 @@ class ParametricAutomaton(DeterministicAutomaton):
         return (global_offset + shift_offset, norm_state)
 
     def accept(self, state):
+        if state[1] == -1:
+            return False
         (global_offset, final_state_idx) = state
         remaining_offset = self.len_query - global_offset
         if remaining_offset < 2 * self.max_D + 1:
-            return self.max_D - self.accept_values[final_state_idx][remaining_offset]
+            return self.accept_values[final_state_idx][remaining_offset] >= 0
         else:
-            return self.max_D + 1
+            return False #self.max_D + 1
+
+# -----------------------------------------
+
+class SparseLevenshteinAutomaton(Automaton):
+    def __init__(self, string, D=2):
+        self.string = string
+        self.max_edits = D
+
+    def initial_state(self):
+        return (range(self.max_edits+1), range(self.max_edits+1))
+
+    def step(self, (indices, values), c):
+        if indices and indices[0] == 0 and values[0] < self.max_edits:
+            new_indices = [0]
+            new_values = [values[0] + 1]
+        else:
+            new_indices = []
+            new_values = []
+
+        for j,i in enumerate(indices):
+            if i == len(self.string): break
+            cost = 0 if self.string[i] == c else 1
+            val = values[j] + cost
+            if new_indices and new_indices[-1] == i:
+                val = min(val, new_values[-1] + 1)
+            if j+1 < len(indices) and indices[j+1] == i+1:
+                val = min(val, values[j+1] + 1)
+            if val <= self.max_edits:
+                new_indices.append(i+1)
+                new_values.append(val)
+        return (new_indices, new_values)
+
+    def accept(self, (indices, values)):
+        return bool(indices) and indices[-1] == len(self.string)
+
+    def can_match(self, (indices, values)):
+        return bool(indices)
+
+    def transitions(self, (indices, values)):
+        return set(self.string[i] for i in indices if i < len(self.string))
+
 
 def levenshtein(query, input_string, D=2):
     automaton = ParametricAutomaton(query, D=D)
@@ -211,14 +250,103 @@ def levenshtein(query, input_string, D=2):
         state = automaton.step(state, c)
     return automaton.accept(state)
 
-assert levenshtein("a", "abc") == 2
-assert levenshtein("a", "abcd") == 3
-assert levenshtein("abcd", "a") == 3
-assert levenshtein("abc", "a") == 2
-assert levenshtein("abcd", "ad") == 2
-assert levenshtein("abcd", "ade") == 3
-assert levenshtein("bcd", "cd", D=1) == 1
-assert levenshtein("bcd", "cd", D=2) == 1
+# -------------------------------------
+
+from collections import defaultdict
+
+class Trie:
+
+    def __init__(self,):
+        self.children = defaultdict(Trie)
+        self.term_id = -1
+
+    def append(self, s, term_id):
+        if len(s) == 0:
+            self.term_id = term_id
+        else:
+            (h, t) = s[0], s[1:]
+            self.children[h].append(t, term_id)
+
+class MutableCounter:
+
+    def __init__(self,):
+        self.val = 0
+
+    def inc(self,):
+        self.val += 1
+
+def intersect(trie, dfa, counter):
+    def aux(trie, dfa, state):
+        if trie.term_id >= 0 and dfa.accept(state):
+            yield trie.term_id
+        for (h, child) in trie.children.items():
+            counter.inc()
+            new_state = dfa.step(state, h)
+            if dfa.can_match(state):
+                for v in aux(child, dfa, new_state):
+                    yield v
+    return aux(trie, dfa, dfa.initial_state())
+
+# -------------------------------------
+
+FILEPATH = "/usr/share/dict/words"
+
+def load(limit=100):
+    num_read = 0
+    for line in open(FILEPATH, 'r'):
+        num_read += 1
+        yield line.strip().lower()
+        if num_read >= limit:
+            break
+
+import time
+
+def benchmark(trie, tests, D):
+    print "\n\n--------------"
+    print "D=", D
+    for Impl in [ParametricAutomaton, SparseLevenshteinAutomaton]:
+        num_calls = MutableCounter()
+        start = time.time()
+        total_count = 0
+        total_calls = 0
+        for test in tests:
+            automaton = Impl(test, D=D)
+            total_count += sum(1 for w in intersect(trie, automaton, num_calls))
+            total_calls += num_calls.val
+        print total_count, total_calls
+        stop = time.time()
+        print Impl.__name__, (stop - start) / len(tests),  (stop - start) * 1000000 / (total_calls)
+
+import random
+
+lines = list(load(limit=50000))
+trie = Trie()
+for (line_id, line) in enumerate(lines):
+    trie.append(line, line_id)
+tests = random.sample(lines, 200)
+
+for D in range(10):
+    PARAM_DFA.append(LevenshteinParametricDFA(D=D))
+    print "\n" * 10
+    benchmark(trie, tests, D=D)
+    # benchmark(trie, tests, D=D)
+
+# for word in test:
+#     for dfa in [ParametricAutomaton(word, D=2), SparseLevenshteinAutomaton(word, D=2)]:
+#         print "-----"
+#         print word
+#         for w in intersect(trie, dfa):
+#             print w
+
+
+# assert levenshtein("a", "abc") == 2
+# assert levenshtein("a", "abcd") == 3
+# assert levenshtein("abcd", "a") == 3
+# assert levenshtein("abc", "a") == 2
+# assert levenshtein("abcd", "ad") == 2
+# assert levenshtein("abcd", "ade") == 3
+# assert levenshtein("bcd", "cd", D=1) == 1
+# assert levenshtein("bcd", "cd", D=2) == 1
 
 #assert levenshtein("abcd", "acd") == 1
 #assert levenshtein("accd", "acd") == 1

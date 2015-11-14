@@ -1,0 +1,154 @@
+---
+layout: post
+title: Of Sum of dices
+category: posts
+published: true
+---
+
+# A nice little puzzle
+
+
+So my next post was supposed to be about an extension to 
+levenshtein automata, but I had some good reason to want to delay that 
+for a bit. Anyway stay tuned !
+
+In the meanwhile, as I was talking about dices at work, I thought about a very cool puzzle. He it goes :
+
+> ** Find all ways to relabel the faces of two dices with non-negative integers in such a way that if you roll them, their sum follows a uniform law on [0, 35] ?**
+
+So you probably know that when you roll two classical dices, their sum does not follow a uniform distribution.
+
+7 is the most likely sum with a probability of $1 \over 6$. 
+2 and 12 are the least likely, with a probability of $1 \over 36$
+
+Actually here is the actual distribution.
+
+<iframe width="600" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/1rilZTWR_L_xjDfo-tVqIhmF2qvKupPRmzZzmLcFfHsw/pubchart?oid=1282500553&amp;format=image"></iframe> 
+
+The goal is to change the number on each faces in order to make this distribution uniform over [1, 36]. Some of the solution are rather simple, some other look very cool.
+
+Stop reading hear if you want to tackle the puzzle on your own.
+
+<div style="height:100px;">&nbsp;</div>
+
+# Sicherman dice
+
+A very similar problem is to find a way to relabel dices such that
+their sum still follows the same distribution as two regular dices.
+
+As explained in the Wikipedia page, there is only one solution to this problem and they are called the Sicherman dices. The dices go :
+
+- 1, 2, 2, 3, 3, 4
+- 1, 3, 4, 5, 6, 8. 
+
+Don't click on the wikipedia page as the theory is basically is the same for the Sicherman dices and this problem.
+
+
+<h2 style='color:red; font-weight:bold; text-align:center'>spoiler coming</h2>
+<div style="height:100px"></div>
+<h2 style='color:red; font-weight:bold; text-align:center'>spoiler coming</h2>
+<div style="height:100px"></div>
+<h2 style='color:red; font-weight:bold; text-align:center'>spoiler coming</h2>
+
+<div style="height:100px"></div>
+<h2 style='color:red; font-weight:bold; text-align:center'>Tyrion is a dragon who took human form</h2>
+<div style="height:100px"></div>
+<h2 style='color:red; font-weight:bold; text-align:center'>spoiler coming</h2>
+<div style="height:100px"></div>
+<h2 style='color:red; font-weight:bold; text-align:center'>spoiler coming</h2>
+<div style="height:100px"></div>
+<h2 style='color:red; font-weight:bold; text-align:center'>spoiler coming</h2>
+<div style="height:100px"></div>
+
+
+# Polynomials showing up
+
+Algebra gives us all of the necessary tools to solve this problem in a very neat way.
+Let's start by having a look at the probability of the sum of two dices... Let's call $X_1$ and $X_2$ the random variable associated with the outcome of the first dice and the second dice respectively.
+
+Then we can compute the probability that their sum is S 
+
+    $$ P(X_1 + X_2 = S) = \sum_{k=1}^{S-1} P(X_1 = k) P(X_2 = S-k) $$
+
+You may recognize here a [convolution](https://en.wikipedia.org/wiki/Convolution), or the formula for polynomial multiplication.
+We're going to heavily rely on this observation. Given a random variable taking value within integer $0 \leq k \leq n$, we can define a polynomial Q defined as : 
+
+    $$ Q(P) = \sum_{k=0}^{n} P(X=k) X^k $$
+
+We then have the interesting property that 
+
+    $$ Q({X_1} + {X_2}) = Q({X_1}{X_2})$$
+
+Let's see what it means with a very concrete example.
+Assume that we have a tetraedric dice with the value `0, 1, 4, 5`
+on one hand, and `0, 2, 8, 10` on the other hand.
+
+The polynomial associated to the first one is 
+
+    $$1 + X + X^4 + X^5$$
+
+The polynomial associated to the second one is
+
+    $$1 + X^2 + X^8 + X^10$$
+
+Then I can compute the distribution of their sum by multiplying these two polynomials.
+
+    $$1 + X + X^2 + X^3 + X^4 + X^5 + X^6 + X^7$$
+
+Which is the polynomial for the uniform law over [0, 7].
+These two polynomials are actually solving our problem for dices with 4 faces.
+
+# Cyclotomic
+
+Finding two dices that solve our problem then boils down to finding pair of polynomials P and Q such that
+    
+    $$ PQ = 1 + X + X^2 + X^3 + ... + X^{35} $$ 
+
+We will call this polynomial U.
+
+Just as there is a unique prime decomposition for integer, there is a unique (up to a scalar) prime decomposition for polynoms. If we can find it for U. Then we can just test all of the way to allocate
+each factors to one dice or the other. Going through all of the possible partitions, will give us all of the possible pair of dices.
+
+Factorizing a polynomial is usually not easy at all. But this one is very special. You may have recognized a geometric series. We have :
+
+    $$ 1 + X + X^2 + X^3 + ... + X^{35} =  {  {1-X^{36}} \over {1- X}} $$
+
+${1-X^{36}}$'s factorization is a well known problem. Its roots, also called root of unity are the complex numbers $(e^{2 i \pi k \over 36})_{0 \leq k < n}$. In $\mathbf{R}$, its factors are the so-called [cyclotomic polynomials](https://en.wikipedia.org/wiki/Cyclotomic_polynomial) associated with the divisor of 36 (1, 2, 3, 4, 6, 9, 12, 18, 36). We will just remove the one for 1, $X-1$ as it is divided away.
+
+The resulting factorization for U is given
+
+    $$ U = (1 + X)  \\
+        ~~~~(1 + X + X^2)\\
+        ~~(1 + X^2)\\
+        ~~~~(1 - X + X^2)\\
+        ~~~~(1 + X^3 + X^6)\\
+        ~~~~(1 - X^2 + X^4)\\
+        ~~~~(1 - X^3 + X^6)\\
+        ~~~~(1 - X^6 + X^{12})$$
+
+We then need to attribute each factor to one or the other of the dice, 
+multiply each dice set of factor, and check if the result is a valid dice (for instance, a negative coefficient is a no-no, and more than 6 monomial is not possible to make a dice).
+
+And the possible solutions are :
+
+    [0, 3, 12, 15, 24, 27]
+    [0, 1, 2, 6, 7, 8]
+
+    [0, 1, 12, 13, 24, 25]
+    [0, 2, 4, 6, 8, 10]
+
+    [0, 3, 6, 9, 12, 15]
+    [0, 1, 2, 18, 19, 20]
+
+    [0, 1, 6, 7, 12, 13]
+    [0, 2, 4, 18, 20, 22]
+
+    [0, 1, 2, 9, 10, 11]
+    [0, 3, 6, 18, 21, 24]
+
+    [0, 1, 4, 5, 8, 9]
+    [0, 2, 12, 14, 24, 26]
+
+    [0, 1, 2, 3, 4, 5]
+    [0, 6, 12, 18, 24, 30]
+

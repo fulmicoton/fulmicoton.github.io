@@ -102,7 +102,7 @@ These two polynomials are actually solving our problem for dices with 4 faces.
 
 Finding two dices that solve our problem then boils down to finding pair of polynomials $P_1$ and $P_2$ such that
     
-    $$ $\phi(D_1)$ $\phi(D_1)$ = 1 + X + X^2 + X^3 + ... + X^{35} $$ 
+    $$ \phi(D_1) \phi(D_2) = 1 + X + X^2 + X^3 + ... + X^{35} $$ 
 
 We will call this polynomial U.
 

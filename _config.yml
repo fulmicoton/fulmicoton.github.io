@@ -1,10 +1,6 @@
-pygments: true
 permalink: /posts/:title
 auto: true
-markdown: rdiscount
-rdiscount:
-  extensions: [smart]
-
+markdown: kramdown
 name: Paul Masurel
 url: http://fulmicoton.com
 description: I got an Idea!

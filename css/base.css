@@ -73,7 +73,7 @@ section.sidebar section.sections {
         margin-top: 50px;
     }
     .sidebar nav.social img {
-       margin-top: 5px; 
+       margin-top: 5px;
     }
     .sidebar nav.sections {
       margin-top: 50px;
@@ -86,7 +86,7 @@ section.sidebar section.sections {
   .content h1.title {
     font-size: 50px;
     margin-top: 20px;
-    margin-bottom: 15px; 
+    margin-bottom: 15px;
   }
   .content h1 {
     color: #333;
@@ -145,7 +145,7 @@ section.sidebar section.sections {
       padding: 2px 3px;
     }
 
-    
+
   .content img {
     padding: 3px;
     //border: 1px solid #eeeeee;
@@ -274,12 +274,12 @@ section.discuss {
 .highlight {
   background-color: #322;
   font-size: 16px;
-  padding: 0px 15px;
+  padding: 10px 15px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   overflow: hidden;
   text-shadow: none;
-  color: #111;
+  color: white;
   margin: 20px 0px;
   margin-right: -150px;
 }
@@ -291,18 +291,18 @@ section.discuss {
 
 
 pre {
-  padding: 30px;
+  padding: 10px;
   font-size: 16px;
   -webkit-border-radius: 10px;
   -moz-border-radius: 10px;
   overflow: hidden;
   text-shadow: none;
   color: #000;
-  margin: 20px 0px 10px 0px;
+  margin: 10px 0px 10px 0px;
   code {
     display: block;
     background-color: #322;
-    clear: both;  
+    clear: both;
   }
 }
 
@@ -321,4 +321,3 @@ code.has-jax {
 #idc-container .idc-c-m .idc-form-info {
   margin-top: -3px;
 }
-

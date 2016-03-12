@@ -21,7 +21,7 @@ you might want for optimization reason, to make sure that all documents with the
 
 For instance, assuming our database contains people, and we want to have people living in the same city to sit in the same shard. Your simple formula is now ``hash(city) % S``.
 
-Intuitively, we see that we may just have ruined the good repartition of our documents. In France, for instance 15% of people 
+Intuitively, we see that we may just have ruined the good repartition of our documents. In France, for instance 15% of people
 live in Paris. The shard containing Paris will probably be much bigger than the other. We also rapidly get the feeling that the bigger the number of shards, the unbalanced they will be. But let's get the math right, and find out a rule on whether we should avoid or not to shard along a field.
 
 My real-life puzzle at work today was to find out whether it was reasonable to shard on one of our non-unique field.
@@ -38,5 +38,6 @@ You want to shard by a specific field. Let's define
 
 You can reasonably shard on your field if you have :
 
-    $$ { \sqrt{ S \left({ \mu  } + {\sigma^2 \over {N}} \right)  \over N } } < 5 \% $$ 
-
+<pre>
+$$ { \sqrt{ S \left({ \mu  } + {\sigma^2 \over {N}} \right)  \over N } } < 5 \% $$
+</pre>    

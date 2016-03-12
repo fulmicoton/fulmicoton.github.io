@@ -8,8 +8,8 @@ published: true
 # A nice little puzzle
 
 
-So my next post was supposed to be about an extension to 
-levenshtein automata, but I had some good reason to want to delay that 
+So my next post was supposed to be about an extension to
+levenshtein automata, but I had some good reason to want to delay that
 for a bit. Anyway stay tuned !
 
 In the meanwhile, as I was talking about dices at work, I thought about a very cool puzzle. He it goes :
@@ -18,12 +18,12 @@ In the meanwhile, as I was talking about dices at work, I thought about a very c
 
 So you probably know that when you roll two classical dices, their sum does not follow a uniform distribution.
 
-7 is the most likely sum with a probability of $1 \over 6$. 
+7 is the most likely sum with a probability of $1 \over 6$.
 2 and 12 are the least likely, with a probability of $1 \over 36$
 
 Actually here is the actual distribution.
 
-<iframe width="600" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/1rilZTWR_L_xjDfo-tVqIhmF2qvKupPRmzZzmLcFfHsw/pubchart?oid=1282500553&amp;format=image"></iframe> 
+<iframe width="600" height="371" seamless frameborder="0" scrolling="no" src="https://docs.google.com/spreadsheets/d/1rilZTWR_L_xjDfo-tVqIhmF2qvKupPRmzZzmLcFfHsw/pubchart?oid=1282500553&amp;format=image"></iframe>
 
 The goal is to change the number on each faces in order to make this distribution uniform over [1, 36]. Some of the solution are rather simple, some other look very cool.
 
@@ -39,7 +39,7 @@ their sum still follows the same distribution as two regular dices.
 As explained in the Wikipedia page, there is only one solution to this problem and they are called the Sicherman dices. The dices go :
 
 - 1, 2, 2, 3, 3, 4
-- 1, 3, 4, 5, 6, 8. 
+- 1, 3, 4, 5, 6, 8.
 
 Don't click on the wikipedia page as the theory is basically is the same for the Sicherman dices and this problem.
 
@@ -66,34 +66,46 @@ Don't click on the wikipedia page as the theory is basically is the same for the
 Algebra gives us all of the necessary tools to solve this problem in a very neat way.
 Let's start by having a look at the probability of the sum of two dices... Let's call $D_1$ and $D_2$ the random variable associated with the outcome of the first dice and the second dice respectively.
 
-Then we can compute $the probability that their sum is S 
+Then we can compute $the probability that their sum is S
 
+<pre>
     $$ p(D_1 + D_2 = S) = \sum_{k=1}^{S-1} p(D_1 = k) p(D_2 = S-k) $$
+</pre>
 
 You may recognize here a [convolution](https://en.wikipedia.org/wiki/Convolution), or the formula for polynomial multiplication.
-We're going to heavily rely on this observation. Given a random variable D taking value within integer $0 \leq k \leq n$, we can define a polynomial $\phi(D)$ defined by 
+We're going to heavily rely on this observation. Given a random variable D taking value within integer $0 \leq k \leq n$, we can define a polynomial $\phi(D)$ defined by
 
+<pre>
     $$ \phi(D) = \sum_{k=0}^{n} p(D=k) X^k $$
+</pre>
 
-We then have the interesting property that 
+We then have the interesting property that
 
+<pre>
     $$ \phi({D_1} + {D_2}) = \phi({D_1})\phi({D_2})$$
+</pre>
 
 Let's see what it means with a very concrete example.
 Assume that we have a tetraedric dice with the value `0, 1, 4, 5`
 on one hand, and `0, 2, 8, 10` on the other hand.
 
-The polynomial associated to the first one is 
+The polynomial associated to the first one is
 
+<pre>
     $$1 + X + X^4 + X^5$$
+</pre>
 
 The polynomial associated to the second one is
 
+<pre>
     $$1 + X^2 + X^8 + X^10$$
+</pre>
 
 Then I can compute the distribution of their sum by multiplying these two polynomials.
 
+<pre>
     $$1 + X + X^2 + X^3 + X^4 + X^5 + X^6 + X^7$$
+</pre>
 
 Which is the polynomial for the uniform law over [0, 7].
 These two polynomials are actually solving our problem for dices with 4 faces.
@@ -101,8 +113,10 @@ These two polynomials are actually solving our problem for dices with 4 faces.
 # Cyclotomic
 
 Finding two dices that solve our problem then boils down to finding pair of polynomials $\phi(D_1)$ and $\phi(D_2)$ such that
-    
-    $$ \phi(D_1) \phi(D_2) = 1 + X + X^2 + X^3 + ... + X^{35} $$ 
+
+<pre>
+    $$ \phi(D_1) \phi(D_2) = 1 + X + X^2 + X^3 + ... + X^{35} $$
+</pre>
 
 We will call this polynomial U.
 
@@ -111,12 +125,15 @@ each factors to one dice or the other. Going through all of the possible partiti
 
 Factorizing a polynomial is usually not easy at all. But this one is very special. You may have recognized a geometric series. We have :
 
+<pre>
     $$ 1 + X + X^2 + X^3 + ... + X^{35} =  {  {1-X^{36}} \over {1- X}} $$
+</pre>
 
 ${1-X^{36}}$'s factorization is a well known problem. Its roots, also called root of unity are the complex numbers $(e^{2 i \pi k \over 36})_{0 \leq k < n}$. In $\mathbf{R}$, its factors are the so-called [cyclotomic polynomials](https://en.wikipedia.org/wiki/Cyclotomic_polynomial) associated with the divisor of 36 (1, 2, 3, 4, 6, 9, 12, 18, 36). We will just remove the one for 1, $X-1$ as it is divided away.
 
 The resulting factorization for U is given
 
+<pre>
     $$ U = (1 + X)  \\
         ~~~~(1 + X + X^2)\\
         ~~(1 + X^2)\\
@@ -125,8 +142,9 @@ The resulting factorization for U is given
         ~~~~(1 - X^2 + X^4)\\
         ~~~~(1 - X^3 + X^6)\\
         ~~~~(1 - X^6 + X^{12})$$
+</pre>        
 
-We then need to attribute each factor to one or the other of the dice, 
+We then need to attribute each factor to one or the other of the dice,
 multiply each dice set of factor, and check if the result is a valid dice (for instance, a negative coefficient is a no-no, and more than 6 monomial is not possible to make a dice).
 
 And the possible solutions are :
@@ -151,4 +169,3 @@ And the possible solutions are :
 
     [0, 1, 2, 3, 4, 5]
     [0, 6, 12, 18, 24, 30]
-

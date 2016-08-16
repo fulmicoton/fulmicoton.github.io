@@ -13,7 +13,7 @@ published: false
 I am quite fond of puzzles / programming competition of all kinds.
 Just this year I spent maybe
 
-- 150 hours on Yandex's kaggle competition. 
+- 150 hours on Yandex's kaggle competition.
 - 15 hours on Kaggle's criteo competition
 - 30 hours on Google Hash code's problems
 - and lately I spent around 8 hours to crack a cute little programming puzzle I could talk about on this blog.
@@ -21,14 +21,14 @@ Just this year I spent maybe
 This puzzle is sponsored by a major video game company, and they use to attract and select candidates.
 I could not care less about this prize as I just got hired and will relocate back to Japan very soon.
 
-I understand that people get very passionnate about the practise of using programming puzzles 
-to select candidates and I will gracefully accept any raging comment. 
+I understand that people get very passionnate about the practise of using programming puzzles
+to select candidates and I will gracefully accept any raging comment.
 
 Such puzzles are just not likely to select candidates who is good for the job, nor are they likely to make you a better programmer. Yet, they are still fun! So just like I just acknowledged that this is blog post is just a very sophisticated kind of masturbation, I would dearly appreciate you to notice how a raging comment is just as funny as commenting about hygiene on a foot fetish porn site. :)
 
 # The puzzle
 
-**I had the chance to chat a little with the guys hosting the challenge. They were concerned that 
+**I had the chance to chat a little with the guys hosting the challenge. They were concerned that
 spoiling out the answer was counterproductive for their customer (it is used for recruiting). I therefore offered to get rid of their name / reference in this blog post, in order to make this page stealthier to people googling for the solution.**
 
 You need to decode message that have been encoded using the following program.
@@ -45,12 +45,12 @@ int main()
 {
   int size;
   cin >> size;
-  
+
   // <- input
   unsigned int* a = new unsigned int[size / 16];
    // <- output
   unsigned int* b = new unsigned int[size / 16];
- 
+
   // Read size / 16 integers to a
   for (int i = 0; i < size / 16; i++) {
     cin >> hex >> a[i];
@@ -59,14 +59,14 @@ int main()
   // Write size / 16 zeros to b
   for (int i = 0; i < size / 16; i++) {
     b[i] = 0;
-  } 
- 
+  }
+
   for (int i = 0; i < size; i++)
   for (int j = 0; j < size; j++) {
       b[(i+j)/32] ^= ( (a[i/32] >> (i%32)) &
                        (a[j/32 + size/32] >> (j%32)) & 1 ) << ((i+j)%32);
   }
-  
+
   for(int i = 0; i < size / 16; i++)
     cout << hex << b[i] << " ";
   return 0;
@@ -94,14 +94,14 @@ If `msg` and `enc` are was a vector of `size*2` bits, what really is done here i
 {% endhighlight %}
 
 
-We see here actually that the first half of the msg and the second part 
+We see here actually that the first half of the msg and the second part
 are playing an independant role. If we call ``left`` and ``right`` respectively the first and the last size-bits of msg, we then have.
 
 
 {% highlight python %}
     for i in range(size)
         for j in range(size)
-            enc[i + j] ^= left[i] & right[j] 
+            enc[i + j] ^= left[i] & right[j]
 {% endhighlight %}
 
 Do you recognize anything here? It mind makes you think of three different things, which are actually very similar: Convolution, integer multplication in which you forgot the carrying, and polynomial multiplication.
@@ -115,8 +115,8 @@ So given two polynomials $U$ and $V$ encoded as the list of their coefficients, 
     res = [0] * (len(U) + len(V)) - 1
     for i in range(size)
       for j in range(size)
-        # multiplication of u_i X^i and v_j X^j 
-        res[i + j] += left[i] * right[j] 
+        # multiplication of u_i X^i and v_j X^j
+        res[i + j] += left[i] * right[j]
         # ... is (u_i * v_j ) X^(i + j)
     return res  
 {% endhighlight %}
@@ -146,7 +146,7 @@ So the message encoding routine is all about :
 
 The puzzle is really about factorization of a big polynomial (256 bits!).
 
-Note that if the problem had been to factorize two 256 bits integers, 
+Note that if the problem had been to factorize two 256 bits integers,
 it would have been equivalent to asking you to crack a 256 bits RSA key.
 
 Interestingly, polynomials with coefficients in $\mathbb{Z}/2 \mathbb{Z}$ share a lot of property with integers.
@@ -163,30 +163,37 @@ For the sake of simplicity we will assume that this polynomial has a prime decom
 
 The big idea, is to first find a polynomial $B$ for which we have :
 
-    $$  B^2 - B \equiv 0[P]  $$
+<pre>
+$$  B^2 - B \equiv 0[P]  $$
+</pre>
 
 By applying the chinese reminder theorem, we then know that for each prime factor $F_k$,
 we have :
 
 
-    $$ B^2 - B \equiv 0[F_k] $$
+<pre>
+$$ B^2 - B \equiv 0[F_k] $$
+</pre>
 
-That can be rewritten as 
+That can be rewritten as
 
-    $$ B(B - 1) \equiv 0[F_k] $$
+<pre>
+$$ B(B - 1) \equiv 0[F_k] $$
+</pre>
 
 Since $F_k$ is prime we now know that $F_k$ divides either $B$ or $B - 1$.
 The idea of the algorithm is that, once we found a polynomial B, we are certain to find at least one non trivial factor in `gcd(P, B)` or `gcd(P, B - 1)`.
 
 # Finding a berlekamp polynomial
 
-Now how do we find such a polynomial B? First you 
+Now how do we find such a polynomial B? First you
 need to notice that the squaring application $q$ for polynomials with binary coefficients is linear.
 
 You can get convince about that easily by developing :
 
-
-    $$ ({Q_1} + {Q_2})^2 \equiv {Q_1} ^ 2 + {Q_2} ^ 2 + 2{Q_1}{Q_2} [P] $$
+<pre>
+$$ ({Q_1} + {Q_2})^2 \equiv {Q_1} ^ 2 + {Q_2} ^ 2 + 2{Q_1}{Q_2} [P] $$
+</pre>
 
 
 All the coefficient of $2{Q_1}{Q_2}$ are obviously even and therefore null in $\mathbb{Z} / 2\mathbb{Z}$.
@@ -198,12 +205,12 @@ basis. This is done by squaring the monomials, compute the rest modulo P, and sh
 # Implementation
 
 I actually had to implement twice : once in Python and once in `C++`. CodingGame
-has a pretty hard timeout at around 5 seconds, and CPython took around 18s to solve 
+has a pretty hard timeout at around 5 seconds, and CPython took around 18s to solve
 the 256bits unit test. Though Pypy was not an option, I noted it would have limboed its
 ways below the limit at less than 2s.
 
-I put here the python version of the algorithm, because it is more readable and because 
-having people copy paste the solution on CodingGame is not the point of this post. 
+I put here the python version of the algorithm, because it is more readable and because
+having people copy paste the solution on CodingGame is not the point of this post.
 
 Note that I assume that the multiplicity of the prime factor in decomposition of P is always 1, and that I extract factor one by one, and recursively factor, which is not required in the original algorithm.
 

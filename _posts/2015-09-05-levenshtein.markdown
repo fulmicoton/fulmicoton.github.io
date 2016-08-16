@@ -5,7 +5,7 @@ category: posts
 published: true
 tags: draft
 style: |
-  
+
     <style type="text/css">
     .node-shape {
       stroke-width: 2px;
@@ -112,7 +112,7 @@ While I love this blogpost, I am afraid that I disagree with Jules, when he clai
 
 Jules's algorithm complexity is indeed linear in the number of characters. However, if you consider the complexity in the maximum edit distance supported, the algorithm does not do that well. The blog post dismisses it by saying that we will only consider edit distance < 2 anyway, so why not consider it constant. I would counter argue that at distance 2, the algorithm described here is already too slow to be usable in practise to build a search autocomplete system.
 
-Moreover, the paper actually describes in ``Chapter 6`` a way to avoid computing the DFA at all... so isn't calling it ** same time complexity ** a bit of a stretch?
+Moreover, the paper actually describes in ``Chapter 6`` a way to avoid computing the DFA at all... so isn't calling it **same time complexity** a bit of a stretch?
 
 In this blog post I will try to take the subject where Jules left it, and explain the actual algorithm in the article. I will also explain some specificities about Lucene's implementation.
 
@@ -123,7 +123,7 @@ In this blog post I will try to take the subject where Jules left it, and explai
 I recently got interested in building an autocomplete service. You probably are familiar with those : the user starts typing a query, and is offered a bunch of suggestions before he has even finished typing.
 
 Imagine you had to implement one of these...  
-As a first shot, you might consider building a trie with 
+As a first shot, you might consider building a trie with
 a list of suggestions. For each of the suggestions, you also probably want to store some kind of score. When a request comes, you can then use the trie to list up the suggestions which admit the user input as a prefix, and serve back the top 10 best entries.
 
 But users make typos, and sometimes they don't actually know how to spell the thing that they are search for. So you might want to relax the prefix constraint and allow for spelling mistake. The [paper](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.652) precisely explains how to search rapidly in a dictionary which entries are at an edit distance lower than k from a query. I will leave the "prefix" part of the problem for a next blog post.
@@ -143,7 +143,7 @@ In my next post, I will talk about an extension of Levenshtein Automata, with ho
 #  Let's get started
 
 As a warm up, let's write the simplest implementation we can think of that checks if two strings are at an edit distance of lesser or equal to D.
-In practise, you probably want to get the distance itself as an output as well, to compute a score for your suggestion, but for the sake of simplicity, I deliberately removed this refinement in this blog post : 
+In practise, you probably want to get the distance itself as an output as well, to compute a score for your suggestion, but for the sake of simplicity, I deliberately removed this refinement in this blog post :
 Our implementations will simply return True iff the matched string is at an edit distance lesser or equal to D.
 
 {% highlight python %}
@@ -170,13 +170,13 @@ def levenshtein(s1, s2, D=2):
 
 {% endhighlight %}
 
-Pretty straightforward, isn't it? This version of the algorithm will unfortunately not help us building our automaton. `s1` and `s2` plays symmetric roles in this code. 
+Pretty straightforward, isn't it? This version of the algorithm will unfortunately not help us building our automaton. `s1` and `s2` plays symmetric roles in this code.
 
-On our way to build our automaton, we will have to break this symmetry : we build the automaton for one of those string `s2` and apply the automaton on `s1`. 
+On our way to build our automaton, we will have to break this symmetry : we build the automaton for one of those string `s2` and apply the automaton on `s1`.
 
-So let's modify our algorithm to make sure that we munch one character `c` away from s1 at each call. 
+So let's modify our algorithm to make sure that we munch one character `c` away from s1 at each call.
 
-At each step we will consider two cases. 
+At each step we will consider two cases.
 Either `c` will not be used to recreate `s2` from `s1`, or it will be used. If it is used, it has to be used in a position of at most `D` in `s2`.
 
 {% highlight python %}
@@ -261,7 +261,7 @@ def levenshtein(s1, s2, D=2):
     def aux(c, i2, D):
         # i2 is the number of character
         # consumed in the string s2.
-        # D is the number of error that we 
+        # D is the number of error that we
         # still alow.
         if D >= 1:
             # deletion
@@ -304,7 +304,7 @@ class NFA(object):
 
     def initial_states(self,):
         raise NotImplementedError()
-        
+
     def eval(self, input_string):
         states = self.initial_states()
         for c in input_string:
@@ -359,7 +359,7 @@ At this point our algorithm is very similar to that of Jules Jacob.
 The next step is to get a DFA from this. This is typically done by running a [powerset construction](https://en.wikipedia.org/wiki/Powerset_construction). The cost of the powerset operation is highly dependant on the number of set of states that are accessible. Let's get a reasonable upper bound of that.
 
 To help us figure out what happens, here is a visualization of our Levenshtein Automaton for the word "flees" and a maximum edit distance of 1. You can type in strings (`flyers`, `flee`).
-The states you end up after stepping into 
+The states you end up after stepping into
 the automaton will be displayed in blue.
 
 <b>Levenshtein Automaton for flees (type in!)</b>
@@ -375,7 +375,9 @@ In other words, at one point of time, you know that all of the active state will
 At this point, the only upper bound we have for the complexity of the number of set of states in the DFA and its complexity.
 (Note that this is an upperbound and that the reality is probably less grim)
 
-    $$ O \left((D+1)^{2D + 1}N \right)$$
+<pre>
+$$ O \left((D+1)^{2D + 1}N \right)$$
+</pre>
 
 *Where N is the number of characters in the string we are building the automaton for, and D is the max edit distance allowed.*
 
@@ -400,10 +402,10 @@ class NFA(object):
 
     def accept(self, state):
         raise NotImplementedError()
-    
+
     def initial_states(self,):
         raise NotImplementedError()
-    
+
     def step(self, c, states):
         next_states = set()
         for state in states:
@@ -422,7 +424,7 @@ class NFA(object):
         for state in final_states:
             if self.accept(state):
                 return True
-    
+
     def simplify(self, states):
         return states
 
@@ -460,13 +462,13 @@ class LevenshteinNFA(NFA):
             if d2 < 0:
                 return True
             return d - d2 >= abs(offset2 - offset)
-        
+
         def is_useful(s):
             for s2 in states:
                 if s != s2 and implies(s2, s):
                     return False
             return True
-        
+
         return filter(is_useful, states)
 
 {% endhighlight %}
@@ -475,7 +477,9 @@ This will not necessarily make our automaton minimal, but it is definitely less 
 
 The new complexity for the number of states in our automaton is
 
-    $$ O \left( D^2 N \right)$$
+<pre>
+$$ O \left( D^2 N \right)$$
+</pre>
 
 
 # So what's next
@@ -521,13 +525,13 @@ class LevenshteinNFA(NFA):
             if D2 < 0:
                 return True
             return D - D2 >= abs(offset2 - offset)
-        
+
         def is_useful(s):
             for s2 in states:
                 if s != s2 and implies(s2, s):
                     return False
             return True
-        
+
         return filter(is_useful, states)
 
 
@@ -554,13 +558,13 @@ def levenshtein(query, input_string, D=2):
 
 
 By doing so, we have built an NFA that works on the alphabet of characteristic vectors.
-The benefit of that is that we almost completely removed the part that is dependant on the query. 
+The benefit of that is that we almost completely removed the part that is dependant on the query.
 
 This opens the door to building a DFA once, and reuse it for all queries which is the key idea behind the paper.
 
-There is still a bunch of issue before reaching this holy grail. 
+There is still a bunch of issue before reaching this holy grail.
 
-First of all, the length of the characteristic vector is right now dependant on the length of the query. But if you look closely, it `transitions` yields a bunch of useless states for the values that go after `offset + D`. Also we saw before that the set of states had offset within a range of length `2D + 1`. We therefore will only need the values of the characteristic vector over a range of `3D + 1`. 
+First of all, the length of the characteristic vector is right now dependant on the length of the query. But if you look closely, it `transitions` yields a bunch of useless states for the values that go after `offset + D`. Also we saw before that the set of states had offset within a range of length `2D + 1`. We therefore will only need the values of the characteristic vector over a range of `3D + 1`.
 
 The second problem is that if we try and apply a [powerset construction](https://en.wikipedia.org/wiki/Powerset_construction) blindly on this NFA, we will see that it is not really finite. This NFA actually has an infinite number of states : Imagine it handles queries of any size! Well the trick here is to normalize our states into two parts
 
@@ -598,13 +602,13 @@ class LevenshteinParametricDFA(object):
                 if D2 < 0:
                     return True
                 return D - D2 >= abs(offset2 - offset)
-            
+
             def is_useful(s):
                 for s2 in states:
                     if s != s2 and implies(s2, s):
                         return False
                 return True
-            
+
             return filter(is_useful, states)
 
         def step(c, states):
@@ -612,8 +616,8 @@ class LevenshteinParametricDFA(object):
             for state in states:
                 next_states |= set(transitions(state, c))    
             return simplify(next_states)
-        
-    
+
+
         def enumerate_chi_values(width):
             if width == 0:
                 yield()
@@ -627,7 +631,7 @@ class LevenshteinParametricDFA(object):
         (global_offset, norm_states) = self.normalize(self.initial_states())
         dfa = {norm_states: {}}
         yet_to_visit = [norm_states]
-        
+
         while yet_to_visit:
             current_state = yet_to_visit.pop()
             state_transitions = {}
@@ -684,13 +688,13 @@ def levenshtein(query, input_string):
 
 The style is a bit weird, but I wanted to emphasize that all of the process is done in the constructor, and that at eval time, the class is behaving like a regular automaton.
 
-So what's the catch? 
-Well in a sense our automaton construction has a complexity of `O(1)` if we let alone the preprocessing. The catch is in the eval function. We do need to eval what we called our characteristic function. Why is it not all that bad? 
+So what's the catch?
+Well in a sense our automaton construction has a complexity of `O(1)` if we let alone the preprocessing. The catch is in the eval function. We do need to eval what we called our characteristic function. Why is it not all that bad?
 
 First, there are many ways to implement it in such a way that is it really cheap. I would be amazed if there wasn't any SSE methods to compute it. But that actually does not really matter.
 
-In the process of building your dfa, you will need a way to map unicode codepoints to the alphabet that really matters. Basically the letters in your query PLUS a symbol that represents letters that are not in your query. Similarly building this alphabet and map it to values of characteristic vectors is very cheap. 
-Sure if we want to talk about complexity that's `O(nD)` 
+In the process of building your dfa, you will need a way to map unicode codepoints to the alphabet that really matters. Basically the letters in your query PLUS a symbol that represents letters that are not in your query. Similarly building this alphabet and map it to values of characteristic vectors is very cheap.
+Sure if we want to talk about complexity that's `O(nD)`
 
 # Lucene's implementation
 
@@ -702,7 +706,7 @@ Also, the parametric levenshtein automaton, is not used directly but is rather u
 
 But this DFA works on unicode characters, while their dictionary structure is encoded in UTF-8. Rather than converting UTF-8 on the fly, they prefer to convert the DFA itself to UTF-8, which I found pretty nifty?
 
-So where is the quirk? Well the algorithm used to build the DFA is very strange. 
+So where is the quirk? Well the algorithm used to build the DFA is very strange.
 
 Rather than just browsing the reachable states of the parametric automaton, it shoves all of the parametric states and all of their transitions.
 This is hurting performance pretty badly, but I assume automaton creation is already fast enough for most user's need.

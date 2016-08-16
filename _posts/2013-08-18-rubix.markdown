@@ -266,7 +266,7 @@ OPERATIONS = [
 
 def sequence(seq, rubix):
 	for axis in seq:
-		rubik's = turn(axis, rubix)
+		rubix = turn(axis, rubix)
 	return rubix
 
 def differences(rubix_1, rubix_2):

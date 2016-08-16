@@ -139,7 +139,7 @@ Which is called a [Dirichlet distribution](http://en.wikipedia.org/wiki/Dirichle
     \end{array}
     \right)
     $$
-.
+
 
 In order to make the math much simpler, let's consider a prior with the very same shape, and parameter alpha<sup>0</sup>.
 

@@ -104,7 +104,7 @@ It's been such a long time since my last post, and so much have happened. I move
 
 # Reacting to another blog post
 
-Earlier this year, Jules Jacob wrote an awesome blog post titled [**Levenshtein automata can be simple and fast**](http://julesjacobs.github.io/2015/06/17/disqus-levenshtein-simple-and-fast.html). While reading it, you might notice that it is kind of a rebuke against the convoluted language of the original paper : [Correction with Levenshtein-Automata](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.652) by Klaus Schulz and Stoyan Mihov. I read this paper, and I have to agree its style is rather abstract and opaque. 
+Earlier this year, Jules Jacob wrote an awesome blog post titled [**Levenshtein automata can be simple and fast**](http://julesjacobs.github.io/2015/06/17/disqus-levenshtein-simple-and-fast.html). While reading it, you might notice that it is kind of a rebuke against the convoluted language of the original paper : [Fast String Correction with Levenshtein-Automata](http://citeseerx.ist.psu.edu/viewdoc/summary?doi=10.1.1.16.652) by Klaus Schulz and Stoyan Mihov. I read this paper, and I have to agree its style is rather abstract and opaque. 
 
 Jules's blog post on the other hand wield great pedagogy, and walks the reader step-by-step through a simpler algorithm to build Levenshtein automata.
 

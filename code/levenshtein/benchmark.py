@@ -150,16 +150,29 @@ PARAM_DFA = []
 class Automaton:
 
     def initial_state(self,):
+        """ returns the initial state.
+        can be any kind of object."""
         raise NotImplementedError()
 
     def accept(self, state):
+        """ returns True iff the state
+        is accepted."""
         raise NotImplementedError()
 
     def step(self, state, c):
+        """ Given a state and a character,
+        returns the new state."""
         raise NotImplementedError()
 
     def can_match(self, state):
+        """ Returns False iff whatever
+        the next characters are, there is
+        not chance that we can match
+        again. """
         raise NotImplementedError()
+
+MAX_LENGTH_QUERY = 30
+ALPHABET = [0] * 30 * 256
 
 class ParametricAutomaton(Automaton):
     # Not really a DFA as it is not technically
@@ -192,15 +205,10 @@ class ParametricAutomaton(Automaton):
         (shift_offset, norm_state) = self.dfa[norm_state][letter]
         return (global_offset + shift_offset, norm_state)
 
-    def accept(self, state):
-        if state[1] == -1:
-            return False
-        (global_offset, final_state_idx) = state
+    def accept(self, (global_offset, final_state_idx)):
         remaining_offset = self.len_query - global_offset
-        if remaining_offset < 2 * self.max_D + 1:
-            return self.accept_values[final_state_idx][remaining_offset] >= 0
-        else:
-            return False #self.max_D + 1
+        return (remaining_offset < self.w) and\
+            self.accept_values[final_state_idx][remaining_offset] >= 0
 
 # -----------------------------------------
 
@@ -275,17 +283,17 @@ class MutableCounter:
     def inc(self,):
         self.val += 1
 
-def intersect(trie, dfa, counter):
-    def aux(trie, dfa, state):
-        if trie.term_id >= 0 and dfa.accept(state):
+def intersect(trie, automaton, counter):
+    def aux(trie, automaton, state):
+        if trie.term_id >= 0 and automaton.accept(state):
             yield trie.term_id
-        for (h, child) in trie.children.items():
+        for (letter, child) in trie.children.items():
             counter.inc()
-            new_state = dfa.step(state, h)
-            if dfa.can_match(state):
-                for v in aux(child, dfa, new_state):
+            new_state = automaton.step(state, letter)
+            if automaton.can_match(new_state):
+                for v in aux(child, automaton, new_state):
                     yield v
-    return aux(trie, dfa, dfa.initial_state())
+    return aux(trie, automaton, automaton.initial_state())
 
 # -------------------------------------
 
@@ -319,7 +327,7 @@ def benchmark(trie, tests, D):
 
 import random
 
-lines = list(load(limit=50000))
+lines = list(load(limit=100000))
 trie = Trie()
 for (line_id, line) in enumerate(lines):
     trie.append(line, line_id)
@@ -327,8 +335,8 @@ tests = random.sample(lines, 200)
 
 for D in range(10):
     PARAM_DFA.append(LevenshteinParametricDFA(D=D))
-    print "\n" * 10
-    benchmark(trie, tests, D=D)
+    for i in range(2):
+        benchmark(trie, tests, D=D)
     # benchmark(trie, tests, D=D)
 
 # for word in test:

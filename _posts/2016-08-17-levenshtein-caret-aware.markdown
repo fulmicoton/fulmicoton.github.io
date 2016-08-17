@@ -8,9 +8,9 @@ tags: draft
 
 # Caret Awareness : A neat feature for autocomplete
 
-Around 8 years ago, I read the description of a possible UI
+Around 8 years ago, I read the description of a nice UI
 improvement to the traditional autocomplete search box.
-I cannot recall the name they used for the feature, but I like to call it
+I cannot recall the name the author used for the feature, but I like to call it
 **caret awareness**. (caret is just another fancy name for text cursor). 
 
 Here is the problem it was addressing.
@@ -30,66 +30,67 @@ the request to the service is along the line of
 
     ?q=BarObama&caret=3
 
-
-Well I like to do that but is it a power user habit?
-
-According to our logs, 3.5% of the search session involve the user moving the edition
-cursor, and starting typing in the middle of the query. 
-
-3.5% is nothing to sneeze at, plus Google does it, so why shouldn't we?
-So we added the feature to indeed.com.
+So we added the feature to [indeed.com](http://indeed.com). Here is how it looks like. 
 
 <img src="/images/caret_aware/caret_aware.gif">
 
 
-
-There are several ways this can be implemented. But here is the twist,
+This feature can be implemented in different ways. But here comes the twist :
 our autocomplete is also fuzzy : if your query is long enough, it 
 will start considering options that at Levenshtein-Damerau distance of up to 2.
 
-For instance, even if you mispelled **"attorney"**, indeed will guess that **"litigation attorney"** is really what 
-you are searching.
+In the following example, even if the user mispelled **"attorney"**, indeed guessed that **"litigation attorney"** is really what he trying to type.
 
 <img src="/images/caret_aware/caret_aware_fuzzy.gif">
 
-But how does it work?
+Let's see how it works.
 
 
 # Caret aware Levenshtein automaton for the win! 
 
 When I first heard about the existence of Levenshtein automaton, I was very surprised.
 
-A mindboggling implication for instance, is that for any given a string s for any given k, there is a regular expression
-that match exactly the strings that are at a levenshtein distance from s shorter than k, .
+A mindboggling implication for instance, is that for any given string $s$ for any given $k$, there is a regular expression that match exactly the strings that are at a levenshtein distance from $s$ smaller than $k$.
 
 While the result is not really practical at all, it is pretty cool isn't it?
 
-Well actually let's go further : let's consider a regular expression s.
-For instance, `ab*c`. In words, we would describe it as "an a, any number of b, followed by a c".
+Well actually let's go further : let's consider a regular expression $s$.
+For instance, `ab*c`.
 
 It matches an infinite set of strings :
 
-    {abc, abbc, abbbc, abbbbc, ...}
+- abc
+- abbc
+- abbbc
+- abbbbc
+- ...
 
 Let's now extend this set by adding all of the strings that are at a levenshtein distance of less than 1 
 from one of the original elements.
 
-We end up with a much larger set, as the string below have been added.
+We end up with a much larger set. For instance the string below have been added.
 
-    {yabc, ac, bac, ...}
+- yabc
+- ac
+- bac
+- ...
 
-One can show that there once again exists a finite definite automaton *(hence a regular expression)*
-that matches only the strings of this new set.
+One can show that there once again exists a finite definite automaton *(and hence, a regular expression)*
+that matches exactly the strings of this new set.
 
 
 # What does this have to do with caret awareness ?
 
-Well, our caret-awareness fuzzy search really is all about trying to find entries in a dictionary
+Well, our caret-aware fuzzy search really is all about trying to find entries in a dictionary
 that are at levenshtein distance of 2 of a string that matches the regular expression `lit.*atorney`.
 
-We know that there is a DFA that actually does the job. But can we build it efficiently ?
+We now know that there is a DFA, possibly huge, that actually does the job. But can we build it efficiently ?
 
-Well adapting the implicit NFA approach is relatively simple.
+# Building the automaton
+
+*This section is very technical, and assumes you have read my [previous blog post about Levenshtein Automata](http://fulmicoton.com/posts/levenshtein). *
+
+Adapting the implicit NFA approach is relatively simple.
 
 Essentially, we change our transition function
 
@@ -124,53 +125,36 @@ In my previous post, I argued that the implicit NFA solution was not as efficien
 DFA approach of the original paper of Klaus Schulz and Stoyan Mihov.
 Caret-awereness is very pathological, as the number of states can rapidly explode.
 
-The problem is that while given a specific `(query,caret)` pair,
-the number of states of this automaton is finite, it is not bounded for any query.
-In fact, the number of state in the NFA grows linearly with the length from the caret position to the end of
-the string **ouch**.
+Without caret-awareness, the number of state that can coexist at the same time
+was bounded by `2k + 1` where `k` is the Levenshtein distance considered. For Levenshtein-Damerau, a generous bound would be `2(2k + 1)`.
 
-For this very reason, Klaus Schulz and Stoyan Mihov parametric DFA caching trick cannot be applied directly :
-The parametric DFA would have an infinity of states. 
+With caret-awareness, there is no such bound : the number of states in the NFA grows linearly with the length of the query. More accurately, it grows linearly with the length from the caret position to the end of the string. **ouch**.
 
-I won't go into further detail but what we do is that we approximate the automaton by one that
-is kind enough to be bounded. The approximation works as follows : when implementing the NFA 
-that is then used to build the parametric DFA, we always trim the set of states by removing the
-states with an offset that is lower than the `rightmost state's offset  - 2k + 1 + some margin`.
+For the same reason, Klaus Schulz and Stoyan Mihov parametric DFA caching trick cannot be applied directly : the parametric DFA would have an infinity of states. 
 
-This approximation only creates very rare false negative for terms in the dictionary that includes some
-repetition. For instance if we are searching for `I love<caret> Jar Binks` and our dictionary contains `I love Jar Jar Binks`,
+Without going into too  much details,  what we did is that we approximate the automaton by one that is kind enough to be bounded. The approximation works as follows : when implementing the NFA that is then used to build the parametric DFA, we always trim the set of states by removing the states that have too low an offset. More accurately, if the largest offset is $m$, we remove all states associated with an offset lower than $m - (2k + 1) - 2$.
+
+This approximation only can only create false negatives for terms in the dictionary that includes some long repetitions. For instance if we are searching for `I love.*Jar Jar Binks` and our dictionary contains `I love Jar Jar Binks`,
 the trimmed automaton will make a mistake because of the repetition `Jar ` coming right after the caret. 
- 
-So we pre-built the parametric caret-aware automaton for Levenshtein Damerau with a distance of 1, and 2.
-The resulting file takes around 2MB.
 
-Once we have that, we can either use a parametric DFA, or build an explicit DFA for our language.
-We currently built the DFA because it was pretty fast in practise anyway. 
+So we pre-built a parametric caret-aware automaton for Levenshtein Damerau with a distance of 1, and 2. The resulting file takes around 2MB, and it is shipped with
+our code.
+
+Once we have that, we can either use a parametric DFA, or build an explicit DFA for our language. We currently built the DFA because it was pretty fast in practise anyway. 
+
 
 # The bizarro dictionary
 
-Another issue with caret awareness is that if the caret is toward the beginning of the string,
-our automaton has to visit all or most of the our trie.
+Another issue with caret awareness is that if the caret is toward the beginning of the string, our automaton has to visit all or most of our trie. This phenomenon has nothing to do with fuzziness, so let's forget Levenshtein for this section.
 
-Let's forget Levenshtein, and consider no fuzzy matching what so ever.
 In the case of `l.*atorney`, the intersection with the trie will end up exploring
 all of words starting by an `l`.
 
-We solved this problem by processing such queries in the bizarro world, where all string are reversed.
-In this world, our query: `l.*atorney`, becomes `yenrita.*l`, and our prefix is suddenly much longer
-and way more restrictive. 
+We solved this problem by processing these queries in what I like to call *the bizarro world*, where all string are reversed.
+In this world, our query: `l.*atorney`, becomes `yenrota.*l`, and we will only visit
+the string that starts up by `yenrota`.
 
-This means we ship a bizarro dictionary with our original dictionary. 
-If the caret is in the first half of the query, we do our regular matching, but 
-if the caret is the second half of the query, then we reverse the query, and 
+This means we ship a bizarro trie along with our original dictionary trie. 
+If the caret is in the second half of the query, we do our regular matching, but 
+if the caret is the first half of the query, then we reverse the query, and 
 run it against our bizarro dictionary.  
-
-# All for nothing
-
-Despite the juicy 3.5% of users moving their caret around during queries,
-we have not been able to see a measurable impact (positive nor negative)
-of caret awareness on any metric that we monitor.
-
-Fuzzy matching on the other hand had a significant impact. 
-Most significantly, if we could recycle the keystrokes this feature spared
-our user, we could type the complete series of Harry Potter every week.

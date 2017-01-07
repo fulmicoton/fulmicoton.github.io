@@ -5,6 +5,15 @@ body {
   background-color: rgb(253, 253, 250);
   -webkit-font-smoothing: antialiased; }
 
+
+
+p.disclaimer {
+  color: #a51313;
+  background-color: rgba(191, 21, 21, 0.1);
+  padding: 5px 5px 5px 20px;
+  border-left: solid 5px #a51313;
+}
+
 a {
   color: rgb(0, 90, 162);
   text-decoration: none;
@@ -306,6 +315,10 @@ pre {
   }
 }
 
+img + em {
+  text-align: center;
+  display: block;
+}
 
 
 code.has-jax {

@@ -22,7 +22,7 @@ it was time to go out for a test drive on a real-life project. I started working
 
 Around two weeks later, to my own surprise, I was more productive in Rust than I was in C++ in which I have 5 years of experience. Don't get me wrong. I am not saying Rust is a simple language. I was not an expert in Rust at that time, nor am I an expert in Rust today... But Rust is just a much more productive language. Also, while my code was sometimes clumsy, I felt a degree of confidence that my code was not buggy, that I had never experienced in any other language (Well, my experience of OCaml is so tiny it does not count).
 
-The first version was a bit silly but only took a couple of months of my spare time to implement. Next step was to actually refactor, clean up the rookie mistakes, add documentation... tantivy was born.
+The first version was a bit silly but only took a couple of months of my spare time to implement. Next step was to actually refactor, clean up the rookie mistakes, add documentation... [tantivy](https://github.com/tantivy-search/tantivy) was born.
 
 ![Tantivy's logo](/tantivy-logo/tantivy-logo.png)
 *The logo is so neat, you can feel it's webscale.*
@@ -212,3 +212,14 @@ Also, as we will see in the part 2 of this blog post, updating a document in a s
 Nevertheless, tantivy is meant to come with batteries included, and therefore includes a doc store which should do just fine for many use cases!
 </p>
 
+
+# Wrapping up...
+
+
+In the next blog post, I will tell you how tantivy's index are built.
+
+In the meanwhile, if you are interested in the project, you can check out the 
+[GitHub repository page](https://github.com/tantivy-search/tantivy).
+The `README.md` gives a bunch of pointer on how to get started.
+
+If you want to contribute, or discuss a use case with me, feel free to comment or drop me email.

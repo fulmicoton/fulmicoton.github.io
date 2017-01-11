@@ -8,7 +8,7 @@ published: true
 # New job, new life
 
 
-<img src="http://www.dataiku.com/static/img/kidlab.jpg" width="400">
+<img src="/slides/tokyo_webmining/kidlab.jpg" width="400">
 
 I  changed job ! I recently joined [Dataiku](http://www.dataiku.com/). We're creating the perfect Data Science Platform. And so far, it has been pretty awesome... By the way we are still recruiting, so if you are looking for a job in a top notch tech startup in Paris, drop me an email : paul.masurel at dataiku.com.
 

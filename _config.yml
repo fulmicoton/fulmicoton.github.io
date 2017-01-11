@@ -1,4 +1,4 @@
-permalink: /posts/:title
+permalink: /posts/:title/
 auto: true
 markdown: kramdown
 name: Paul Masurel

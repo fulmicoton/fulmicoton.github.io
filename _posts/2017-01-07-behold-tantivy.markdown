@@ -53,7 +53,7 @@ Following Lucene's terminology, the couples `field:text` (e.g. `(title, obama)`)
 We now have a boolean query with 4 terms. We first lookup all of these terms in a datastructure called the **term dictionary**. 
 For each of the term, it associates the following information :
 
-- the number of documents containing the document (also called document frequency)
+- the number of documents containing the term (also called document frequency)
 - a pointer (or an address) into the inverted index file
 
 ### Inverted index (.idx file)
@@ -172,7 +172,7 @@ We encode it as
 
 The resulting deltas can then be bitpacked.
 
-Our last block is very likely to contain less than 128 documents. In that case, we use (variable-length integer](https://en.wikipedia.org/wiki/Variable-length_quantity) in place of bitpacking.
+Our last block is very likely to contain less than 128 documents. In that case, we use [variable-length integer](https://en.wikipedia.org/wiki/Variable-length_quantity) in place of bitpacking.
 
 
 

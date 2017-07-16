@@ -12,7 +12,7 @@ inner workings of a [rust search engine library called tantivy](https://github.c
 
 # Foreword
 
-In my [last blog post](behold-tantivy), I talked about the data-structures that are used in a tantivy index, but I did not explain how indexes are actually built.
+In my [last blog post](/posts/behold-tantivy/), I talked about the data-structures that are used in a tantivy index, but I did not explain how indexes are actually built.
 In other words, how do you get from a file containing documents *(possibly too big to fit in RAM)* to the index described in my first post *(possibly too big to fit in RAM too)*.
 
 You may have noticed that index data representation is very compact. If you do not index positions nor store documents, an inverted index is in fact typically much smaller in size than the original data itself.

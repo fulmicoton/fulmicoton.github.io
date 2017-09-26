@@ -5,7 +5,7 @@ title: "Who am I?"
 
 I'm a Software Developer at Indeed Tokyo.
 Indeed is currently hiring for many positions in 
-[San Francisco, Austin, Seattle, Tokyo and Hyperabad](http://app.jobvite.com/m?3n4OAhwB).
+[San Francisco, Austin, Seattle, Tokyo and Hyderabad](http://app.jobvite.com/m?3n4OAhwB).
 
 I started writing this blog for different reasons :
 get better at writing technical content in English, 

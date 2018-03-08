@@ -24,13 +24,14 @@ The app would run the phrase query `"French people are"` on the search engine, s
 
 I wondered how much it would cost me to try and reproduce this demo nowadays. 
 Exalead is a company with hundreds of servers to back this search engine. Obviously I'm on a tighter budget.
-If successful, that project would be a great way to test tantivy, and a cool way to slap a well-deserved [sarcastic webscale label on it](https://www.youtube.com/watch?v=b2F-DItXtZs).
 
-And if you were wondering, here is a picture of the French people stereotype.
-![French people]({{ "/images/commoncrawl/french.jpg" }})
-<center>Adjectives most frequently associated with French people on the English web.</center><br/>
 
-Now let me explain how I did it. If you are impatient, just scroll down, you'll be able to see more colorful pictures, I promise.
+![Tantivy]({{ "https://fulmicoton.com/tantivy-logo/tantivy-logo.png" }})
+
+I happen to develop a search engine library in Rust called [tantivy](https://github.com/tantivy-search/tantivy). 
+Indexing common-crawl would be a great way to test it, and a cool way to slap a well-deserved [sarcastic webscale label on it](https://www.youtube.com/watch?v=b2F-DItXtZs).
+
+Well so far, I indexed a bit more than 25% of it, and indexing it entirely should cost me less than $400. Let me explain how I did it. If you are impatient, just scroll down, you'll be able to see colorful pictures, I promise.
 
 
 # Common Crawl
@@ -139,7 +140,7 @@ So I randomly partitioned the 80,000 WET files into 80 shards of 10,000 files ea
 I then started indexing these shards sequentially. For each shard, after having indexed all documents, I force-merge all of the segments into a single very large segment. 
 
 
-I'm not gonna lie to you. I haven't indexed Common-Crawl entirely. I only bought one 4TB hard disk, and indexed 21 shards (26%).
+I'm not gonna lie to you. I haven't indexed Common-Crawl entirely yet. I only bought one 4TB hard disk, and indexed 21 shards (26%).
 Indexing is in a iatus at this point, because I have been quite busy recently (see the personal news below). Shards are independent : the feasibility of indexing Common-Crawl entirely on one machine is proven at this point. Finishing the job is only a matter of throwing time and money.
 
 # Resuming

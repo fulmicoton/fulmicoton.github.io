@@ -153,8 +153,12 @@ section.sidebar section.sections {
       border-radius: 3px;
       padding: 2px 3px;
     }
-
-
+    .content blockquote p {
+    	font-size: 30px;
+	line-height: 1.2em;
+	margin-top: 20px;
+	margin-bottom: 25px;
+    }
   .content img {
     padding: 3px;
     //border: 1px solid #eeeeee;
@@ -181,7 +185,7 @@ section.sidebar section.sections {
     color: #444; }
     .content blockquote cite:before {
       content: '— '; }
-    .content blockquote cite {
+    .content > blockquote cite {
       display: block;
       margin-top: .5em;
       text-align: right;

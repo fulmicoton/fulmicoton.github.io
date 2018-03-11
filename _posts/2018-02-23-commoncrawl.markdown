@@ -36,27 +36,27 @@ Well so far, I indexed a bit more than 25% of it, and indexing it entirely shoul
 
 # Common Crawl
 
-[Common Crawl](http://commoncrawl.org/) is one of my favorite open datasets. It consists in 3.2 billions pages crawled from the 
-web. Of course, 3 billions is far from exhaustive. The web contains hundreds of trillions of webpages, and most of it is unindexed. 
+[Common Crawl](http://commoncrawl.org/) is one of my favorite open datasets. It consists in 3.2 billion pages crawled from the
+web. Of course, 3 billion is far from exhaustive. The web contains hundreds of trillions of webpages, and most of it is unindexed.
 
 It would be interesting to compare this figure to recent search engines to give us some frame of reference.
 Unfortunately Google and Bing are very secretive about the number of web pages they index.
 
-We have some figure about the past:
+We have some figures about the past:
 In 2000, [Google reached its first billion indexed web pages](https://googleblog.blogspot.jp/2008/07/we-knew-web-was-big.html).
-In 2012, [Yandex -the leading russian search engine- grew from 4 billions to tens of billions web pages](https://thenextweb.com/insider/2012/06/27/yandex-expands-global-search-index-from-4-billion-to-tens-of-billions-of-pages/).
+In 2012, [Yandex -the leading russian search engine- grew from 4 billion to tens of billions web pages](https://thenextweb.com/insider/2012/06/27/yandex-expands-global-search-index-from-4-billion-to-tens-of-billions-of-pages/).
 
-> 3 billions pages indexed might have been enough to compete in the global search engine market in 2002. 
+> 3 billion pages indexed might have been enough to compete in the global search engine market in 2002.
 
 Nothing to sneeze as really.
 
 The Common Crawl website [lists example projects](http://commoncrawl.org/the-data/examples/) . 
-That kind of dataset is typically useful to mine for facts or linguistics. It can be helpful to train train a language model for instance, or try to create a list of companies in a specific industry for instance.
+That kind of dataset is typically useful to mine for facts or linguistics. It can be helpful to train a language model for instance, or try to create a list of companies in a specific industry.
 
 As far as I know, all of these projects are batching Common Crawl's data. Since it sits conveniently on Amazon S3, it is possible to grep through it with EC2 instances for [the price of a sandwich](https://engineeringblog.yelp.com/2015/03/analyzing-the-web-for-the-price-of-a-sandwich.html). 
 
 As far as I know, nobody actually indexed Common Crawl so far. 
-A opensource project called [Common Search](https://github.com/commonsearch) had the ambitious plan to make a public search engine out of it using elasticsearch. It seems inactive today unfortunately.
+A opensource project called [Common Search](https://github.com/commonsearch) had an ambitious plan to make a public search engine out of it using elasticsearch. It seems inactive today unfortunately.
 I would assume it lacked financial support to cover server costs. That kind of project would require a bare minimum of 40 server relatively high spec servers. 
 
 
@@ -66,7 +66,7 @@ Since the data is conveniently sitting on `Amazon S3` as part of [Amazon's publi
 
 Let's see how much that would have cost.
 
-Since I focus on the documents containing English text, we can bring the 3.2 billions documents down to roughly 2.15 billions.
+Since I focus on the documents containing English text, we can bring the 3.2 billion documents down to roughly 2.15 billion.
 
 Common Crawl conveniently distributes so-called WET files that contains the text extracted from the HTML markup of the page.
 The data is split into 80,000 WET files of roughly 115MB each, amounting overall to 9TB GZipped data, and somewhere around 17TB uncompressed.
@@ -75,7 +75,7 @@ We can shard our index into 80 shards including 1,000 WET files each.
 
 To reproduce the family Feud demo, we will need to access the original text of the matched documents. For convenience, Tantivy makes this possible by defining our fields as *STORED* in our schema.
 
-Tantivy's docstore compresses the data using LZ4 compression. After We typically get an inverse compression rate of 0.6 on natural language (by which I mean you compressed file is 60% the size of your original data).
+Tantivy's docstore compresses the data using LZ4 compression. We typically get an inverse compression rate of 0.6 on natural language (by which I mean your compressed file is 60% the size of your original data).
 The inverted index on the other hand, with positions, takes around 40% of the size of the uncompressed text. We should therefore expect our index, including the stored data, to be roughly equal to 17TB as well.
 
 Indexing cost should not be an issue. Tantivy is already quite fast at indexing.
@@ -84,7 +84,7 @@ We might want larger segments for Common-crawl, so maybe we should take a large 
 Our 17TB would require an overall 875 hours to index on instances that cost $0.05. The problem is extremely easy to distribute over 
 80 instances, each of them in charge of 1000 WET files for instance. The whole operation should cost us less than 50 bucks. Not bad...
 
-But where do we store this 17B index ? Should we upload all of these shards to S3. Then when we eventually want to query it, start many instances, have them download their respective set of shards and start up a search engine instance? That's sounds extremely expensive, and would require a very high start up time.
+But where do we store this 17B index? Should we upload all of these shards to S3? Then when we eventually want to query it, start many instances, have them download their respective set of shards and start up a search engine instance? That's sounds extremely expensive, and would require a very high start up time.
 
 Interestingly, search engines are designed so that an individual query actually requires as litte IO as possible.
 My initial plan was therefore to leave the index on `Amazon S3`, and query the data directly from there. Tantivy abstracts file accesses via a [`Directory`](https://tantivy-search.github.io/tantivy/tantivy/directory/trait.Directory.html) trait. Maybe it would be a good solution to have some kind of `S3` directory that downloads specific slices of files while queries are being run?
@@ -112,7 +112,7 @@ Back to the black board!
 
 
 By the way, my estimates were not too far from reality.
-I did not take in account the WET file headers, that ends up being thrown away. Also, some of the document which passed our English language detector
+I did not take in account the WET file headers, that end up being thrown away. Also, some of the document which passed our English language detector
 are multilingual. The tokenizer is configured to discard all tokens that do not contain exclusively characters in `[a-zA-Z0-9]`.
 
 > In the end, one shard takes 165 GB, so the overall size of the index would te 13.2 TB. 
@@ -136,16 +136,16 @@ Once again, indexing at this speed is really not a problem.
 In fact, my bandwidth is only fast enough to keep two indexing threads busy, leaving me plenty of CPU to watch netflix and code. On my laptop, 1 thread would probably be ok.
 Explicitely limiting the number of threads has the positive side effect of allocating more RAM to each segment being indexed. As a result, new segments produced are larger and less merging work is needed.
 
-So I randomly partitioned the 80,000 WET files into 80 shards of 10,000 files each.
+So I randomly partitioned the 80,000 WET files into 80 shards of 1,000 files each.
 I then started indexing these shards sequentially. For each shard, after having indexed all documents, I force-merge all of the segments into a single very large segment. 
 
 
 I'm not gonna lie to you. I haven't indexed Common-Crawl entirely yet. I only bought one 4TB hard disk, and indexed 21 shards (26%).
-Indexing is in a iatus at this point, because I have been quite busy recently (see the personal news below). Shards are independent : the feasibility of indexing Common-Crawl entirely on one machine is proven at this point. Finishing the job is only a matter of throwing time and money.
+Indexing is in a hiatus at this point, because I have been quite busy recently (see the personal news below). Shards are independent : the feasibility of indexing Common-Crawl entirely on one machine is proven at this point. Finishing the job is only a matter of throwing time and money.
 
 # Resuming
 
-I recently bought a house in Tokyo and the power installation was not too really suited with morning routine : dishwaser, heater and kettle was apparently too much and our fuses blew half of dozen of times.  
+I recently bought a house in Tokyo and the power installation was not too really suited with morning routine : dishwaser, heater and kettle was apparently too much and our fuses blew half a dozen times.
 
 This was a very nice test for tantivy's ability to avoid data corruption and resume indexing under a a black out scenario.
 In order to make it easier to keep track of the progress of indexing and resume from the right position, tantivy 0.5.0 now makes it possible to embed a small payload with every commit. For common-crawl, I commit after every 10 WET files. The payload is the last WET filename that got indexed.
@@ -157,13 +157,13 @@ On the off chance indexing Common-Crawl might interest businesses, academics or 
 I made the code I used to download and index common-crawl available [here](https://github.com/tantivy-search/tantivy-ccrawl).
 
 The `README` file explains how to install and run the indexer part.
-It's fairly well package.
+It's fairly well packaged.
 
 You can then query each shard individually using [`tantivy-cli`](https://github.com/tantivy-search/tantivy-cli).
 
 For instance, the search command will stream documents matching a given query.
 You just need to pass it a shard directory and a query.
-Its speed will be dominated limited by your IO, so if you have more than one disc, you can 
+Its speed will be limited by your IO, so if you have more than one disc, you can
 speed up the results by spreading shards over different shards and query them in parallel.
 
 For instance, running the following command
@@ -174,14 +174,14 @@ will output all the documents containing the phrase `"I like"`, in a json format
 
 # Demo time !
 
-I wrote a small python script that reproduces the "family feud" demo. The script just outputs the data and the tag cloud are actually create manually on [wordclouds.com](https://www.wordclouds.com/) Here are a few results.
+I wrote a small python script that reproduces the "family feud" demo. The script just outputs the data and the tag clouds are actually created manually on [wordclouds.com](https://www.wordclouds.com/) Here are a few results.
 
 ## The useful stuff
 
 First, we can use this to understand stereotypes.
 
 At Indeed, I had to work a lot with domain specific vocabulary.
-Jobseeker might search for an `RN` or an `LVN` job for instance.
+Jobseekers might search for an `RN` or an `LVN` job for instance.
 These acronyms were very obscure for me and other most non-native speakers.
 
 If I search for `RN stands for`, I get the following results
@@ -5653,8 +5653,8 @@ up the nice pace.
 First, my daughter just got born! I don't expect to have 
 much time to work on tantivy or blog for quite a while.
 
-Second, I will join Google Tokyo in April. I expect it will this new position
-to nurture my imposter syndrome. Besides, starting a new job usually bring 
+Second, I will join Google Tokyo in April. I expect this new position
+to nurture my imposter syndrome. Besides, starting a new job usually brings
 its bit of overhead to get used to the new position / development
 environment. The next year will be very busy for me !
 

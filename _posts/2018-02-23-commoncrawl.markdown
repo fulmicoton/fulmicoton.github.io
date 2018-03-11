@@ -6,6 +6,8 @@ published: true
 tags: commoncrawl, search, tantivy, rust
 ---
 
+** Thanks Avishai for the proof reading.**
+
 # Family feud meets Big Data
 
 When I was working at Exalead, I had the chance to have access to a 16 billions pages search engine to play with. 

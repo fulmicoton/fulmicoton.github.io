@@ -1,9 +1,8 @@
 ---
 layout: post
-title:  Of Wiggle Photography [CoffeeScript] 
+title:  Of Wiggle Photography 
 category: posts
 ---
-
 
 
 Demo
@@ -12,7 +11,6 @@ Demo
 
 Wiggle Stereoscopy
 ---------------------------------------
-
 
 Wiggle stereoscopy is probably the cheapest trick to give your brain a 3D feeling. While most technics try to take advantage of binocular vision by giving your left eye and your right eye different pictures, [wiggle stereoscopy](http://en.wikipedia.org/wiki/Wiggle_stereoscopy) is just about looping on a couple of pictures with a slight shift of point of view. Your brain will interpret the parallax and give you a sense of 3D. What's [parallax](http://en.wikipedia.org/wiki/Parallax) ? Imagine you're in the mountain driving in a car. You're looking out the window. Objects far away are moving slowly, objects closer seem to move very fast. 
 That's parallax! 

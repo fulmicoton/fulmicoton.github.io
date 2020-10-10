@@ -1,8 +1,9 @@
 ---
 layout: post
-title:  Of Intersecting linked lists
+title:  Of intersecting linked lists
 category: pythonistas
-description: Algorithm to compute the common interesection of two linked lists.
+description: Algorithm to compute the common intersection of two linked lists.
+published: false
 ---
 
 

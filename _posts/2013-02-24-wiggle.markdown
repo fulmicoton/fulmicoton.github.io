@@ -1,9 +1,8 @@
 ---
 layout: post
-title:  Of Wiggle Photography 
+title:  Of wiggle photography 
 category: posts
 ---
-
 
 Demo
 ----------------

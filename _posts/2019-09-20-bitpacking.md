@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Of bitpacking, with or without SSE3.
+title: Of bitpacking with or without SSE3
 category: posts
 published: true
 tags: tantivy, datastructure 

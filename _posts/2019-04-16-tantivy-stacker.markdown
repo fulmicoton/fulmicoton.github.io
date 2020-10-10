@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Of stuff tantivy does differently - the stacker
+title: Of tantivy indexing datastructure, the stacker
 category: posts
 published: true
 tags: tantivy, datastructure 

@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Of tantivy - Indexing (part 2)
+title: Of tantivy's indexing
 category: posts
 draft: false
 tags: search, tantivy, rust, information retrieval

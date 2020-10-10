@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Of Sum of dices
+title: Of sum of dices
 category: posts
 published: true
 ---

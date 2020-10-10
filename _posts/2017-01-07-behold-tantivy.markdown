@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Of tantivy, a search engine in Rust (part 1)
+title: Of tantivy, a search engine in Rust
 category: posts
 published: true
 tags: search, tantivy, rust, information retrieval

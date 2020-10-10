@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Of Levenshtein Automata implementations
+title: Of Levenshtein automata implementations
 category: posts
 published: true
 tags: draft

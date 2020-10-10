@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Of solving the rubik's from scratch [Python]
+title: Of solving the rubik's from scratch 
 category: posts
 published: true
 description: Solving the rubik's cube from scratch in python.

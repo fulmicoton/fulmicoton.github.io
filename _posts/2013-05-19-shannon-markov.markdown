@@ -2,7 +2,7 @@
 layout: post
 title: Of generating random text using a Markov model
 category: posts
-published: true
+published: false
 description: Generating random texts in CoffeeScript.
 ---
 

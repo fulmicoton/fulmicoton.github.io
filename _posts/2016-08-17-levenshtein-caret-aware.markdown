@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Of Caret awareness
+title: Of caret awareness
 category: posts
 published: true
 tags: draft

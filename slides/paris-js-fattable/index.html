@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>reveal.js - The HTML Presentation Framework</title>
+
+        <meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+        <meta name="author" content="Hakim El Hattab">
+
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <link rel="stylesheet" href="css/reveal.min.css">
+        <link rel="stylesheet" href="css/theme/default.css" id="theme">
+
+        <!-- For syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/zenburn.css">
+
+        <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+        <script>
+            if( window.location.search.match( /print-pdf/gi ) ) {
+                var link = document.createElement( 'link' );
+                link.rel = 'stylesheet';
+                link.type = 'text/css';
+                link.href = 'css/print/pdf.css';
+                document.getElementsByTagName( 'head' )[0].appendChild( link );
+            }
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                
+
+                <section>
+                    <h1>Fat table,</h1>
+                    <h3>when size matter</h3>
+                    <p>
+                        <small>Paul Masurel / <a href="http://twitter.com/fulmicoton">@fulmicoton</a></small>
+                        <small>
+    <a href="http://fulmicoton.com">http://fulmicoton.com</a><br/>
+    <a href="https://twitter.com/fulmicoton">@fulmicoton</a><br/>
+        </small>
+                    </p>
+                </section>
+
+                <section>
+                    <h1>Dataiku</h1>
+                    <h5><input type="checkbox">we're hiring</input></h5>
+                    <h5><input type="checkbox">we're not hiring</input></h5>
+                    <h5><input type="checkbox" checked>it's complicated</input></h5>
+                </section>
+
+                <section data-state="customevent">
+                    <h2>The issue :</h2>
+                    <img src='dataiku.png'/>
+                    <p>
+                    <ul>
+                        <li>30000 rows</li>
+                        <li>1000 columns</li>
+                    </ul>
+                </p>
+                </section>
+
+                <section>
+                    <h2>UI experience</h2>
+                    <ul>
+                        <li>impossible to work with more than 100s of columns</li>
+                        <li>infinite scroll does not allow jump</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h3>What do we do from here?</h3>
+                    <img src="mechants.png"></img>
+                </section>
+
+                <section>
+                    <h1>How do browser work?</h1>
+                </section>
+                
+                <section>
+                    <h2>Scientific method, my friend</h2>
+                    <img src="maestro.png"></img>
+                </section>
+
+                <section>
+                    <h2>First experiment</h2>
+                    <a href="http://jsfiddle.net/w9g4u/">[fiddle]</a>
+<pre><code data-trim contenteditable style="font-size: 18px; margin-top: 20px;">
+for (var i =0; i<100000; i++) {
+    $square.css("top", i/1000);
+}
+</code></pre>
+                </section>
+                <section>
+                    <h2>Result?</h2>
+                </section>
+                <section>
+                    <h2>Conclusion?</h2>
+                    Repaint occur once per-event loop
+                </section>                
+
+
+                <section>
+                    <h2>Second experiment</h2>
+                    <a href="http://jsfiddle.net/QZMt4/">[fiddle]</a>
+<pre><code data-trim contenteditable style="font-size: 18px; margin-top: 20px;">
+var $left = $("div.left");
+var $right = $("div.right");
+for (var i =0; i<100; i++) {
+    $left.css("width", i);
+    console.log($right.position());
+}
+</code></pre>
+                </section>                
+
+
+                <section>
+                    <h2>Result?</h2>
+                </section>
+                
+                <section>
+                    <h2>Conclusion?</h2>
+                    The browser may compute the layout more than once
+                    per-event loop.
+                </section>     
+
+                <section>
+                    <h2>The internet says yes</h2>
+                    <li>Reflow</li>
+                    <li>Repaint</li>
+                </section>     
+
+                <section>
+                    <h2>When does it reflow?</h2>
+                    <li>Dirty-bit</li>
+                    <li>Display:none to be sure</li>
+                </section>    
+
+                <section>
+                    <h2>Back to our problem</h2>
+                    <ul>
+                    <li>Reflow probably linear with the number of elements displayed</li>
+                    <li>Repaint probably linear with the number of elements on screen</li>
+                    </ul>
+                </section>
+
+                <section>
+                    <h2>Let's handle the DOM on our own!</h2>
+                    <img src="bigpicture.png"></img>
+                </section>
+
+                <section>
+                    <h2>Pro-tips: Recycle your DOM elements</h2>
+                    <p>Using a pool for instance</p>
+                </section>
+
+                <section>
+                    <h2>fattable</h2>
+                    <div>[fattable](http://fulmicoton.com/fattable/index2.html)</div>
+                </section>
+
+                <section>
+                    <h2>PROBLEM: scrollbar</h2>
+                    <a href="http://stackoverflow.com/questions/21830056/onscroll-fired-after-or-before-repaint">[stackoverflow]</a>
+                    <a href="http://jsfiddle.net/m2E65/1/">[fiddle]</a>
+<pre>
+<code data-trim contenteditable style="font-size: 18px; margin-top: 20px;">
+var onscroll = function() {
+    var y = $("#container").scrollTop() + 30;
+    var z = 0
+    for (var c=0; c&lt;y*10000; c++) {
+        z+=c;
+    }
+    $("#label").text("bocal : "+z);
+    $("#label").css("top", y);
+};
+$('#container').scroll(onscroll);
+</code>
+</pre>
+                </section>
+                
+                <section>
+                    <h1>Solution</h1>
+                    <p>Uncouple scrollbar from container</p>
+                </section>
+                
+
+                <section>
+                    <h1>Misc</h1>
+                    <ul>
+                        <li>Firefox mouse move</li>
+                        <li>IE9 is by spec a different beast with DOCTYPE html</li>
+                        <li>pointer-events: none</li>
+                    </ul>
+                </section>
+                
+
+
+                <section>
+                    <h1>Tooling</h1>
+                    <img src="inspector.png"/>
+                </section>
+                
+                <section>
+                    <h1>That's all!</h1>
+                    <a href="https://github.com/fulmicoton/fattable">https://github.com/fulmicoton/fattable</a>
+
+                </section>
+
+            </div>
+
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.min.js"></script>
+
+        <script>
+
+            // Full list of configuration options available here:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+                transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+                // Parallax scrolling
+                // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+                // parallaxBackgroundSize: '2100px 900px',
+
+                // Optional libraries used to extend on reveal.js
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+                    { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>

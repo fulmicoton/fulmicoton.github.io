@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <meta charset="utf-8">
+  <title>{{ page.title }}</title>
+  <meta name="viewport" content="width=600">
+  <meta name="author" content="Paul Masurel" />
+  {% if page.description %}
+  <meta name="description" content="Fulmicoton - {{ page.description }}" />
+  {% endif %}
+
+  <link rel="alternate" type="application/rss+xml" href="/atom.xml" />
+  <link media="(min-width:800px)" rel="stylesheet" href="/css/base.css" type="text/css"/>
+  <link media="(max-width:800px)" href="/css/phone.css" type="text/css" rel="stylesheet"/>
+
+  <link rel="stylesheet" href="/css/pygments.css" type="text/css" />
+  <link href='//fonts.googleapis.com/css?family=Yanone+Kaffeesatz' rel='stylesheet' type='text/css'>
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+  <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script type="text/javascript" src="/js/application.js"></script>
+
+  {% if page.style %}
+   <style type="text/css">
+       {{ page.style }}
+   </style>
+  {% endif %}
+  
+</head>
+
+<body>
+  <section class="sidebar">
+    <a href="/">
+      <img src="{{ site.gravatar_url }}?s=150" height="75" width="75" class="avatar" />
+    </a>
+
+    <section class="name">
+      <a href="/">
+        <span id="fname">Paul</span>
+        <span id="lname">Masurel</span>
+      </a>
+    </section>
+
+    <section class="meta">
+
+
+
+      <!--<a href="https://github.com/{{ site.github }}" target="_blank"><img src="/images/github.png" /></a>
+      <a href="https://twitter.com/{{ site.twitter }}" target="_blank"><img src="/images/twitter.png"></a>
+      <a href="/atom.xml"><img src="/images/rss.png" /></a>
+      <a href="https://plus.google.com/106830395024961735687" rel="publisher">Find us on Google+</a>-->
+     </section>
+  
+        <nav class="sections">
+      <ul>
+        <li><a href="/about/">about</a></li>
+        <li><a href="/">posts</a></li>
+      </ul>
+    </nav>
+
+
+      <nav class="social">
+        <a href="/atom.xml"><img src="/images/rss.png" /></a>
+      <a href="//twitter.com/{{ site.twitter }}" target="_blank"><img src="/images/twitter.png"></a>
+            <a href="//jp.linkedin.com/in/fulmicoton
+"><img src="/images/linkedin.png" /></a>
+      <a href="//plus.google.com/106830395024961735687" target="_blank" rel="publisher"><img src="/images/google+.png" /></a>
+      </nav>
+
+    <!--
+    <section class="sections projects">
+    <h1>projects</h1>
+    <ul>
+        <li><a href="/potato/">potato</a></li>
+        <li><a href="/readymade/">readymade</a></li>
+    </ul>
+    </section>
+  -->
+  </section>
+  {{ content }}
+
+  </section>
+  <!--
+  <section class="amazon">
+
+
+<SCRIPT charset="utf-8" type="text/javascript" src="http://ws-na.amazon-adsystem.com/widgets/q?rt=tf_mfw&ServiceVersion=20070822&MarketPlace=US&ID=V20070822%2FUS%2Fpoulejapon-20%2F8001%2F98c76caf-a577-4059-a9c6-f728bd90a938">
+</SCRIPT>
+<NOSCRIPT>
+  <A HREF="http://ws-na.amazon-adsystem.com/widgets/q?rt=tf_mfw&ServiceVersion=20070822&MarketPlace=US&ID=V20070822%2FUS%2Fpoulejapon-20%2F8001%2F98c76caf-a577-4059-a9c6-f728bd90a938&Operation=NoScript">Amazon.com Widgets</A>
+</NOSCRIPT>
+
+
+  </section>
+-->
+  
+  <script type="text/javascript">
+
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-38194295-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+
+  </script>
+
+<!--
+<section class="google-ads">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<ins class="adsbygoogle"
+     style="display:inline-block;width:160px;height:600px"
+     data-ad-client="ca-pub-1443738683569942"
+     data-ad-slot="9581623131"></ins>
+<script>
+(adsbygoogle = window.adsbygoogle || []).push({});
+</script>
+</section>
+-->
+
+</body>
+
+</html>

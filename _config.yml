@@ -1,0 +1,9 @@
+permalink: /posts/:title/
+auto: true
+markdown: kramdown
+name: Paul Masurel
+url: https://fulmicoton.com
+description: I got an Idea!
+twitter: fulmicoton
+github: poulejapon
+gravatar_url: https://gravatar.com/avatar/1cd46a26ceada395ae900bd4cd40a052

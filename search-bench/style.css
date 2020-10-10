@@ -1,0 +1,26 @@
+body {
+  width: 800px;
+  margin: 0 auto;
+  padding: 30px 10px;
+}
+.fastest {
+  background-color: #cddccd;
+  color: #222;
+}
+.slowest {
+  background-color: #e0b8b8;
+  color: #222;
+}
+td {
+  border: solid 1px white;
+  text-align: right;
+}
+td:last-child {
+  padding-right: 10px;
+}
+.average-row td {
+  padding: 20px;
+  background-color: #382373;
+  color: white;
+  border-bottom: solid 8px white;
+}

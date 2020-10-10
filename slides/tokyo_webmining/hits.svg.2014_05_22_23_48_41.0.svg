@@ -1,0 +1,1284 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="hits.svg">
+  <defs
+     id="defs4">
+    <marker
+       inkscape:stockid="Arrow1Lend"
+       orient="auto"
+       refY="0.0"
+       refX="0.0"
+       id="Arrow1Lend"
+       style="overflow:visible;">
+      <path
+         id="path4268"
+         d="M 0.0,0.0 L 5.0,-5.0 L -12.5,0.0 L 5.0,5.0 L 0.0,0.0 z "
+         style="fill-rule:evenodd;stroke:#000000;stroke-width:1.0pt;"
+         transform="scale(0.8) rotate(180) translate(12.5,0)" />
+    </marker>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.28561128"
+     inkscape:cx="-2193.4943"
+     inkscape:cy="242.19006"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1600"
+     inkscape:window-height="876"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Calque 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g4035"
+       transform="translate(-1.7775857,-50.63545)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+       inkscape:export-xdpi="54.642719"
+       inkscape:export-ydpi="54.642719">
+      <rect
+         ry="16.096359"
+         y="192.20677"
+         x="-689.01257"
+         height="569.8822"
+         width="563.02509"
+         id="rect2985"
+         style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3755"
+         y="287.36218"
+         x="-618"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           y="287.36218"
+           x="-618"
+           id="tspan3757"
+           sodipodi:role="line">1  http://lemonde.fr</tspan><tspan
+           id="tspan3759"
+           y="337.36218"
+           x="-618"
+           sodipodi:role="line" /><tspan
+           id="tspan3761"
+           y="387.36218"
+           x="-618"
+           sodipodi:role="line">2  http://figaro.fr</tspan><tspan
+           id="tspan3763"
+           y="437.36218"
+           x="-618"
+           sodipodi:role="line" /><tspan
+           id="tspan3765"
+           y="487.36218"
+           x="-618"
+           sodipodi:role="line">3 http://leparisien.fr</tspan><tspan
+           id="tspan3767"
+           y="537.36218"
+           x="-618"
+           sodipodi:role="line" /><tspan
+           id="tspan3769"
+           y="587.36218"
+           x="-618"
+           sodipodi:role="line">4 http://ouestfrance.fr</tspan><tspan
+           id="tspan3771"
+           y="637.36218"
+           x="-618"
+           sodipodi:role="line" /><tspan
+           id="tspan3773"
+           y="687.36218"
+           x="-618"
+           sodipodi:role="line">5 http://liberation.fr</tspan></text>
+      <path
+         sodipodi:nodetypes="ccscccc"
+         inkscape:connector-curvature="0"
+         id="path3794"
+         d="m -194.42395,257.39612 9.45739,58.60644 c 0,0 13.23256,-9.68156 13.83804,-11.2727 0.60547,-1.59115 31.62736,27.55914 31.62736,27.55914 l -18.39208,-39.44673 13.18848,-13.78254 z"
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.74205762px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3796"
+         y="803.36218"
+         x="-438"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           y="803.36218"
+           x="-438"
+           id="tspan3798"
+           sodipodi:role="line">t=0</tspan></text>
+    </g>
+    <g
+       id="g4019"
+       transform="translate(-73.894158,8.991093)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+       inkscape:export-xdpi="54.642719"
+       inkscape:export-ydpi="54.642719">
+      <rect
+         ry="16.096359"
+         y="191.74498"
+         x="146.48746"
+         height="569.8822"
+         width="563.02509"
+         id="rect2985-5"
+         style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3755-8"
+         y="286.90039"
+         x="217.50003"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           y="286.90039"
+           x="217.50003"
+           id="tspan3757-3"
+           sodipodi:role="line">1  http://lemonde.fr</tspan><tspan
+           id="tspan3759-7"
+           y="336.90039"
+           x="217.50003"
+           sodipodi:role="line" /><tspan
+           id="tspan3761-3"
+           y="386.90039"
+           x="217.50003"
+           sodipodi:role="line">2  http://figaro.fr</tspan><tspan
+           id="tspan3763-3"
+           y="436.90039"
+           x="217.50003"
+           sodipodi:role="line" /><tspan
+           id="tspan3765-6"
+           y="486.90039"
+           x="217.50003"
+           sodipodi:role="line">3 http://leparisien.fr</tspan><tspan
+           id="tspan3767-0"
+           y="536.90039"
+           x="217.50003"
+           sodipodi:role="line" /><tspan
+           id="tspan3769-9"
+           y="586.90039"
+           x="217.50003"
+           sodipodi:role="line">4 http://ouestfrance.fr</tspan><tspan
+           id="tspan3771-0"
+           y="636.90039"
+           x="217.50003"
+           sodipodi:role="line" /><tspan
+           id="tspan3773-1"
+           y="686.90039"
+           x="217.50003"
+           sodipodi:role="line">5 http://liberation.fr</tspan></text>
+      <path
+         sodipodi:nodetypes="ccscccc"
+         inkscape:connector-curvature="0"
+         id="path3794-7"
+         d="m 631.07608,364.93433 9.45739,58.60644 c 0,0 13.23256,-9.68156 13.83804,-11.2727 0.60547,-1.59115 31.62736,27.55914 31.62736,27.55914 l -18.39208,-39.44673 13.18848,-13.78254 z"
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.74205762px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3796-4"
+         y="802.90039"
+         x="397.50003"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           y="802.90039"
+           x="397.50003"
+           id="tspan3798-0"
+           sodipodi:role="line">t=10s</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-88"
+       y="426.36218"
+       id="text3857"
+       sodipodi:linespacing="125%"><tspan
+         sodipodi:role="line"
+         id="tspan3859"
+         x="-88"
+         y="426.36218" /></text>
+    <g
+       id="g4129"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="translate(-21,-9)"
+         d="m 120,376.36218 a 79.5,79 0 1 1 -159,0 79.5,79 0 1 1 159,0 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861"
+         style="fill:#ffff4d;fill-opacity:1;stroke:#000000;stroke-width:8.19999980999999956;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         inkscape:connector-curvature="0"
+         id="path3863"
+         d="m -36.815667,388.8783 c -0.629207,-4.76438 8.126096,-8.64992 17.350496,-9.93308 21.5428374,-4.21591 46.391954,-3.59078 67.951533,0.26262 9.539323,1.45914 19.69403,2.92689 26.949199,6.32133 0.677523,0.43275 1.198264,0.92891 1.380565,1.46104"
+         style="fill:none;stroke:#000000;stroke-width:3.66774845;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="translate(6,0)"
+         d="m 5,354.36218 a 13.5,13 0 1 1 -27,0 13.5,13 0 1 1 27,0 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         d="m 61,353.36218 a 12.5,13 0 1 1 -25,0 12.5,13 0 1 1 25,0 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g4135"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         transform="translate(784.5,-49)"
+         d="m 120,376.36218 a 79.5,79 0 1 1 -159,0 79.5,79 0 1 1 159,0 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-6"
+         style="fill:#ffff4d;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3863-7"
+         d="m 769.5,347.36218 c -0.62017,10.09348 8.0094,18.32513 17.10134,21.04356 21.23347,8.93153 45.72575,7.60717 66.97572,-0.55637 9.40234,-3.09126 19.41122,-6.20072 26.5622,-13.39194 0.66779,-0.9168 1.18106,-1.96792 1.36074,-3.09525"
+         style="fill:#ffff4d;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         d="m 5,354.36218 a 13.5,13 0 1 1 -27,0 13.5,13 0 1 1 27,0 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019000000044;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="translate(805.5,-40)" />
+      <path
+         d="m 61,353.36218 a 12.5,13 0 1 1 -25,0 12.5,13 0 1 1 25,0 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-8"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019000000044;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="translate(805.5,-40)" />
+    </g>
+    <g
+       id="g4003"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+       inkscape:export-xdpi="54.642719"
+       inkscape:export-ydpi="54.642719">
+      <rect
+         ry="16.096359"
+         y="163.745"
+         x="941.48743"
+         height="569.8822"
+         width="563.02509"
+         id="rect2985-5-2"
+         style="fill:none;stroke:#000000;stroke-width:10;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3755-8-5"
+         y="258.90039"
+         x="1012.5"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           y="258.90039"
+           x="1012.5"
+           id="tspan3757-3-8"
+           sodipodi:role="line">1  http://lemonde.fr</tspan><tspan
+           id="tspan3759-7-4"
+           y="308.90039"
+           x="1012.5"
+           sodipodi:role="line" /><tspan
+           id="tspan3761-3-0"
+           y="358.90039"
+           x="1012.5"
+           sodipodi:role="line">2  http://figaro.fr</tspan><tspan
+           id="tspan3763-3-2"
+           y="408.90039"
+           x="1012.5"
+           sodipodi:role="line" /><tspan
+           id="tspan3765-6-0"
+           y="458.90039"
+           x="1012.5"
+           sodipodi:role="line">3 http://leparisien.fr</tspan><tspan
+           id="tspan3767-0-6"
+           y="508.90039"
+           x="1012.5"
+           sodipodi:role="line" /><tspan
+           id="tspan3769-9-1"
+           y="558.90039"
+           x="1012.5"
+           sodipodi:role="line">4 http://ouestfrance.fr</tspan><tspan
+           id="tspan3771-0-4"
+           y="608.90039"
+           x="1012.5"
+           sodipodi:role="line" /><tspan
+           id="tspan3773-1-6"
+           y="658.90039"
+           x="1012.5"
+           sodipodi:role="line">5 http://liberation.fr</tspan></text>
+      <path
+         sodipodi:nodetypes="ccscccc"
+         inkscape:connector-curvature="0"
+         id="path3794-7-7"
+         d="m 1470.0761,550.93433 9.4574,58.60644 c 0,0 13.2325,-9.68156 13.838,-11.2727 0.6055,-1.59115 31.6274,27.55914 31.6274,27.55914 l -18.3921,-39.44673 13.1885,-13.78254 z"
+         style="fill:#000000;fill-opacity:1;stroke:#000000;stroke-width:0.74205762px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1" />
+      <text
+         sodipodi:linespacing="125%"
+         id="text3796-4-1"
+         y="775.90039"
+         x="1129.5"
+         style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+         xml:space="preserve"><tspan
+           y="775.90039"
+           x="1129.5"
+           id="tspan3798-0-3"
+           sodipodi:role="line">t=10mn10s</tspan></text>
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-107.48023"
+       y="823.25958"
+       id="text4051"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+       inkscape:export-xdpi="54.642719"
+       inkscape:export-ydpi="54.642719"><tspan
+         sodipodi:role="line"
+         id="tspan4053"
+         x="-107.48023"
+         y="823.25958">dwell time of </tspan><tspan
+         sodipodi:role="line"
+         x="-107.48023"
+         y="873.25958"
+         id="tspan4055"> 10-0 = 10s</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="670.40582"
+       y="816.00012"
+       id="text4051-5"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+       inkscape:export-xdpi="54.642719"
+       inkscape:export-ydpi="54.642719"><tspan
+         sodipodi:role="line"
+         id="tspan4053-6"
+         x="670.40582"
+         y="816.00012">dwell time of </tspan><tspan
+         sodipodi:role="line"
+         x="670.40582"
+         y="866.00012"
+         id="tspan4055-0"> 10mn10s - 10s = 10mn</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:9.28539562;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-end:url(#Arrow1Lend)"
+       d="m -403.75721,1696.0614 c 1839.12181,0 1881.99701,0 1881.99701,0"
+       id="path4081"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54" />
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-388.69531"
+       y="1753.0042"
+       id="text4083"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><tspan
+         sodipodi:role="line"
+         id="tspan4085"
+         x="-388.69531"
+         y="1753.0042">0</tspan></text>
+    <path
+       style="fill:none;stroke:#000000;stroke-width:16.20028496;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:16.20028452, 16.20028452;stroke-dashoffset:0"
+       d="m 30.656504,1343.6045 c 0,332.0214 0,417.8068 0,417.8068"
+       id="path4087"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54" />
+    <path
+       style="fill:none;stroke:#000000;stroke-width:16.20028496;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:16.20028452, 16.20028452;stroke-dashoffset:0"
+       d="m 597.60061,1353.5263 c 0,332.0214 0,417.8068 0,417.8068"
+       id="path4087-8"
+       inkscape:connector-curvature="0"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54" />
+    <g
+       transform="translate(-190.32788,1113.3076)"
+       id="g4129-7"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="translate(-21,-9)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-8"
+         style="fill:#ffff4d;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         inkscape:connector-curvature="0"
+         id="path3863-9"
+         d="m -36.815667,388.8783 c -0.629207,-4.76438 8.126096,-8.64992 17.350496,-9.93308 21.5428374,-4.21591 46.391954,-3.59078 67.951533,0.26262 9.539323,1.45914 19.69403,2.92689 26.949199,6.32133 0.677523,0.43275 1.198264,0.92891 1.380565,1.46104"
+         style="fill:none;stroke:#000000;stroke-width:3.66774845;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="translate(6,0)"
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-92"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-85"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       transform="translate(36.566686,1113.6954)"
+       id="g4135-2"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         transform="translate(784.5,-49)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-6-6"
+         style="fill:#ffff4d;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3863-7-2"
+         d="m 769.5,347.36218 c -0.62017,10.09348 8.0094,18.32513 17.10134,21.04356 21.23347,8.93153 45.72575,7.60717 66.97572,-0.55637 9.40234,-3.09126 19.41122,-6.20072 26.5622,-13.39194 0.66779,-0.9168 1.18106,-1.96792 1.36074,-3.09525"
+         style="fill:#ffff4d;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-2"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="translate(805.5,-40)" />
+      <path
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-8-4"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="translate(805.5,-40)" />
+    </g>
+    <g
+       id="g4222"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         transform="translate(281.34962,1074.5984)"
+         d="m 120,376.36218 a 79.5,79 0 1 1 -159,0 79.5,79 0 1 1 159,0 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-6-7"
+         style="fill:#ffff4d;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3863-7-3"
+         d="m 265.18407,1469.795 c 13.07477,11.2441 90.60069,8.7092 112.94204,2.181 0.68169,-0.2818 1.20564,-0.6049 1.38906,-0.9514"
+         style="fill:#ffff4d;fill-opacity:1;stroke:#000000;stroke-width:4.06899977;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:nodetypes="ccc" />
+      <path
+         d="m 5,354.36218 a 13.5,13 0 1 1 -27,0 13.5,13 0 1 1 27,0 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-1"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="translate(302.34962,1083.5984)" />
+      <path
+         d="m 61,353.36218 a 12.5,13 0 1 1 -25,0 12.5,13 0 1 1 25,0 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-8-9"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="translate(302.34962,1083.5984)" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-44.563793"
+       y="1839.6559"
+       id="text4228"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><tspan
+         sodipodi:role="line"
+         id="tspan4230"
+         x="-44.563793"
+         y="1839.6559">30s?</tspan></text>
+    <text
+       xml:space="preserve"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="539.0769"
+       y="1834.4104"
+       id="text4228-7"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><tspan
+         sodipodi:role="line"
+         id="tspan4230-2"
+         x="539.0769"
+         y="1834.4104">1mn?</tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4253"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="matrix(1.9479598,0,0,1.9479598,-1704.6896,-1792.9417)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><flowRegion
+         id="flowRegion4255"><rect
+           id="rect4257"
+           width="643.69922"
+           height="326.80115"
+           x="1366.623"
+           y="1814.8982" /></flowRegion><flowPara
+         id="flowPara4259">dwell time</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4705"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(69.321457,9.074646)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><flowRegion
+         id="flowRegion4707"><rect
+           id="rect4709"
+           width="460.49255"
+           height="89.127586"
+           x="-396.12262"
+           y="1235.5688" /></flowRegion><flowPara
+         id="flowPara4711">relevancy = 0</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4705-5"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(547.19527,9.074646)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><flowRegion
+         id="flowRegion4707-8"><rect
+           id="rect4709-8"
+           width="460.49255"
+           height="89.127586"
+           x="-396.12262"
+           y="1235.5688" /></flowRegion><flowPara
+         id="flowPara4711-3">relevancy = 1</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4705-7"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="translate(1122.3307,9.074646)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime2.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><flowRegion
+         id="flowRegion4707-1"><rect
+           id="rect4709-7"
+           width="460.49255"
+           height="89.127586"
+           x="-396.12262"
+           y="1235.5688" /></flowRegion><flowPara
+         id="flowPara4711-38">relevancy = 2</flowPara></flowRoot>    <text
+       xml:space="preserve"
+       style="font-size:65.52910614px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-3300.7317"
+       y="551.60626"
+       id="text3755-9"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><tspan
+         sodipodi:role="line"
+         id="tspan3757-0"
+         x="-3300.7317"
+         y="551.60626">1  http://lemonde.fr</tspan><tspan
+         sodipodi:role="line"
+         x="-3300.7317"
+         y="633.51764"
+         id="tspan3759-8" /><tspan
+         sodipodi:role="line"
+         x="-3300.7317"
+         y="715.42902"
+         id="tspan3761-1">2  http://figaro.fr</tspan><tspan
+         sodipodi:role="line"
+         x="-3300.7317"
+         y="797.34039"
+         id="tspan3763-7" /><tspan
+         sodipodi:role="line"
+         x="-3300.7317"
+         y="879.25177"
+         id="tspan3765-3">3 http://leparisien.fr</tspan><tspan
+         sodipodi:role="line"
+         x="-3300.7317"
+         y="961.16315"
+         id="tspan3767-7" /><tspan
+         sodipodi:role="line"
+         x="-3300.7317"
+         y="1043.0746"
+         id="tspan3769-1">4 http://ouestfrance.fr</tspan><tspan
+         sodipodi:role="line"
+         x="-3300.7317"
+         y="1124.986"
+         id="tspan3771-8" /><tspan
+         sodipodi:role="line"
+         x="-3300.7317"
+         y="1206.8973"
+         id="tspan3773-4">5 http://liberation.fr</tspan></text>
+    <g
+       id="g4470"
+       transform="translate(-565.55997,-1.823494)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="matrix(0.79269899,0,0,0.79269899,-2874.2841,560.91049)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-2-9"
+         style="fill:#ff774d;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         inkscape:connector-curvature="0"
+         id="path3863-2-5"
+         d="m -2886.8211,876.30822 c -0.4988,-3.77672 6.4415,-6.85679 13.7537,-7.87395 17.077,-3.34194 36.7748,-2.8464 53.8651,0.20818 7.5618,1.15666 15.6114,2.32014 21.3626,5.01091 0.5371,0.34304 0.9499,0.73635 1.0944,1.15817"
+         style="fill:none;stroke:#000000;stroke-width:2.9074204;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="matrix(0.79269899,0,0,0.79269899,-2852.8812,568.04478)"
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-8-3"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         transform="matrix(0.79269899,0,0,0.79269899,-2857.6374,568.04478)"
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-82-1"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g4458"
+       transform="translate(-556.89483,-7.6293945e-6)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         transform="matrix(0.86673507,0,0,0.86673507,-2885.9477,210.02524)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-6-7-5"
+         style="fill:#ffa841;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3863-7-3-0"
+         d="m -2899.959,552.55599 c 11.3324,9.74566 78.5268,7.54857 97.8909,1.89035 0.5908,-0.24424 1.0449,-0.52429 1.2039,-0.82461"
+         style="fill:none;stroke:#000000;stroke-width:3.52674484;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:nodetypes="ccc" />
+      <path
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-1-4"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.86673507,0,0,0.86673507,-2867.7463,217.82586)" />
+      <path
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-8-9-3"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.86673507,0,0,0.86673507,-2867.7463,217.82586)" />
+    </g>
+    <g
+       id="g4482"
+       transform="translate(-558.13277,0)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="matrix(0.79269899,0,0,0.79269899,-2881.7113,880.28435)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-2-9-5"
+         style="fill:#ff774d;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         inkscape:connector-curvature="0"
+         id="path3863-2-5-5"
+         d="m -2894.2483,1195.682 c -0.4988,-3.7767 6.4415,-6.8568 13.7537,-7.8739 17.077,-3.342 36.7748,-2.8464 53.8651,0.2082 7.5618,1.1566 15.6114,2.3201 21.3626,5.0109 0.5371,0.343 0.9499,0.7363 1.0944,1.1581"
+         style="fill:none;stroke:#000000;stroke-width:2.9074204;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="matrix(0.79269899,0,0,0.79269899,-2860.3084,887.41865)"
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-8-3-0"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         transform="matrix(0.79269899,0,0,0.79269899,-2865.0646,887.41865)"
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-82-1-9"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g4476"
+       transform="translate(-570.51163,5.2776718)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         transform="matrix(0.86673507,0,0,0.86673507,-2872.3309,686.54362)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-6-7-5-1"
+         style="fill:#ffa841;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3863-7-3-0-1"
+         d="m -2886.3422,1029.0744 c 11.3324,9.7456 78.5268,7.5485 97.8909,1.8903 0.5908,-0.2442 1.0449,-0.5243 1.2039,-0.8246"
+         style="fill:none;stroke:#000000;stroke-width:3.52674484;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:nodetypes="ccc" />
+      <path
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-1-4-3"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.86673507,0,0,0.86673507,-2854.1295,694.34424)" />
+      <path
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-8-9-3-4"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.86673507,0,0,0.86673507,-2854.1295,694.34424)" />
+    </g>
+    <g
+       id="g4464"
+       transform="translate(-558.13259,-6.463707)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         transform="matrix(0.76308456,0,0,0.76308456,-2880.5121,416.09777)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-6-2"
+         style="fill:#00fe13;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3863-7-1"
+         d="m -2891.9583,718.55563 c -0.4733,7.70218 6.1118,13.98362 13.0497,16.05801 16.203,6.81551 34.8927,5.80492 51.1082,-0.42456 7.1748,-2.35889 14.8124,-4.73167 20.2692,-10.21918 0.5096,-0.69959 0.9012,-1.50169 1.0383,-2.36194"
+         style="fill:none;stroke:#000000;stroke-width:4.04434824;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-6"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.76308456,0,0,0.76308456,-2864.4873,422.96553)" />
+      <path
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-6-6"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.76308456,0,0,0.76308456,-2823.4116,421.44352)" />
+    </g>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4553"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="matrix(2.2733805,0,0,2.2733805,3003.1698,-1743.9279)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><flowRegion
+         id="flowRegion4555"><rect
+           id="rect4557"
+           width="824.43018"
+           height="188.15825"
+           x="-2805.0432"
+           y="1359.3572" /></flowRegion><flowPara
+         id="flowPara4559">NOT TOO BAD</flowPara></flowRoot>    <flowRoot
+       xml:space="preserve"
+       id="flowRoot4553-4"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="matrix(2.2733805,0,0,2.2733805,4391.4798,-1729.0679)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><flowRegion
+         id="flowRegion4555-9"><rect
+           id="rect4557-6"
+           width="824.43018"
+           height="188.15825"
+           x="-2805.0432"
+           y="1359.3572" /></flowRegion><flowPara
+         id="flowPara4559-7">PERFECT</flowPara></flowRoot>    <text
+       xml:space="preserve"
+       style="font-size:65.52910614px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       x="-2116.2388"
+       y="561.45752"
+       id="text3755-9-9"
+       sodipodi:linespacing="125%"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54"><tspan
+         sodipodi:role="line"
+         id="tspan3757-0-9"
+         x="-2116.2388"
+         y="561.45752">2  http://figaro.fr</tspan><tspan
+         sodipodi:role="line"
+         x="-2116.2388"
+         y="643.3689"
+         id="tspan4710" /><tspan
+         sodipodi:role="line"
+         x="-2116.2388"
+         y="725.28027"
+         id="tspan4708">1  http://lemonde.fr</tspan><tspan
+         sodipodi:role="line"
+         x="-2116.2388"
+         y="807.19165"
+         id="tspan3763-7-6" /><tspan
+         sodipodi:role="line"
+         x="-2116.2388"
+         y="889.10303"
+         id="tspan3765-3-1">4 http://ouestfrance.fr</tspan><tspan
+         sodipodi:role="line"
+         x="-2116.2388"
+         y="971.0144"
+         id="tspan4716" /><tspan
+         sodipodi:role="line"
+         x="-2116.2388"
+         y="1052.9258"
+         id="tspan4718">3 http://leparisien.fr</tspan><tspan
+         sodipodi:role="line"
+         x="-2116.2388"
+         y="1134.8372"
+         id="tspan3771-8-1" /><tspan
+         sodipodi:role="line"
+         x="-2116.2388"
+         y="1216.7485"
+         id="tspan3773-4-0">5 http://liberation.fr</tspan></text>
+    <g
+       id="g4470-5"
+       transform="translate(606.55417,183.80715)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="matrix(0.79269899,0,0,0.79269899,-2874.2841,560.91049)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-2-9-4"
+         style="fill:#ff774d;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         inkscape:connector-curvature="0"
+         id="path3863-2-5-4"
+         d="m -2886.8211,876.30822 c -0.4988,-3.77672 6.4415,-6.85679 13.7537,-7.87395 17.077,-3.34194 36.7748,-2.8464 53.8651,0.20818 7.5618,1.15666 15.6114,2.32014 21.3626,5.01091 0.5371,0.34304 0.9499,0.73635 1.0944,1.15817"
+         style="fill:none;stroke:#000000;stroke-width:2.9074204;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="matrix(0.79269899,0,0,0.79269899,-2852.8812,568.04478)"
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-8-3-9"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         transform="matrix(0.79269899,0,0,0.79269899,-2857.6374,568.04478)"
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-82-1-0"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g4458-8"
+       transform="translate(610.26777,160.87297)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         transform="matrix(0.86673507,0,0,0.86673507,-2885.9477,210.02524)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-6-7-5-9"
+         style="fill:#ffa841;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3863-7-3-0-8"
+         d="m -2899.959,552.55599 c 11.3324,9.74566 78.5268,7.54857 97.8909,1.89035 0.5908,-0.24424 1.0449,-0.52429 1.2039,-0.82461"
+         style="fill:none;stroke:#000000;stroke-width:3.52674484;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:nodetypes="ccc" />
+      <path
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-1-4-31"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.86673507,0,0,0.86673507,-2867.7463,217.82586)" />
+      <path
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-8-9-3-7"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.86673507,0,0,0.86673507,-2867.7463,217.82586)" />
+    </g>
+    <g
+       id="g4482-1"
+       transform="translate(611.50557,37.084668)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="matrix(0.79269899,0,0,0.79269899,-2881.7113,880.28435)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-2-9-5-5"
+         style="fill:#ff774d;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         inkscape:connector-curvature="0"
+         id="path3863-2-5-5-0"
+         d="m -2894.2483,1195.682 c -0.4988,-3.7767 6.4415,-6.8568 13.7537,-7.8739 17.077,-3.342 36.7748,-2.8464 53.8651,0.2082 7.5618,1.1566 15.6114,2.3201 21.3626,5.0109 0.5371,0.343 0.9499,0.7363 1.0944,1.1581"
+         style="fill:none;stroke:#000000;stroke-width:2.9074204;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         transform="matrix(0.79269899,0,0,0.79269899,-2860.3084,887.41865)"
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-8-3-0-6"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         transform="matrix(0.79269899,0,0,0.79269899,-2865.0646,887.41865)"
+         inkscape:export-ydpi="54.642719"
+         inkscape:export-xdpi="54.642719"
+         inkscape:export-filename="/home/paul/Documents/wscd/tokyo/dwelltime.png"
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-82-1-9-9"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+    </g>
+    <g
+       id="g4476-6"
+       transform="translate(606.55407,-143.32014)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         transform="matrix(0.86673507,0,0,0.86673507,-2872.3309,686.54362)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-6-7-5-1-0"
+         style="fill:#ffa841;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3863-7-3-0-1-8"
+         d="m -2886.3422,1029.0744 c 11.3324,9.7456 78.5268,7.5485 97.8909,1.8903 0.5908,-0.2442 1.0449,-0.5243 1.2039,-0.8246"
+         style="fill:none;stroke:#000000;stroke-width:3.52674484;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:nodetypes="ccc" />
+      <path
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-1-4-3-2"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.86673507,0,0,0.86673507,-2854.1295,694.34424)" />
+      <path
+         d="m 61,353.36218 c 0,7.1797 -5.596441,13 -12.5,13 -6.903559,0 -12.5,-5.8203 -12.5,-13 0,-7.1797 5.596441,-13 12.5,-13 6.903559,0 12.5,5.8203 12.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="12.5"
+         sodipodi:cy="353.36218"
+         sodipodi:cx="48.5"
+         id="path3881-8-9-3-4-9"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.86673507,0,0,0.86673507,-2854.1295,694.34424)" />
+    </g>
+    <g
+       id="g4464-0"
+       transform="translate(604.07847,-169.24648)"
+       inkscape:export-filename="/home/paul/Documents/wscd/tokyo/goodresult.png"
+       inkscape:export-xdpi="54"
+       inkscape:export-ydpi="54">
+      <path
+         transform="matrix(0.76308456,0,0,0.76308456,-2880.5121,416.09777)"
+         d="m 120,376.36218 c 0,43.6305 -35.593362,79 -79.5,79 -43.9066376,0 -79.5,-35.3695 -79.5,-79 0,-43.63049 35.5933624,-79 79.5,-79 43.906638,0 79.5,35.36951 79.5,79 z"
+         sodipodi:ry="79"
+         sodipodi:rx="79.5"
+         sodipodi:cy="376.36218"
+         sodipodi:cx="40.5"
+         id="path3861-6-2-1"
+         style="fill:#00fe13;fill-opacity:1;stroke:#000000;stroke-width:8.19999981;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc" />
+      <path
+         inkscape:connector-curvature="0"
+         id="path3863-7-1-8"
+         d="m -2891.9583,718.55563 c -0.4733,7.70218 6.1118,13.98362 13.0497,16.05801 16.203,6.81551 34.8927,5.80492 51.1082,-0.42456 7.1748,-2.35889 14.8124,-4.73167 20.2692,-10.21918 0.5096,-0.69959 0.9012,-1.50169 1.0383,-2.36194"
+         style="fill:none;stroke:#000000;stroke-width:4.04434824;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+      <path
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-6-3"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.76308456,0,0,0.76308456,-2864.4873,422.96553)" />
+      <path
+         d="m 5,354.36218 c 0,7.1797 -6.0441559,13 -13.5,13 -7.455844,0 -13.5,-5.8203 -13.5,-13 0,-7.1797 6.044156,-13 13.5,-13 7.4558441,0 13.5,5.8203 13.5,13 z"
+         sodipodi:ry="13"
+         sodipodi:rx="13.5"
+         sodipodi:cy="354.36218"
+         sodipodi:cx="-8.5"
+         id="path3879-9-6-6-9"
+         style="fill:#ffffff;fill-opacity:1;stroke:#000000;stroke-width:5.30000019;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none"
+         sodipodi:type="arc"
+         transform="matrix(0.76308456,0,0,0.76308456,-2823.4116,421.44352)" />
+    </g>
+  </g>
+</svg>

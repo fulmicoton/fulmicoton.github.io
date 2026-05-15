@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TurboQuant (Zandieh et al., 2025) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="TurboQuant (Zandieh, Daliri, Hadian, Mirrokni — Google Research, ICLR 2026) is an online, data-oblivious vector quantization algorithm that achieves near-optimal rate-distortion for both MSE and inner…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">TurboQuant (Zandieh et al., 2025)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/zandieh-2025-turboquant.pdf">zandieh-2025-turboquant.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h2>Summary</h2>
+<p>TurboQuant (Zandieh, Daliri, Hadian, Mirrokni — Google Research, ICLR 2026) is an online, data-oblivious vector quantization algorithm that achieves near-optimal rate-distortion for both MSE and inner-product reconstruction of high-dimensional Euclidean vectors. The construction is a two-stage pipeline: (1) randomly rotate the input so each coordinate becomes Beta(½, (d-1)/2)-distributed and near-independent, then apply a precomputed Lloyd-Max scalar quantizer per coordinate at b bits; (2) apply a 1-bit QJL (Quantized Johnson-Lindenstrauss) transform to the residual to remove the multiplicative bias that MSE-optimal quantizers introduce in inner-product estimation. The data-oblivious property — no codebook training, no per-block scales — makes it suitable for streaming KV-cache compression and online ANN indexing. The paper reports parity with full-precision LongBench scores at 3.5 bits/channel on Llama-3.1-8B and ~99% Recall@10 on 1536-dim OpenAI embeddings with effectively zero indexing time (vs ~240s for PQ, ~2270s for RaBitQ on the same benchmark).</p>
+<h2>Key points</h2>
+<h3>Two-stage construction</h3>
+<p>Given a unit-norm input <span class="math math-inline">$x \in \mathbb{R}^d$</span>:
+1. <strong>MSE stage</strong> — rotate <span class="math math-inline">$x \leftarrow \Pi x$</span> with a uniformly random orthogonal <span class="math math-inline">$\Pi$</span>, then per-coordinate Lloyd-Max scalar quantize to <span class="math math-inline">$\tilde{x}_{\text{mse}}$</span> at <span class="math math-inline">$b-1$</span> bits.
+2. <strong>QJL residual stage</strong> — compute <span class="math math-inline">$r = x - \tilde{x}_{\text{mse}}$</span>, project via a random sign matrix <span class="math math-inline">$S$</span>, store <span class="math math-inline">$\text{sign}(Sr)$</span> as 1 bit per output dimension, plus <span class="math math-inline">$\gamma = \|r\|_2$</span>.
+3. <strong>Decode</strong> — <span class="math math-inline">$\hat{x} = \tilde{x}_{\text{mse}} + \tilde{x}_{\text{qjl}}$</span> where <span class="math math-inline">$\tilde{x}_{\text{qjl}} = \frac{\pi/2}{d} \gamma S^T \text{sign}(Sr)$</span>.</p>
+<p>Distortion bound: <span class="math math-inline">$D_{\text{prod}} \leq \frac{\sqrt{3}\pi^2 \|y\|_2^2}{d \cdot 4^b}$</span> — order-optimal in <span class="math math-inline">$b$</span>.</p>
+<h3>Why random rotation matters</h3>
+<p>After uniform random rotation, coordinates of a unit-norm vector are marginally Beta-distributed: <span class="math math-inline">$f_X(x) = \frac{\Gamma(d/2)}{\sqrt{\pi}\Gamma((d-1)/2)}(1-x^2)^{(d-3)/2}$</span> on <span class="math math-inline">$[-1,1]$</span>, converging to <span class="math math-inline">$\mathcal{N}(0, 1/d)$</span>. Distinct coordinates become near-independent in high <span class="math math-inline">$d$</span> — this is what licenses per-coordinate scalar quantization without coding losses. Precomputed Lloyd-Max codebooks for this Beta distribution: <span class="math math-inline">$b=1 \Rightarrow c \approx \{\pm\sqrt{2/(\pi d)}\}$</span>; <span class="math math-inline">$b=2 \Rightarrow c \approx \{\pm 0.453/\sqrt{d}, \pm 1.51/\sqrt{d}\}$</span>. Codebooks are universal — computed once, never adapted.</p>
+<h3>Why the QJL residual</h3>
+<p>A pure MSE-optimal scalar quantizer is <strong>biased</strong> for inner-product estimation: e.g., the 1-bit MSE quantizer has multiplicative bias <span class="math math-inline">$2/\pi$</span>. ANN search and attention both need accurate inner products, not just small MSE. The 1-bit QJL projection on the residual is unbiased — <span class="math math-inline">$\mathbb{E}[\langle y, \tilde{x}_{\text{qjl}}\rangle] = \langle y, r\rangle$</span> — so the combined estimator <span class="math math-inline">$\langle y, \hat{x}\rangle$</span> is unbiased while inheriting near-optimal variance from the small residual norm.</p>
+<h3>Data-oblivious / online</h3>
+<p>No data-dependent training. The random rotation is a fixed random matrix (or simulated via structured rotations like Hadamard), the codebooks are precomputed from the Beta distribution, and there are no per-block scale/zero-point metadata to store. This is what makes TurboQuant fit KV cache compression during autoregressive generation, where new tokens arrive one at a time with unknown statistics, and online ANN insertion.</p>
+<h3>Headline results</h3>
+<p><strong>KV cache (Llama-3.1-8B-Instruct, LongBench)</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Config</th>
+<th>Bits/channel</th>
+<th>Avg score</th>
+<th>vs full FP16</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Full precision</td>
+<td>16</td>
+<td>50.06</td>
+<td>—</td>
+</tr>
+<tr>
+<td>TurboQuant</td>
+<td>3.5</td>
+<td>50.06</td>
+<td>0.00</td>
+</tr>
+<tr>
+<td>TurboQuant</td>
+<td>2.5</td>
+<td>49.44</td>
+<td>−0.62</td>
+</tr>
+</tbody>
+</table>
+<p>Mixed-precision strategy gives 2.5 b/channel average: 32 outlier channels at 3 bits + 96 regular channels at 2 bits. Needle-in-a-Haystack stays at 0.997 recall at 4× compression.</p>
+<p><strong>ANN search (DBpedia OpenAI 1536-dim)</strong>:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Index time</th>
+<th>Recall@10</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PQ</td>
+<td>239.75 s</td>
+<td>~92%</td>
+</tr>
+<tr>
+<td>RaBitQ</td>
+<td>2267.59 s</td>
+<td>~88%</td>
+</tr>
+<tr>
+<td>TurboQuant (4-bit)</td>
+<td>0.0013 s</td>
+<td>~98%</td>
+</tr>
+</tbody>
+</table>
+<p>Indexing collapses to almost free because there&rsquo;s nothing to train.</p>
+<h3>What&rsquo;s not addressed</h3>
+<ul>
+<li>The paper focuses on Euclidean / inner-product geometry. Non-Euclidean distances (e.g., Manhattan, cosine on non-normalized data) are out of scope.</li>
+<li>The QJL residual stage adds <span class="math math-inline">$O(d)$</span> bits per vector for the sign portion plus storage for <span class="math math-inline">$\gamma$</span> — this is a fixed cost that becomes proportionally more expensive at very low bit widths.</li>
+<li>Comparison with newer rotation-based LLM weight/activation quantizers (QuaRot, SpinQuant) is implicit; TurboQuant targets KV cache and ANN, those target weights.</li>
+</ul>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-syllabus" href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a> — entry point for this reading path</li>
+<li><a class="wikilink is-source" href="zandieh-2024-qjl.html">QJL (Zandieh et al., 2024)</a> — the 1-bit Quantized JL transform reused as the second stage</li>
+<li><a class="wikilink is-source" href="gao-2024-rabitq.html">RaBitQ (Gao et al., 2024)</a> — concurrent / antecedent work with the same rotation-then-quantize structure, restricted to 1 bit/dim</li>
+<li><a class="wikilink is-source" href="jegou-2011-product-quantization.html">Product Quantization (Jegou et al., 2011)</a> — the classical ANN baseline TurboQuant displaces</li>
+<li><a class="wikilink is-source" href="liu-2024-kivi.html">KIVI (Liu et al., 2024)</a> — prior KV cache quantization (per-channel keys, per-token values, INT2)</li>
+<li><a class="wikilink is-concept" href="concept-vector-quantization-rate-distortion.html">Vector quantization and rate-distortion</a> — Lloyd-Max &amp; Shannon bound background</li>
+<li><a class="wikilink is-concept" href="concept-random-rotation-high-dim.html">Random rotation in high dimensions</a> — why rotation makes coordinates well-behaved</li>
+<li><a class="wikilink is-concept" href="concept-mse-vs-inner-product-quantization.html">MSE vs inner-product quantization</a> — the bias asymmetry the two-stage design fixes</li>
+<li><a class="wikilink is-concept" href="concept-kv-cache-quantization.html">KV cache quantization</a> — LLM inference context</li>
+<li><a class="wikilink is-project" href="turboquant-implementations.html">TurboQuant — implementation landscape</a> — the (community) implementation landscape</li>
+</ul><nav class="entry-nav"><a class="nav-prev" href="liu-2024-kivi.html"><span class="nav-label">Previous</span>KIVI (Liu et al., 2024)</a><span></span></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>QJL (Zandieh et al., 2024) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="QJL — &quot;1-Bit Quantized JL Transform for KV Cache Quantization with Zero Overhead&quot; (Zandieh, Daliri, Han — AAAI 2025) — quantizes a vector $x \in \mathbb{R}^d$ to $\text{sign}(Sx)$ where $S$ is a rando…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">QJL (Zandieh et al., 2024)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/zandieh-2024-qjl.pdf">zandieh-2024-qjl.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h2>Summary</h2>
+<p>QJL — &ldquo;1-Bit Quantized JL Transform for KV Cache Quantization with Zero Overhead&rdquo; (Zandieh, Daliri, Han — AAAI 2025) — quantizes a vector <span class="math math-inline">$x \in \mathbb{R}^d$</span> to <span class="math math-inline">$\text{sign}(Sx)$</span> where <span class="math math-inline">$S$</span> is a random Johnson–Lindenstrauss matrix, giving a 1-bit-per-output-dimension code with <em>no</em> per-block quantization constants stored. The estimator for inner products is <strong>asymmetric</strong>: apply QJL (sign-bit) to one vector and a plain (unquantized) JL to the other; the result is an unbiased estimator of the original inner product with variance <span class="math math-inline">$\frac{\pi}{2m}\|x\|_2^2\|y\|_2^2$</span> for <span class="math math-inline">$m$</span> output dims. Eliminating the per-block scales is what gives QJL its &ldquo;zero overhead&rdquo; — standard 3-bit KV cache methods burn 1–2 bits of metadata per block on scale + zero-point storage. On Llama-2 / Llama-3 with various NLP tasks, QJL compresses KV caches &gt;5× at 3 bits with no accuracy loss and faster decode runtime. QJL is the direct building block reused as TurboQuant&rsquo;s residual stage.</p>
+<h2>Key points</h2>
+<h3>The construction</h3>
+<ol>
+<li>Sample a random matrix <span class="math math-inline">$S \in \mathbb{R}^{m \times d}$</span> with i.i.d. Gaussian entries (or sub-Gaussian; structured Hadamard works too).</li>
+<li><strong>QJL side</strong> (the &ldquo;stored&rdquo; vector): compute <span class="math math-inline">$h(x) = \text{sign}(Sx)$</span> — 1 bit per row.</li>
+<li><strong>JL side</strong> (the &ldquo;query&rdquo; vector): compute <span class="math math-inline">$Sy$</span> in full precision (no sign).</li>
+<li><strong>Estimator</strong>: <span class="math math-inline">$\hat{\langle x, y\rangle} = \frac{\pi/2}{m} \|x\|_2 \cdot (Sy)^T h(x)$</span> — unbiased for <span class="math math-inline">$\langle x, y\rangle$</span>.</li>
+</ol>
+<p>The <span class="math math-inline">$\sqrt{\pi/2}$</span> factor compensates for the bias the sign operation would otherwise introduce. The <span class="math math-inline">$\|x\|_2$</span> scalar is the <em>only</em> per-vector overhead.</p>
+<h3>Why &ldquo;zero overhead&rdquo;</h3>
+<p>Conventional 3-bit quantization stores per-block scales and zero-points at higher precision (e.g., FP16) — this metadata costs 1–2 bits per quantized value, which is why &ldquo;3-bit quantization&rdquo; effective rate is closer to 4–5 bits. QJL stores only a single <span class="math math-inline">$\|x\|_2$</span> per vector (amortized across hundreds of coordinates), so the effective rate is essentially the raw bit count. This is the &ldquo;zero overhead&rdquo; claim.</p>
+<h3>Asymmetric estimator</h3>
+<p>Quantizing both sides (<span class="math math-inline">$\text{sign}(Sx)^T \text{sign}(Sy)$</span>) gives a biased estimator (the arcsine kernel — angular distance, not inner product). The asymmetric design — quantize one side, keep the other full-precision — preserves the inner-product geometry. In KV-cache use this matches the access pattern perfectly: keys are stored quantized; queries arrive at decode time in full precision.</p>
+<h3>KV cache results</h3>
+<p>Across Llama-2-7B, Llama-3-8B, and Mistral-7B on LongBench / GSM8K / NIAH:
+- 3-bit QJL ≈ FP16 quality (negligible perplexity / score deltas)
+- &gt;5× memory reduction on the KV cache
+- Faster end-to-end decode because attention becomes memory-bound and the smaller KV cache fits more of the active context in cache hierarchy</p>
+<h3>How QJL differs from KIVI / KVQuant</h3>
+<ul>
+<li><strong>KIVI / KVQuant</strong>: data-dependent — per-channel or per-token scales computed at write time, stored as metadata, used at read time.</li>
+<li><strong>QJL</strong>: data-oblivious — the random matrix <span class="math math-inline">$S$</span> is fixed at model load; nothing per-block to compute.</li>
+<li>Trade-off: KIVI/KVQuant can squeeze more accuracy out of the data distribution; QJL is cheaper and trivially streaming.</li>
+</ul>
+<h3>Limitations</h3>
+<ul>
+<li>The output dimension <span class="math math-inline">$m$</span> for QJL is typically <span class="math math-inline">$\geq d$</span> (often <span class="math math-inline">$m = 2d$</span> or <span class="math math-inline">$m = 3d$</span>) to hit the desired variance — so &ldquo;1 bit per output coordinate&rdquo; doesn&rsquo;t mean &ldquo;1 bit per input coordinate&rdquo;. Effective compression is closer to 3 bits/input-coord at <span class="math math-inline">$m = 3d$</span>.</li>
+<li>The asymmetric pattern requires you to know in advance which side is &ldquo;stored&rdquo; vs &ldquo;queried&rdquo; — fine for KV cache, awkward for symmetric similarity search.</li>
+</ul>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-syllabus" href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></li>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — reuses QJL verbatim as the residual stage</li>
+<li><a class="wikilink is-source" href="gao-2024-rabitq.html">RaBitQ (Gao et al., 2024)</a> — also 1-bit sign-after-rotation, but symmetric and for ANN</li>
+<li><a class="wikilink is-source" href="liu-2024-kivi.html">KIVI (Liu et al., 2024)</a> — the data-dependent KV-cache approach QJL improves on</li>
+<li><a class="wikilink is-concept" href="concept-mse-vs-inner-product-quantization.html">MSE vs inner-product quantization</a> — asymmetric estimators, unbiasedness</li>
+<li><a class="wikilink is-concept" href="concept-random-rotation-high-dim.html">Random rotation in high dimensions</a> — JL transform foundations</li>
+</ul><nav class="entry-nav"><a class="nav-prev" href="gao-2024-rabitq.html"><span class="nav-label">Previous</span>RaBitQ (Gao et al., 2024)</a><a class="nav-next" href="liu-2024-kivi.html"><span class="nav-label">Next</span>KIVI (Liu et al., 2024)</a></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

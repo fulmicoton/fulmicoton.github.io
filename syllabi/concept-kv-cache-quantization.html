@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>KV cache quantization — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="In a transformer decoder, each attention layer at decode step $t$ needs the keys $K_{1..t}$ and values $V_{1..t}$ for every prior token to compute attention from the current query. Instead of recomput…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Concept</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Concept</div><h1 class="entry-title">KV cache quantization</h1><div class="entry-meta"><span class="tags"><span class="tag concept">concept</span></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h1>KV cache quantization</h1>
+<h2>What the KV cache is</h2>
+<p>In a transformer decoder, each attention layer at decode step <span class="math math-inline">$t$</span> needs the keys <span class="math math-inline">$K_{1..t}$</span> and values <span class="math math-inline">$V_{1..t}$</span> for every prior token to compute attention from the current query. Instead of recomputing them, they are cached in GPU memory and grown by one row per generated token. This is the <strong>KV cache</strong>.</p>
+<p>Size per token, per layer, per head: <span class="math math-inline">$2 \cdot d_{\text{head}}$</span> floats. For Llama-3-8B (32 layers, 8 KV heads, 128 d_head, FP16): ~131 KB per token. A 128k-token context uses ~16 GB of KV cache — much larger than the 16 GB model itself.</p>
+<h2>Why quantizing it is worthwhile</h2>
+<p>Two reasons, both about memory:</p>
+<ol>
+<li><strong>Capacity</strong>: serving longer contexts and larger batches is bottlenecked by KV cache, not model weights (weights are shared across requests; cache is per-request).</li>
+<li><strong>Bandwidth</strong>: in autoregressive decode, attention is memory-bound — each token reads the whole cache. Reducing bits per cache entry directly reduces wall-clock decode latency.</li>
+</ol>
+<p>Even a &ldquo;modest&rdquo; 4× compression unlocks 4× context length at the same memory budget, or 4× batch size, or correspondingly faster decode.</p>
+<h2>What makes KV cache quantization different from weight quantization</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Weight quantization (GPTQ, AWQ, QuaRot)</th>
+<th>KV cache quantization</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Calibration</td>
+<td>Offline, on a small held-out set</td>
+<td>Must be online — new tokens arrive at decode</td>
+</tr>
+<tr>
+<td>Distribution shift</td>
+<td>Static (weights don&rsquo;t change)</td>
+<td>Constantly drifting per-request</td>
+</tr>
+<tr>
+<td>Read pattern</td>
+<td>Dense (whole weight matrix)</td>
+<td>Sparse, growing (one query × <span class="math math-inline">$t$</span> keys)</td>
+</tr>
+<tr>
+<td>Per-block metadata cost</td>
+<td>Amortized over many forward passes</td>
+<td>Paid per generated token</td>
+</tr>
+</tbody>
+</table>
+<p>The &ldquo;online + no calibration&rdquo; requirement is why data-oblivious schemes (QJL, TurboQuant) are particularly natural here, whereas data-dependent schemes (KIVI, KVQuant) need careful streaming statistics.</p>
+<h2>Outlier structure: keys vs values</h2>
+<p>A consistent empirical finding (KIVI, KVQuant, SmoothQuant):</p>
+<ul>
+<li><strong>Keys</strong>: persistent outliers on specific channel indices (~3–5% of channels), across all tokens. Per-channel scales help.</li>
+<li><strong>Values</strong>: outliers concentrate on specific tokens (e.g., punctuation, BOS), across all channels. Per-token scales help.</li>
+</ul>
+<p>This asymmetry is what motivates KIVI&rsquo;s split scheme. Rotation-based methods sidestep the issue: a random rotation flattens both kinds of outlier into well-behaved Beta-distributed coordinates, so per-coordinate quantization works uniformly.</p>
+<h2>The state of the art (mid-2025 / early-2026)</h2>
+<p>Three rough families:</p>
+<ul>
+<li><strong>Per-block scalar with smart partitioning</strong>: KIVI (per-channel K, per-token V), KVQuant (per-channel K, pre-RoPE, sparse outlier handling). Excellent at 2–3 bits but pay 1–2 bits of metadata overhead.</li>
+<li><strong>Rotation + scalar</strong>: QuaRot, SpinQuant for weights; QJL, TurboQuant for KV cache. Data-oblivious, zero metadata, near-Shannon-rate.</li>
+<li><strong>Sparse + dense hybrids</strong>: KVQuant&rsquo;s dense-sparse split, attention-aware eviction (H2O, StreamingLLM) — orthogonal to quantization, sometimes stacked.</li>
+</ul>
+<p>Headline numbers: parity with FP16 at 3.5 b/channel (TurboQuant), small degradation at 2 b/channel (KIVI, QJL). The race is now to push below 2 bits without crossing the quality cliff.</p>
+<h2>Where the cliff is</h2>
+<p>For Llama-class models on long-context tasks:
+- <span class="math math-inline">$\geq 4$</span> b/channel: indistinguishable from FP16
+- 3.5 b/channel: parity (TurboQuant claim)
+- 2.5–3 b/channel: small but measurable degradation on hard tasks (LongBench Reasoning, NIAH at extreme depth)
+- <span class="math math-inline">$&lt; 2$</span> b/channel: open problem; quality falls off for everyone</p>
+<h2>Pointers in this syllabus</h2>
+<ul>
+<li><a class="wikilink is-source" href="liu-2024-kivi.html">KIVI (Liu et al., 2024)</a> — data-dependent INT2, per-channel K + per-token V</li>
+<li><a class="wikilink is-source" href="zandieh-2024-qjl.html">QJL (Zandieh et al., 2024)</a> — data-oblivious 1-bit JL projection</li>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — data-oblivious general bit width</li>
+<li><a class="wikilink is-concept" href="concept-mse-vs-inner-product-quantization.html">MSE vs inner-product quantization</a> — why attention needs inner-product fidelity, not MSE</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

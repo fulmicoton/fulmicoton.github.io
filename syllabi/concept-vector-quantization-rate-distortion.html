@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Vector quantization and rate-distortion — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Quantization replaces a continuous signal with a finite set of code points so it can be stored in $b$ bits per sample. Two regimes:">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Concept</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Concept</div><h1 class="entry-title">Vector quantization and rate-distortion</h1><div class="entry-meta"><span class="tags"><span class="tag concept">concept</span></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h1>Vector quantization and rate-distortion</h1>
+<h2>Intuition</h2>
+<p>Quantization replaces a continuous signal with a finite set of code points so it can be stored in <span class="math math-inline">$b$</span> bits per sample. Two regimes:</p>
+<ul>
+<li><strong>Scalar quantization</strong> — each coordinate is rounded independently to one of <span class="math math-inline">$2^b$</span> levels. Optimal level placement for a fixed marginal distribution is given by the Lloyd-Max algorithm (essentially 1-D k-means).</li>
+<li><strong>Vector quantization (VQ)</strong> — the whole vector is mapped to one of <span class="math math-inline">$2^{bd}$</span> codepoints chosen to cover the support of the joint distribution. Theoretically wins because it can exploit correlations between coordinates; practically wins only when the codebook is trainable and small enough to search.</li>
+</ul>
+<p>The Shannon rate-distortion theorem gives a lower bound on the MSE distortion any encoder with rate <span class="math math-inline">$R$</span> bits per sample can achieve. For an i.i.d. Gaussian source with variance <span class="math math-inline">$\sigma^2$</span>: <span class="math math-inline">$D(R) = \sigma^2 \cdot 2^{-2R}$</span> — the famous &ldquo;<span class="math math-inline">$6$</span> dB per bit&rdquo; rule. Real quantizers are within constants of this bound; rotation-based methods (RaBitQ, TurboQuant) achieve those constants without training.</p>
+<h2>Lloyd-Max scalar quantizer</h2>
+<p>For a 1-D source with density <span class="math math-inline">$f(x)$</span>, find <span class="math math-inline">$b$</span> thresholds <span class="math math-inline">$t_1 &lt; \cdots &lt; t_{2^b - 1}$</span> and <span class="math math-inline">$2^b$</span> centroids <span class="math math-inline">$c_i$</span> minimizing</p>
+<div class="math math-block">$$\sum_{i=1}^{2^b} \int_{t_{i-1}}^{t_i} (x - c_i)^2 f(x)\, dx$$</div>
+<p>The optimality conditions are: thresholds at midpoints of consecutive centroids, centroids at conditional means. Solve by fixed-point iteration. For Gaussian / Beta / Laplacian sources the optima are tabulated and reusable — no per-instance training needed.</p>
+<pre><code># 1-bit Lloyd-Max for Beta(1/2, (d-1)/2):
+# centroids c ≈ {-sqrt(2/(pi*d)), +sqrt(2/(pi*d))}
+# threshold at 0
+</code></pre>
+<h2>Why VQ usually doesn&rsquo;t help in practice</h2>
+<p>The codebook size grows as <span class="math math-inline">$2^{bd}$</span>, so VQ for <span class="math math-inline">$d=128$</span>, <span class="math math-inline">$b=2$</span> has <span class="math math-inline">$2^{256}$</span> codepoints — impossible to enumerate. Workarounds:
+- <strong>Product quantization</strong> (<a class="wikilink is-source" href="jegou-2011-product-quantization.html">Product Quantization (Jegou et al., 2011)</a>): break the vector into low-d chunks and VQ each. Loses cross-subspace correlations.
+- <strong>Tree-structured VQ / lattice VQ</strong>: structured codebooks searchable in <span class="math math-inline">$O(d)$</span>.
+- <strong>Rotation + scalar VQ</strong> (the modern winner — RaBitQ, TurboQuant): randomly rotate to make coordinates near-independent, then scalar-quantize per coordinate. Recovers VQ-like distortion at scalar-quantization cost.</p>
+<h2>Why rotation rescues scalar quantization</h2>
+<p>Independence of coordinates means the joint distortion is the sum of per-coordinate distortions — no cross-coordinate gain a VQ codebook could have captured. Random rotation of an arbitrary unit vector produces marginals that converge to <span class="math math-inline">$\mathcal{N}(0, 1/d)$</span> with vanishing dependence (see <a class="wikilink is-concept" href="concept-random-rotation-high-dim.html">Random rotation in high dimensions</a>). Scalar Lloyd-Max on those marginals is then near-optimal — and <em>data-oblivious</em>, since the marginal distribution only depends on <span class="math math-inline">$d$</span>.</p>
+<h2>Pointers in this syllabus</h2>
+<ul>
+<li><a class="wikilink is-source" href="jegou-2011-product-quantization.html">Product Quantization (Jegou et al., 2011)</a> — structured VQ via subspace decomposition</li>
+<li><a class="wikilink is-source" href="gao-2024-rabitq.html">RaBitQ (Gao et al., 2024)</a> — 1-bit per dim, asymptotically optimal</li>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — Lloyd-Max per-coord on the Beta marginal</li>
+<li><a class="wikilink is-concept" href="concept-mse-vs-inner-product-quantization.html">MSE vs inner-product quantization</a> — the MSE-optimal objective isn&rsquo;t always what we want</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

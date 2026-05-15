@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>MSE vs inner-product quantization — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="There are two natural quality metrics for a quantizer $Q$ on vectors:">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Concept</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Concept</div><h1 class="entry-title">MSE vs inner-product quantization</h1><div class="entry-meta"><span class="tags"><span class="tag concept">concept</span></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h1>MSE vs inner-product quantization</h1>
+<h2>The asymmetry</h2>
+<p>There are two natural quality metrics for a quantizer <span class="math math-inline">$Q$</span> on vectors:</p>
+<ul>
+<li><strong>MSE / reconstruction error</strong>: <span class="math math-inline">$\mathbb{E}\|x - Q(x)\|_2^2$</span></li>
+<li><strong>Inner-product / search error</strong>: <span class="math math-inline">$\mathbb{E}(\langle y, Q(x)\rangle - \langle y, x\rangle)^2$</span> for a held-out query <span class="math math-inline">$y$</span></li>
+</ul>
+<p>Most classical quantization theory targets MSE — Lloyd-Max, Shannon&rsquo;s rate-distortion bound, vector quantization, Linde-Buzo-Gray, all minimize <span class="math math-inline">$\ell_2$</span> reconstruction. But nearest-neighbor search and attention both need inner products to be preserved, not raw vectors. The two objectives diverge in a specific, predictable way.</p>
+<h2>Why MSE-optimal quantizers are biased for inner products</h2>
+<p>Consider 1-bit MSE-optimal quantization of a coordinate <span class="math math-inline">$x \sim \mathcal{N}(0, 1/d)$</span>: the optimal codepoints are <span class="math math-inline">$\pm \mathbb{E}|x| = \pm\sqrt{2/(\pi d)}$</span>. So</p>
+<div class="math math-block">$$Q_{\text{mse}}(x) = \sqrt{\tfrac{2}{\pi d}} \cdot \text{sign}(x)$$</div>
+<p>For a query <span class="math math-inline">$y$</span> in expectation:</p>
+<div class="math math-block">$$\mathbb{E}_x \langle y, Q_{\text{mse}}(x)\rangle = \sqrt{\tfrac{2}{\pi d}} \mathbb{E}\langle y, \text{sign}(x)\rangle = \tfrac{2}{\pi} \langle y, x\rangle$$</div>
+<p>So the MSE-optimal quantizer underestimates inner products by a factor of <span class="math math-inline">$2/\pi \approx 0.64$</span>. This is structural, not a bug — minimizing MSE pulls the codepoints inward (to where the mass is); preserving inner products needs codepoints further out.</p>
+<p>You can rescale to fix the multiplicative bias (multiply by <span class="math math-inline">$\pi/2$</span>), but only at the cost of inflating variance. There&rsquo;s a real Pareto frontier between MSE and inner-product accuracy.</p>
+<h2>Three fixes, three modern algorithms</h2>
+<h3>1. Ratio normalization (RaBitQ)</h3>
+<p>Estimate <span class="math math-inline">$\langle y, x\rangle$</span> as <span class="math math-inline">$\langle y, \tilde{x}\rangle / \langle \tilde{x}, x\rangle$</span> where <span class="math math-inline">$\tilde{x}$</span> is the quantized vector and <span class="math math-inline">$\langle \tilde{x}, x\rangle$</span> is a single scalar stored per vector. The ratio is unbiased without rescaling. Costs: <span class="math math-inline">$O(1)$</span> extra storage per vector. See <a class="wikilink is-source" href="gao-2024-rabitq.html">RaBitQ (Gao et al., 2024)</a>.</p>
+<h3>2. Asymmetric estimator (QJL)</h3>
+<p>Quantize one side only. Apply sign-bit to the stored vector <span class="math math-inline">$x$</span>, keep the query <span class="math math-inline">$y$</span> in full precision. The estimator</p>
+<div class="math math-block">$$\hat{\langle y, x\rangle} = \frac{\pi/2}{m} \|x\|_2 (Sy)^T \text{sign}(Sx)$$</div>
+<p>is unbiased — the <span class="math math-inline">$\pi/2$</span> rescaling works here because variance is bounded by the JL embedding. See <a class="wikilink is-source" href="zandieh-2024-qjl.html">QJL (Zandieh et al., 2024)</a>.</p>
+<h3>3. Two-stage MSE + 1-bit residual (TurboQuant)</h3>
+<p>Quantize the bulk of the signal with an MSE-optimal Lloyd-Max scheme (accepts the inner-product bias), then estimate the <em>residual</em> with an unbiased 1-bit QJL. The residual has small norm, so the unbiased estimator&rsquo;s variance is small. Combined estimator is unbiased and inherits near-Shannon-rate MSE on the first stage. See <a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a>.</p>
+<h2>Pointer to think about it</h2>
+<p>A useful way to see why these aren&rsquo;t all the same:</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>MSE near-optimal?</th>
+<th>Inner-product unbiased?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lloyd-Max (raw)</td>
+<td>Yes</td>
+<td>No (factor-<span class="math math-inline">$2/\pi$</span> bias)</td>
+</tr>
+<tr>
+<td>Lloyd-Max + <span class="math math-inline">$\pi/2$</span> rescale</td>
+<td>Inflated variance</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>RaBitQ ratio</td>
+<td>Yes (after rescale)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>QJL</td>
+<td>N/A (lossy projection)</td>
+<td>Yes</td>
+</tr>
+<tr>
+<td>TurboQuant 2-stage</td>
+<td>Yes</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<p>TurboQuant is the first construction to be near-optimal <em>on both axes simultaneously</em> across arbitrary bit-widths.</p>
+<h2>Pointers in this syllabus</h2>
+<ul>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — combines stages 1 + 2</li>
+<li><a class="wikilink is-source" href="zandieh-2024-qjl.html">QJL (Zandieh et al., 2024)</a> — asymmetric unbiased estimator</li>
+<li><a class="wikilink is-source" href="gao-2024-rabitq.html">RaBitQ (Gao et al., 2024)</a> — ratio normalization</li>
+<li><a class="wikilink is-concept" href="concept-vector-quantization-rate-distortion.html">Vector quantization and rate-distortion</a> — what &ldquo;near-optimal&rdquo; means</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

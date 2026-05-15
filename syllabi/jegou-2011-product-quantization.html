@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Product Quantization (Jegou et al., 2011) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Product Quantization (Jégou, Douze, Schmid — IEEE TPAMI 2011) is the canonical method for compressing high-dimensional vectors for approximate nearest neighbor search. It splits each $d$-dim vector in…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">Product Quantization (Jegou et al., 2011)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/jegou-2011-product-quantization.pdf">jegou-2011-product-quantization.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h2>Summary</h2>
+<p>Product Quantization (Jégou, Douze, Schmid — IEEE TPAMI 2011) is the canonical method for compressing high-dimensional vectors for approximate nearest neighbor search. It splits each <span class="math math-inline">$d$</span>-dim vector into <span class="math math-inline">$m$</span> sub-vectors of dimension <span class="math math-inline">$d/m$</span>, runs k-means independently on each subspace to learn a codebook of <span class="math math-inline">$k$</span> centroids, and represents each input vector by the concatenation of the <span class="math math-inline">$m$</span> centroid indices — <span class="math math-inline">$m \log_2 k$</span> bits per vector. Distance from a query to any database vector is computed by precomputing a <span class="math math-inline">$m \times k$</span> lookup table of squared distances between query sub-vectors and centroids, then summing <span class="math math-inline">$m$</span> lookups per database vector. The 2011 paper introduced both <em>symmetric</em> (quantize both query and DB) and <em>asymmetric</em> (quantize only DB) estimators, paired PQ with an inverted file index (IVFADC) for billion-scale search, and held the empirical state-of-the-art on SIFT1B for nearly a decade. PQ is the baseline every modern quantization paper — RaBitQ, TurboQuant, OPQ, ScaNN — measures itself against.</p>
+<h2>Key points</h2>
+<h3>Construction</h3>
+<ul>
+<li>Split <span class="math math-inline">$x \in \mathbb{R}^d$</span> into <span class="math math-inline">$m$</span> sub-vectors <span class="math math-inline">$x = [x^1, \ldots, x^m]$</span>, each of dim <span class="math math-inline">$d/m$</span>.</li>
+<li>Train independent k-means codebooks <span class="math math-inline">$C^1, \ldots, C^m$</span>, each with <span class="math math-inline">$k = 256$</span> (so each index fits in 1 byte).</li>
+<li>Quantization code: <span class="math math-inline">$q(x) = (q^1(x^1), \ldots, q^m(x^m))$</span> — <span class="math math-inline">$m$</span> bytes per vector.</li>
+<li>Typical config: <span class="math math-inline">$d=128$</span> SIFT, <span class="math math-inline">$m=8$</span> → 64 bits per vector for SIFT1B.</li>
+</ul>
+<h3>Asymmetric distance computation (ADC)</h3>
+<p>Given query <span class="math math-inline">$y$</span>:
+1. Precompute table <span class="math math-inline">$T[i][j] = \|y^i - c_j^i\|^2$</span> for each sub-space <span class="math math-inline">$i$</span> and centroid <span class="math math-inline">$j$</span>.
+2. For each database vector with code <span class="math math-inline">$(j_1, \ldots, j_m)$</span>: <span class="math math-inline">$\hat{d}(y, x)^2 = \sum_i T[i][j_i]$</span>.</p>
+<p>This turns an O(d) distance per DB vector into O(m) lookups. The asymmetry (query unquantized, DB quantized) keeps more accuracy than symmetric SDC where both are quantized.</p>
+<h3>IVFADC: inverted index + residual PQ</h3>
+<p>For billion-scale search, the paper adds a coarse quantizer (a single k-means with ~<span class="math math-inline">$10^3$</span>–<span class="math math-inline">$10^4$</span> cells) that partitions the dataset, then runs PQ on the <strong>residuals</strong> <span class="math math-inline">$(x - \text{coarse}(x))$</span> inside each cell. Search only scans the cells nearest to the query — sublinear in dataset size. This is the architecture that powered Facebook&rsquo;s faiss for years.</p>
+<h3>Empirical results (2011)</h3>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Bits/vec</th>
+<th>Recall@100</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SIFT1M</td>
+<td>64</td>
+<td>~95%</td>
+</tr>
+<tr>
+<td>SIFT1B</td>
+<td>64</td>
+<td>~80%</td>
+</tr>
+<tr>
+<td>GIST1M</td>
+<td>64</td>
+<td>~90%</td>
+</tr>
+</tbody>
+</table>
+<p>Search speed: ~10 ms per query on SIFT1B with IVFADC on a single 2010-era CPU.</p>
+<h3>Limitations later attacked by RaBitQ / TurboQuant</h3>
+<ul>
+<li><strong>No theoretical error bound</strong>. PQ relies on k-means converging to &ldquo;good&rdquo; centroids; on adversarial distributions it can fail catastrophically (50% error on MSong — see <a class="wikilink is-source" href="gao-2024-rabitq.html">RaBitQ (Gao et al., 2024)</a>).</li>
+<li><strong>Expensive training</strong>: k-means on each sub-space, repeated for residual stages — minutes to hours on 1M-vec datasets, days on 1B.</li>
+<li><strong>Not online</strong>: codebooks are tied to the dataset distribution; new data drifts away from learned centroids.</li>
+<li><strong>Subspace independence assumption</strong>: improved by OPQ (Ge et al. 2013) and later by rotation-then-quantize approaches like RaBitQ.</li>
+</ul>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-syllabus" href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></li>
+<li><a class="wikilink is-source" href="gao-2024-rabitq.html">RaBitQ (Gao et al., 2024)</a> — successor with theoretical guarantees at half the code length</li>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — successor with zero indexing time</li>
+<li><a class="wikilink is-concept" href="concept-vector-quantization-rate-distortion.html">Vector quantization and rate-distortion</a> — PQ is a <em>structured</em> vector quantizer; this note covers the general theory</li>
+</ul><nav class="entry-nav"><span></span><a class="nav-next" href="gao-2024-rabitq.html"><span class="nav-label">Next</span>RaBitQ (Gao et al., 2024)</a></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

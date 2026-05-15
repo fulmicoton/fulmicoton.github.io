@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TurboQuant — implementation landscape — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="**No official Google Research implementation is publicly available.** Google announced TurboQuant in a research.google blog and published the paper (arXiv:2504.19874) but has not released code on gith…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Implementation</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Implementation</div><h1 class="entry-title">TurboQuant — implementation landscape</h1><div class="entry-meta"><span class="tags"><span class="tag project">project</span></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h1>TurboQuant — implementation landscape</h1>
+<h2>State (as of May 2026)</h2>
+<p><strong>No official Google Research implementation is publicly available.</strong> Google announced TurboQuant in a research.google blog and published the paper (arXiv:2504.19874) but has not released code on github.com/google-research/ at the time of writing. The implementation landscape is entirely community-driven, which means: lots of choice, no single canonical reference, varying fidelity to the paper.</p>
+<p>If you need to <em>understand</em> the algorithm, read the paper plus the official QJL repo (which implements the second-stage primitive verbatim). If you need to <em>use</em> it in inference, pick the community implementation closest to your runtime.</p>
+<h2>Official QJL implementation (the building block)</h2>
+<p><a href="https://github.com/amirzandieh/QJL">amirzandieh/QJL</a> — Amir Zandieh is a TurboQuant co-author and the QJL paper&rsquo;s first author. This is the most authoritative code for the 1-bit JL residual stage that TurboQuant reuses. Useful as ground truth when evaluating any TurboQuant implementation.</p>
+<h2>Community TurboQuant implementations</h2>
+<p>A non-exhaustive snapshot:</p>
+<table>
+<thead>
+<tr>
+<th>Repo</th>
+<th>Language / runtime</th>
+<th>Focus</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/0xSero/turboquant">0xSero/turboquant</a></td>
+<td>Python + Triton</td>
+<td>vLLM integration, KV cache</td>
+<td>~1.4k stars; most prominent on GitHub; 3-bit K / 2-bit V config; GPL-3.0. README does <strong>not</strong> claim official status despite community confusion.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/tonbistudio/turboquant-pytorch">tonbistudio/turboquant-pytorch</a></td>
+<td>PyTorch</td>
+<td>From-scratch, pedagogical</td>
+<td>Documents 5× compression at 3-bit with 99.5% attention fidelity.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/hackimov/turboquant-kv">hackimov/turboquant-kv</a></td>
+<td>PyTorch</td>
+<td>KV cache, ~3 bits</td>
+<td>Claims 6× memory reduction, 8× faster inference.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OnlyTerp/turboquant">OnlyTerp/turboquant</a></td>
+<td>Python</td>
+<td>KV cache</td>
+<td>Explicit &ldquo;independent implementation&rdquo; disclaimer.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/TheTom/turboquant_plus">TheTom/turboquant_plus</a></td>
+<td>C++ / llama.cpp</td>
+<td>Apple Silicon</td>
+<td>Includes follow-on experiments beyond the base paper.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/sharpner/turboquant-mlx">sharpner/turboquant-mlx</a></td>
+<td>MLX</td>
+<td>Apple Silicon PoC</td>
+<td>Proof of concept.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/AbdelStark/turboquant">abdelstark/turboquant</a></td>
+<td>Rust</td>
+<td>Vector quantization</td>
+<td>Rust crate, ANN-focused.</td>
+</tr>
+<tr>
+<td><a href="https://github.com/botirk38/turboquant">botirk38/turboquant</a></td>
+<td>Python</td>
+<td>Library</td>
+<td>&ldquo;Library for Google&rsquo;s Turboquant Algorithm&rdquo;.</td>
+</tr>
+</tbody>
+</table>
+<p>There is also a <a href="https://github.com/ggml-org/llama.cpp/discussions/20969">llama.cpp discussion #20969</a> tracking whether to integrate TurboQuant into the mainline.</p>
+<h2>What to verify before trusting an implementation</h2>
+<p>The paper&rsquo;s claims are sensitive to several construction details that are easy to get wrong:</p>
+<ul>
+<li><strong>Rotation source</strong>: a <em>uniform random orthogonal</em> matrix (or a structured proxy: random Hadamard with random sign flips). Block-Hadamard without sign-flip diagonal is <strong>not</strong> equivalent and degrades quality.</li>
+<li><strong>Lloyd-Max codebook</strong>: must be computed for the <strong>Beta</strong> marginal at dimension <span class="math math-inline">$d$</span>, not for a Gaussian approximation. The asymptotic equivalence holds at large <span class="math math-inline">$d$</span> but the exact <span class="math math-inline">$d=128$</span> table differs.</li>
+<li><strong>Residual normalization</strong>: <span class="math math-inline">$\gamma = \|r\|_2$</span> must be stored and used in the QJL stage&rsquo;s decode formula. Skipping it (or storing <span class="math math-inline">$\|x\|_2$</span> instead) breaks unbiasedness.</li>
+<li><strong>Mixed-precision channel selection</strong>: the 2.5-b/channel result uses 32 outlier channels at 3 bits + 96 at 2 bits, with the outlier channels selected based on&hellip; what? The paper underspecifies this; different implementations make different choices.</li>
+</ul>
+<h2>Open questions for the implementation track</h2>
+<ul>
+<li>Will Google release official code? If not, which community fork becomes de facto canonical?</li>
+<li>Triton vs CUDA: 0xSero/turboquant is Triton-only; a hand-tuned CUDA kernel could close the gap to FP16 decode latency further.</li>
+<li>vLLM mainline integration: still a draft as of May 2026.</li>
+<li>Integration with KV-cache eviction (StreamingLLM, H2O): orthogonal, but the composition isn&rsquo;t validated.</li>
+</ul>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-syllabus" href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></li>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — the paper these implementations target</li>
+<li><a class="wikilink is-source" href="zandieh-2024-qjl.html">QJL (Zandieh et al., 2024)</a> — the building block, with official code</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

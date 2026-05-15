@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Syllabus — TurboQuant and the rotation-based quantization line — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="TurboQuant (Zandieh et al., ICLR 2026) is the current state of the art for **data-oblivious vector quantization** — quantize a high-dimensional vector to a few bits per coordinate, with no training, n…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Syllabus</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Syllabus</div><h1 class="entry-title">Syllabus — TurboQuant and the rotation-based quantization line</h1><div class="entry-meta"><span class="tags"><span class="tag syllabus">syllabus</span></span></div><h1>Syllabus — TurboQuant and the rotation-based quantization line</h1>
+<h2>What this covers</h2>
+<p>TurboQuant (Zandieh et al., ICLR 2026) is the current state of the art for <strong>data-oblivious vector quantization</strong> — quantize a high-dimensional vector to a few bits per coordinate, with no training, no per-block scales, and near-Shannon-rate distortion. It matters because it makes extreme KV-cache compression (≤3 bits/channel) and online ANN indexing essentially free.</p>
+<p>The syllabus traces the lineage: classical product quantization → the theoretical breakthroughs of RaBitQ and QJL → TurboQuant as their unification → contrast with the data-dependent KV-cache line (KIVI). After reading this you should understand why &ldquo;rotate then scalar-quantize&rdquo; became the dominant recipe, what the two-stage MSE + QJL construction buys you over either alone, and what the open problems are below 2 bits/channel.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li><a class="wikilink is-concept" href="concept-vector-quantization-rate-distortion.html">Vector quantization and rate-distortion</a> — Lloyd-Max scalar quantizers, Shannon&rsquo;s rate-distortion bound, why VQ usually doesn&rsquo;t beat scalar VQ in practice.</li>
+<li><a class="wikilink is-concept" href="concept-random-rotation-high-dim.html">Random rotation in high dimensions</a> — Johnson-Lindenstrauss, why a random rotation makes coordinates Beta-distributed and near-independent, structured Hadamard rotations.</li>
+<li><a class="wikilink is-concept" href="concept-mse-vs-inner-product-quantization.html">MSE vs inner-product quantization</a> — the <span class="math math-inline">$2/\pi$</span> bias of MSE-optimal sign quantizers, ratio normalization (RaBitQ), asymmetric estimators (QJL), two-stage residual fixing (TurboQuant).</li>
+<li><a class="wikilink is-concept" href="concept-kv-cache-quantization.html">KV cache quantization</a> — what the KV cache is, why decode is memory-bound, the key/value outlier asymmetry.</li>
+</ul>
+<h2>Reading order</h2>
+<ol>
+<li><a class="wikilink is-source" href="jegou-2011-product-quantization.html">Product Quantization (Jegou et al., 2011)</a> — the classical baseline; understand what &ldquo;code length&rdquo; and &ldquo;asymmetric distance computation&rdquo; mean before reading anything modern. Read for the IVFADC architecture and to see what theoretical guarantees were missing.</li>
+<li><a class="wikilink is-source" href="gao-2024-rabitq.html">RaBitQ (Gao et al., 2024)</a> — the breakthrough that proved you can do 1 bit/dim with an asymptotically optimal error bound, using rotation + sign. Read for the unbiased ratio estimator and the connection to Alon–Klartag&rsquo;s lower bound.</li>
+<li><a class="wikilink is-source" href="zandieh-2024-qjl.html">QJL (Zandieh et al., 2024)</a> — same sign-after-rotation idea, but for the LLM KV-cache setting, with an <em>asymmetric</em> estimator that is the building block TurboQuant reuses. Read for the &ldquo;zero overhead&rdquo; argument and the unbiased inner-product estimator.</li>
+<li><a class="wikilink is-source" href="liu-2024-kivi.html">KIVI (Liu et al., 2024)</a> — the contrast: a data-<em>dependent</em> KV-cache quantization scheme that exploits the per-channel-K / per-token-V outlier asymmetry. Read to understand what TurboQuant deliberately gives up by going data-oblivious, and what it gets in return.</li>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — finally, the synthesis. Lloyd-Max scalar quantization on the Beta marginal (MSE stage) + 1-bit QJL on the residual (bias fix). Generalizes RaBitQ to any bit-width and beats KIVI&rsquo;s effective rate by removing all metadata.</li>
+</ol>
+<h2>Implementations</h2>
+<ul>
+<li><a class="wikilink is-project" href="turboquant-implementations.html">TurboQuant — implementation landscape</a> — landscape: no official Google release, several community PyTorch/Triton/MLX/Rust implementations of varying fidelity, official QJL code for the building block.</li>
+</ul>
+<h2>Open questions</h2>
+<ul>
+<li><strong>Sub-2-bit KV cache</strong>: every method falls off the quality cliff below 2 bits/channel. Is the cliff fundamental (Shannon-rate sets it) or is there a smarter construction (mixed-precision per-layer, attention-aware, sparse-and-dense)?</li>
+<li><strong>Rotation cost at inference</strong>: structured Hadamard rotations are <span class="math math-inline">$O(d \log d)$</span> but still measurable. Can the rotation be folded into adjacent linear layers without breaking the data-oblivious property?</li>
+<li><strong>Beyond Euclidean</strong>: TurboQuant is built around Euclidean / inner-product geometry. Cosine on non-normalized vectors, Mahalanobis, and learned metrics are not directly addressed.</li>
+<li><strong>Composition with KV-cache eviction</strong>: StreamingLLM, H2O, and similar attention-aware eviction policies are orthogonal in principle. Stacking them with TurboQuant is unvalidated.</li>
+<li><strong>Will Google release official code?</strong> Implementation choices (exact codebook, channel selection for mixed precision) currently vary across forks. A canonical reference would resolve fidelity arguments.</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

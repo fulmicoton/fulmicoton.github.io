@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>KIVI (Liu et al., 2024) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="KIVI (Liu et al., 2024) is a tuning-free 2-bit quantization scheme for the KV cache of decoder-only LLMs that exploits the *asymmetric* outlier structure of keys vs values: keys are quantized **per-ch…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">KIVI (Liu et al., 2024)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/liu-2024-kivi.pdf">liu-2024-kivi.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h2>Summary</h2>
+<p>KIVI (Liu et al., 2024) is a tuning-free 2-bit quantization scheme for the KV cache of decoder-only LLMs that exploits the <em>asymmetric</em> outlier structure of keys vs values: keys are quantized <strong>per-channel</strong> (group along the feature axis), values are quantized <strong>per-token</strong> (group along the sequence axis). The asymmetry comes from an empirical observation — in attention K, a few feature channels carry persistent large-magnitude outliers, whereas in V the outliers are scattered token-wise. Quantizing each in its &ldquo;natural&rdquo; direction keeps INT2 representations within the dynamic range of the dominant signal without sacrificing accuracy. Reported gains: 2.6× peak memory reduction, 2.35–3.47× decode throughput, up to 4× larger serving batch size, with quality parity vs FP16 across Llama, Falcon, Mistral. KIVI represents the data-dependent KV-quantization line that TurboQuant and QJL deliberately step away from.</p>
+<h2>Key points</h2>
+<h3>The outlier asymmetry</h3>
+<ul>
+<li><strong>Keys</strong>: a small set of channels (~3–5%) consistently has activations ~10× larger than the rest, across all tokens. Per-channel quantization isolates these channels with their own scale, leaving the rest in tight range.</li>
+<li><strong>Values</strong>: outliers are <em>per-token</em> (specific tokens like punctuation or BOS have larger activations across all channels). Per-token quantization gives each token its own scale.</li>
+</ul>
+<p>This is the same pattern Dettmers et al. observed for LLM weights (the basis of LLM.int8); KIVI is the KV-cache version.</p>
+<h3>Algorithm</h3>
+<p>For each block of new KV pairs:
+- <strong>K</strong> is reshaped to (channel, group_size) and quantized to INT2 per channel with a per-channel scale + zero-point.
+- <strong>V</strong> is reshaped to (token, hidden) and quantized to INT2 per token with a per-token scale + zero-point.
+- A small residual buffer (~last 128 tokens) is kept in FP16 to avoid quantization noise on the most attention-relevant tokens.
+- During attention, dequantize on the fly into a tile of the right shape before matmul.</p>
+<h3>Tuning-free</h3>
+<p>No calibration pass, no per-model hyperparameters. Quantization parameters are derived directly from the running block&rsquo;s min/max. This is what makes KIVI cheap to ship — you don&rsquo;t need a held-out dataset, unlike GPTQ-style methods.</p>
+<h3>Benchmark headline</h3>
+<p>Llama-2-7B / Llama-2-13B / Falcon-7B / Mistral-7B across LongBench:
+- INT2 KIVI quality ≈ FP16 quality (deltas &lt;0.5 point on most tasks)
+- Peak memory: 2.6× smaller (including model weights — the KV cache fraction shrinks 8×)
+- Decode throughput: 2.35× (small batches) to 3.47× (large batches)
+- Max batch size: up to 4× vs FP16 baseline at the same GPU memory budget</p>
+<h3>Limitations relative to TurboQuant / QJL</h3>
+<ul>
+<li>The per-channel / per-token scales <strong>are metadata</strong> stored at FP16 → real effective bits per KV value are ~2.5–3 bits, not 2.</li>
+<li>Tuning-free in the sense of &ldquo;no calibration&rdquo;, but still data-dependent (statistics are computed from each block).</li>
+<li>The residual FP16 buffer is essential for accuracy — pure INT2 without the residual degrades non-trivially.</li>
+</ul>
+<p>These are exactly the costs the data-oblivious approach (QJL, TurboQuant) is designed to eliminate.</p>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-syllabus" href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></li>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — data-oblivious successor in the KV-cache compression line</li>
+<li><a class="wikilink is-source" href="zandieh-2024-qjl.html">QJL (Zandieh et al., 2024)</a> — direct rebuttal: replaces per-block scales with a JL random matrix</li>
+<li><a class="wikilink is-concept" href="concept-kv-cache-quantization.html">KV cache quantization</a> — broader context on KV cache compression</li>
+</ul><nav class="entry-nav"><a class="nav-prev" href="zandieh-2024-qjl.html"><span class="nav-label">Previous</span>QJL (Zandieh et al., 2024)</a><a class="nav-next" href="zandieh-2025-turboquant.html"><span class="nav-label">Next</span>TurboQuant (Zandieh et al., 2025)</a></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

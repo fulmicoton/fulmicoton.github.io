@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>RaBitQ (Gao et al., 2024) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="RaBitQ (Gao &amp; Long, SIGMOD 2024) is a randomized 1-bit-per-dimension quantization method for high-dimensional Euclidean vectors used in approximate nearest-neighbor search. It centers and unit-normali…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">RaBitQ (Gao et al., 2024)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/gao-2024-rabitq.pdf">gao-2024-rabitq.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h2>Summary</h2>
+<p>RaBitQ (Gao &amp; Long, SIGMOD 2024) is a randomized 1-bit-per-dimension quantization method for high-dimensional Euclidean vectors used in approximate nearest-neighbor search. It centers and unit-normalizes the database vectors, then quantizes each vector to a vertex of a randomly rotated <span class="math math-inline">$\{\pm 1/\sqrt{D}\}^D$</span> hypercube — equivalent to storing the sign of each coordinate after a random orthogonal rotation. The paper proves an asymptotically tight <span class="math math-inline">$O(1/\sqrt{D})$</span> error bound on the inner-product estimator (which Alon &amp; Klartag 2017 show is the best possible for <span class="math math-inline">$D$</span>-bit codes), giving RaBitQ a <em>theoretical</em> guarantee that PQ-family methods lack. Empirically it beats product quantization at half the code length on standard ANN benchmarks; the SIMD-friendly bitwise distance estimator is ~3× faster than the original PQ table-lookup. It is the direct conceptual predecessor — and now competitor — of TurboQuant&rsquo;s first 1-bit stage.</p>
+<h2>Key points</h2>
+<h3>Algorithm</h3>
+<ol>
+<li><strong>Center &amp; normalize</strong>: subtract dataset centroid, scale each <span class="math math-inline">$x$</span> to unit norm <span class="math math-inline">$\bar{o}$</span>.</li>
+<li><strong>Random rotation</strong>: pick a random orthogonal <span class="math math-inline">$P$</span>; the quantization codebook is <span class="math math-inline">$\{P v : v \in \{\pm 1/\sqrt{D}\}^D\}$</span>.</li>
+<li><strong>Code assignment</strong>: code of <span class="math math-inline">$\bar{o}$</span> is the sign pattern <span class="math math-inline">$\text{sign}(P^{-1}\bar{o})$</span> packed as <span class="math math-inline">$D$</span> bits.</li>
+<li><strong>Query</strong>: rotate the query <span class="math math-inline">$\bar{q}$</span>, scalar-quantize to a few bits, compute the inner product of the two rotated vectors using bitwise / SIMD ops, then re-rank with raw vectors.</li>
+</ol>
+<h3>Unbiased estimator</h3>
+<p>The core estimator <span class="math math-inline">$\langle \tilde{o}, \bar{q}\rangle / \langle \tilde{o}, \bar{o}\rangle$</span> is unbiased for <span class="math math-inline">$\langle \bar{o}, \bar{q}\rangle$</span>, where <span class="math math-inline">$\tilde{o}$</span> is the quantized vector. The denominator <span class="math math-inline">$\langle \tilde{o}, \bar{o}\rangle$</span> is precomputed and stored alongside the code — this is RaBitQ&rsquo;s <em>one</em> per-vector scalar overhead (TurboQuant later replaces this with the precomputed Lloyd-Max constants of the Beta distribution).</p>
+<h3>Asymptotic optimality</h3>
+<p>The <span class="math math-inline">$O(1/\sqrt{D})$</span> error bound matches the Alon–Klartag 2017 lower bound for any <span class="math math-inline">$D$</span>-bit binary code on the unit sphere. So in the 1-bit-per-dim regime RaBitQ is rate-distortion optimal up to constants — which is precisely why TurboQuant&rsquo;s 1-bit residual stage uses the same structural recipe.</p>
+<h3>Empirical results vs PQ</h3>
+<ul>
+<li>Recovers higher recall than PQ at <strong>half the code length</strong> on standard ANN datasets (MSong, GIST, DEEP1M, SIFT1M).</li>
+<li>On MSong, PQ shows &gt;50% relative distance error and &lt;60% recall even with re-ranking — RaBitQ&rsquo;s theoretical bound prevents this kind of dataset-specific blow-up.</li>
+<li>Single-vector implementation: bitwise XOR + popcount → ~3× faster than PQ&rsquo;s table lookups.</li>
+<li>Batched implementation: comparable to fast-scan PQ variants while keeping the error bound.</li>
+</ul>
+<h3>Why exactly 1 bit per dimension</h3>
+<p>The construction is tied to sign-bit quantization on the sphere — extending to multi-bit RaBitQ requires either repeating the construction independently (multi-bit, multi-rotation) or moving to a scalar quantizer per coordinate. The latter is essentially what TurboQuant does, so TurboQuant subsumes RaBitQ as the 1-bit special case while generalizing to any <span class="math math-inline">$b$</span>.</p>
+<h3>How RaBitQ differs structurally from TurboQuant</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>RaBitQ</th>
+<th>TurboQuant</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Rate</td>
+<td>1 bit/dim fixed</td>
+<td>any <span class="math math-inline">$b$</span> bits/coord</td>
+</tr>
+<tr>
+<td>Per-vector overhead</td>
+<td><span class="math math-inline">$\langle \tilde{o}, \bar{o}\rangle$</span> scalar</td>
+<td><span class="math math-inline">$\|r\|_2$</span> scalar (in residual stage)</td>
+</tr>
+<tr>
+<td>Bias</td>
+<td>Unbiased by ratio estimator</td>
+<td>MSE stage biased, fixed by QJL residual</td>
+</tr>
+<tr>
+<td>Application targeted</td>
+<td>ANN search</td>
+<td>KV cache + ANN</td>
+</tr>
+</tbody>
+</table>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-syllabus" href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a> — reading order</li>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — successor / generalization</li>
+<li><a class="wikilink is-source" href="zandieh-2024-qjl.html">QJL (Zandieh et al., 2024)</a> — same sign-bit-after-rotation pattern, applied to inner products via JL projection</li>
+<li><a class="wikilink is-source" href="jegou-2011-product-quantization.html">Product Quantization (Jegou et al., 2011)</a> — the baseline RaBitQ dethroned with theoretical guarantees</li>
+<li><a class="wikilink is-concept" href="concept-random-rotation-high-dim.html">Random rotation in high dimensions</a> — why rotation makes the sign pattern informative</li>
+<li><a class="wikilink is-concept" href="concept-mse-vs-inner-product-quantization.html">MSE vs inner-product quantization</a> — RaBitQ&rsquo;s ratio-estimator trick for unbiased inner products</li>
+</ul><nav class="entry-nav"><a class="nav-prev" href="jegou-2011-product-quantization.html"><span class="nav-label">Previous</span>Product Quantization (Jegou et al., 2011)</a><a class="nav-next" href="zandieh-2024-qjl.html"><span class="nav-label">Next</span>QJL (Zandieh et al., 2024)</a></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Random rotation in high dimensions — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="In high dimensions, a uniformly random orthogonal rotation makes any unit vector look &quot;generic&quot; — its coordinates concentrate near zero, become marginally identically distributed, and become near-inde…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Concept</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Concept</div><h1 class="entry-title">Random rotation in high dimensions</h1><div class="entry-meta"><span class="tags"><span class="tag concept">concept</span></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-turboquant.html">Syllabus — TurboQuant and the rotation-based quantization line</a></aside><h1>Random rotation in high dimensions</h1>
+<h2>Intuition</h2>
+<p>In high dimensions, a uniformly random orthogonal rotation makes any unit vector look &ldquo;generic&rdquo; — its coordinates concentrate near zero, become marginally identically distributed, and become near-independent. This single trick is the foundation under both the Johnson–Lindenstrauss lemma (used in JL projections, locality-sensitive hashing) and modern rotation-then-quantize methods (RaBitQ, TurboQuant, QJL, QuaRot, SpinQuant).</p>
+<p>The mental model: a random rotation is like spreading the &ldquo;interesting&rdquo; information of a vector equally across all coordinates. Whatever the original signal structure was — a few large outlier channels, a sparse representation, a clustering — rotation flattens it.</p>
+<h2>The math (1 paragraph)</h2>
+<p>Let <span class="math math-inline">$x$</span> be a fixed unit vector in <span class="math math-inline">$\mathbb{R}^d$</span> and <span class="math math-inline">$\Pi$</span> a uniform random orthogonal matrix. Then each coordinate of <span class="math math-inline">$y = \Pi x$</span> has marginal density</p>
+<div class="math math-block">$$f_Y(t) = \frac{\Gamma(d/2)}{\sqrt{\pi}\,\Gamma((d-1)/2)} (1 - t^2)^{(d-3)/2}, \quad t \in [-1, 1]$$</div>
+<p>— a Beta<span class="math math-inline">$(\tfrac{1}{2}, \tfrac{d-1}{2})$</span>-like distribution. As <span class="math math-inline">$d \to \infty$</span>, <span class="math math-inline">$\sqrt{d}\, y_i \xrightarrow{d} \mathcal{N}(0, 1)$</span>, and any finite subset of coordinates becomes asymptotically independent. The deviations are <span class="math math-inline">$O(1/\sqrt{d})$</span> in total variation.</p>
+<h2>Johnson–Lindenstrauss in two lines</h2>
+<p>For <span class="math math-inline">$n$</span> points in <span class="math math-inline">$\mathbb{R}^d$</span> and <span class="math math-inline">$\epsilon &gt; 0$</span>, a random projection to <span class="math math-inline">$m = O(\epsilon^{-2} \log n)$</span> dimensions preserves all pairwise distances within a <span class="math math-inline">$(1\pm\epsilon)$</span> factor with high probability. The projection is just a Gaussian (or random-sign, or random-Hadamard) matrix. This is what licenses random projection as a <em>data-oblivious</em> dimensionality reduction.</p>
+<h2>Worked example: 1-bit quantization on the sphere</h2>
+<p>Sample <span class="math math-inline">$x$</span> uniformly on <span class="math math-inline">$S^{d-1}$</span> and quantize to <span class="math math-inline">$\text{sign}(x) \in \{\pm 1\}^d$</span>. The reconstructed unit vector is <span class="math math-inline">$\sqrt{1/d} \, \text{sign}(x)$</span>.</p>
+<p>Expected inner product with original:</p>
+<div class="math math-block">$$\mathbb{E}\langle x, \tfrac{1}{\sqrt{d}}\text{sign}(x)\rangle = \frac{1}{\sqrt{d}} \sum_i \mathbb{E}|x_i| = \frac{1}{\sqrt{d}} \cdot d \cdot \sqrt{\frac{2}{\pi d}} = \sqrt{\frac{2}{\pi}} \approx 0.798$$</div>
+<p>That <span class="math math-inline">$\sqrt{2/\pi}$</span> factor is the bias every 1-bit MSE-optimal sign quantizer carries — it shows up in RaBitQ as the ratio normalization, and in QJL/TurboQuant as the <span class="math math-inline">$\pi/2$</span> scale in the unbiased estimator.</p>
+<h2>Practical: structured rotations</h2>
+<p>A dense random orthogonal multiply costs <span class="math math-inline">$O(d^2)$</span> which is prohibitive for <span class="math math-inline">$d \sim 4096$</span>. In practice everyone uses structured rotations:</p>
+<ul>
+<li><strong>Random Hadamard / Walsh-Hadamard</strong>: <span class="math math-inline">$\Pi = H D$</span> where <span class="math math-inline">$H$</span> is the Hadamard matrix and <span class="math math-inline">$D$</span> is a random ±1 diagonal. Cost <span class="math math-inline">$O(d \log d)$</span>, preserves JL-like properties.</li>
+<li><strong>Block-Hadamard + permutation</strong>: used in QuaRot / SpinQuant for LLM weight quantization.</li>
+<li><strong>Random rotation cached in model weights</strong>: bake the rotation into adjacent linear layers so it&rsquo;s free at inference time.</li>
+</ul>
+<h2>Why this matters for quantization</h2>
+<p>A unit vector with arbitrary coordinate distribution is hard to quantize — outlier coordinates blow up the dynamic range. A rotated unit vector is well-behaved: coordinates are bounded <span class="math math-inline">$O(1/\sqrt{d})$</span>, distributed identically, near-independent. Lloyd-Max scalar quantization on the Beta marginal is then near-Shannon-optimal, <em>without ever looking at the data</em>. This is the kernel of TurboQuant.</p>
+<h2>Pointers in this syllabus</h2>
+<ul>
+<li><a class="wikilink is-source" href="zandieh-2025-turboquant.html">TurboQuant (Zandieh et al., 2025)</a> — Lloyd-Max on the Beta marginal</li>
+<li><a class="wikilink is-source" href="gao-2024-rabitq.html">RaBitQ (Gao et al., 2024)</a> — sign of rotated vector</li>
+<li><a class="wikilink is-source" href="zandieh-2024-qjl.html">QJL (Zandieh et al., 2024)</a> — sign of JL projection</li>
+<li><a class="wikilink is-concept" href="concept-vector-quantization-rate-distortion.html">Vector quantization and rate-distortion</a> — why we want independent coordinates</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

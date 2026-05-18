@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Countdown to December 1, 2028</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #060614;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    canvas {
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+
+    #overlay {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      font-family: 'Space Mono', 'Courier New', monospace;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    #days {
+      font-size: clamp(3.5rem, 9vw, 8rem);
+      font-weight: 700;
+      letter-spacing: -3px;
+      background: linear-gradient(135deg, #ffffff 0%, #a8c8ff 60%, #6699ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1;
+    }
+
+    #label {
+      font-size: clamp(0.6rem, 1.4vw, 0.9rem);
+      color: #6666aa;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      margin-top: 0.4em;
+    }
+
+    #separator {
+      margin: 1em auto 0;
+      width: clamp(100px, 18vw, 200px);
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #2a2a5a, transparent);
+    }
+
+    #progress-row {
+      margin-top: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.7em;
+      font-size: clamp(0.5rem, 0.9vw, 0.7rem);
+      color: #44446a;
+    }
+
+    #bar-track {
+      width: clamp(100px, 15vw, 200px);
+      height: 2px;
+      background: #111130;
+      border-radius: 2px;
+      position: relative;
+      overflow: visible;
+    }
+
+    #bar-fill {
+      height: 100%;
+      border-radius: 2px;
+      background: linear-gradient(90deg, #2244cc, #6699ff);
+      position: relative;
+    }
+
+    #bar-fill::after {
+      content: '';
+      position: absolute;
+      right: -3px;
+      top: -3px;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #88aaff;
+      box-shadow: 0 0 8px 2px rgba(100, 160, 255, 0.7);
+    }
+
+    #pct-line {
+      margin-top: 0.6em;
+      font-size: clamp(0.45rem, 0.8vw, 0.65rem);
+      color: #333366;
+      letter-spacing: 2px;
+    }
+
+    #destination-label {
+      position: absolute;
+      font-family: 'Space Mono', monospace;
+      font-size: clamp(0.45rem, 0.8vw, 0.6rem);
+      color: rgba(180, 200, 255, 0.4);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      pointer-events: none;
+      transform: translate(-50%, -200%);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<div id="overlay">
+  <div id="days">—</div>
+  <div id="label">days remaining</div>
+  <div id="separator"></div>
+  <div id="progress-row">
+    <span>Dec 1 '24</span>
+    <div id="bar-track"><div id="bar-fill" style="width:0%"></div></div>
+    <span>Dec 1 '28</span>
+  </div>
+  <div id="pct-line">—</div>
+</div>
+
+<div id="destination-label">Dec 1, 2028</div>
+
+<script>
+const canvas = document.getElementById('c');
+const ctx    = canvas.getContext('2d');
+
+const START      = new Date('2024-12-01T00:00:00');
+const END        = new Date('2028-12-01T00:00:00');
+const TOTAL_MS   = END - START;
+const TOTAL_DAYS = TOTAL_MS / 86400000; // 1461
+
+// Orbit geometry (set in resize())
+let W, H, cx, cy, rx, ry;
+
+const TILT        = -Math.PI / 14;        // gentle tilt
+const START_ANGLE = Math.PI * 1.20;       // planet origin: lower-left
+const TRAIL_SWEEP = Math.PI / 5;          // 36° of trail behind planet
+const TRAIL_N     = 60;
+
+let stars = [];
+
+// ─── Resize ───────────────────────────────────────────────────────────────────
+
+function resize() {
+  W  = canvas.width  = window.innerWidth;
+  H  = canvas.height = window.innerHeight;
+  cx = W / 2;
+  cy = H * 0.44;
+  rx = Math.min(W, H) * 0.37;
+  ry = Math.min(W, H) * 0.195;
+
+  generateStars();
+  positionOverlay();
+  positionDestinationLabel();
+}
+
+function positionOverlay() {
+  const orbitBottom = cy + ry + 48;
+  const overlay = document.getElementById('overlay');
+  overlay.style.top  = orbitBottom + 'px';
+  overlay.style.left = '50%';
+}
+
+function positionDestinationLabel() {
+  // Place near the END point of the orbit (progress = 1 → same as START angle)
+  // Just slightly past the start point (a small delta for visual clarity)
+  const endAngle = START_ANGLE + Math.PI * 2;
+  const pt = ellipsePoint(endAngle);
+  const lbl = document.getElementById('destination-label');
+  lbl.style.left = pt.x + 'px';
+  lbl.style.top  = pt.y + 'px';
+}
+
+// ─── Stars ────────────────────────────────────────────────────────────────────
+
+function generateStars() {
+  stars = [];
+  for (let i = 0; i < 240; i++) {
+    stars.push({
+      x:         Math.random() * W,
+      y:         Math.random() * H,
+      r:         Math.random() * 1.2 + 0.3,
+      baseAlpha: Math.random() * 0.45 + 0.15,
+      phase:     Math.random() * Math.PI * 2,
+      speed:     Math.random() * 0.4 + 0.15,
+    });
+  }
+}
+
+function drawStars(t) {
+  for (const s of stars) {
+    const alpha = Math.max(0, s.baseAlpha + 0.14 * Math.sin(t * s.speed + s.phase));
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(200, 212, 255, ${alpha})`;
+    ctx.fill();
+  }
+}
+
+// ─── Orbit math ───────────────────────────────────────────────────────────────
+
+function ellipsePoint(angle) {
+  const cosT = Math.cos(TILT), sinT = Math.sin(TILT);
+  const ex   = rx * Math.cos(angle);
+  const ey   = ry * Math.sin(angle);
+  return {
+    x: cx + ex * cosT - ey * sinT,
+    y: cy + ex * sinT + ey * cosT,
+  };
+}
+
+// ─── Orbit arcs ───────────────────────────────────────────────────────────────
+
+function drawOrbit(progress) {
+  const currentAngle = START_ANGLE + progress * Math.PI * 2;
+  const endAngle     = START_ANGLE + Math.PI * 2;
+
+  // Full ghost orbit (very dim)
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, TILT, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(50, 40, 90, 0.18)';
+  ctx.lineWidth   = 1;
+  ctx.setLineDash([]);
+  ctx.stroke();
+
+  // Remaining arc (dim, dashed)
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, TILT, currentAngle, endAngle, false);
+  ctx.strokeStyle = 'rgba(90, 70, 160, 0.28)';
+  ctx.lineWidth   = 1.5;
+  ctx.setLineDash([3, 9]);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Elapsed arc (bright, solid)
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, rx, ry, TILT, START_ANGLE, currentAngle, false);
+  ctx.strokeStyle = 'rgba(120, 180, 255, 0.65)';
+  ctx.lineWidth   = 1.8;
+  ctx.stroke();
+
+  // Start marker (small dot at origin)
+  const startPt = ellipsePoint(START_ANGLE);
+  ctx.beginPath();
+  ctx.arc(startPt.x, startPt.y, 3, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(100, 140, 255, 0.5)';
+  ctx.fill();
+
+  // End marker (glowing target ring)
+  const endPt = ellipsePoint(endAngle);
+  ctx.beginPath();
+  ctx.arc(endPt.x, endPt.y, 6, 0, Math.PI * 2);
+  ctx.strokeStyle = 'rgba(160, 200, 255, 0.35)';
+  ctx.lineWidth   = 1;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(endPt.x, endPt.y, 2.5, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(160, 200, 255, 0.4)';
+  ctx.fill();
+}
+
+// ─── Trail ────────────────────────────────────────────────────────────────────
+
+function drawTrail(progress) {
+  const currentAngle = START_ANGLE + progress * Math.PI * 2;
+  for (let i = 0; i < TRAIL_N; i++) {
+    const f     = i / TRAIL_N;                       // 0 = tail, 1 = near planet
+    const angle = currentAngle - TRAIL_SWEEP * (1 - f);
+    const pt    = ellipsePoint(angle);
+    const alpha = f * 0.55;
+    const r     = f * 4.5 + 0.5;
+    ctx.beginPath();
+    ctx.arc(pt.x, pt.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(90, 160, 255, ${alpha})`;
+    ctx.fill();
+  }
+}
+
+// ─── Sun ──────────────────────────────────────────────────────────────────────
+
+function drawSun(t) {
+  const pulse = 1 + 0.09 * Math.sin(t * 0.75);
+
+  // Outer corona
+  const g1 = ctx.createRadialGradient(cx, cy, 0, cx, cy, 70 * pulse);
+  g1.addColorStop(0,   'rgba(255, 200, 80, 0.18)');
+  g1.addColorStop(0.5, 'rgba(255, 140, 30, 0.06)');
+  g1.addColorStop(1,   'rgba(255, 100, 10, 0)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, 70 * pulse, 0, Math.PI * 2);
+  ctx.fillStyle = g1;
+  ctx.fill();
+
+  // Inner glow
+  const g2 = ctx.createRadialGradient(cx, cy, 0, cx, cy, 24);
+  g2.addColorStop(0,   'rgba(255, 248, 220, 1)');
+  g2.addColorStop(0.45,'rgba(255, 190, 70, 0.9)');
+  g2.addColorStop(1,   'rgba(255, 80, 10, 0)');
+  ctx.beginPath();
+  ctx.arc(cx, cy, 24, 0, Math.PI * 2);
+  ctx.fillStyle = g2;
+  ctx.fill();
+
+  // Core
+  ctx.beginPath();
+  ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+  ctx.fillStyle = '#fff8e8';
+  ctx.fill();
+}
+
+// ─── Planet ───────────────────────────────────────────────────────────────────
+
+function drawPlanet(px, py, t) {
+  const glowR = 30 + 2.5 * Math.sin(t * 1.25);
+
+  // Outer halo
+  const halo = ctx.createRadialGradient(px, py, 0, px, py, glowR);
+  halo.addColorStop(0,   'rgba(80, 150, 255, 0.38)');
+  halo.addColorStop(0.5, 'rgba(60, 110, 255, 0.12)');
+  halo.addColorStop(1,   'rgba(40,  80, 255, 0)');
+  ctx.beginPath();
+  ctx.arc(px, py, glowR, 0, Math.PI * 2);
+  ctx.fillStyle = halo;
+  ctx.fill();
+
+  // Planet sphere (off-center light source for 3-D feel)
+  const sphere = ctx.createRadialGradient(px - 3, py - 3, 1.5, px, py, 10);
+  sphere.addColorStop(0,   '#ddeeff');
+  sphere.addColorStop(0.35,'#5599ff');
+  sphere.addColorStop(0.75,'#2255cc');
+  sphere.addColorStop(1,   '#0d1f66');
+  ctx.beginPath();
+  ctx.arc(px, py, 10, 0, Math.PI * 2);
+  ctx.fillStyle = sphere;
+  ctx.fill();
+
+  // Specular highlight
+  ctx.beginPath();
+  ctx.arc(px - 3, py - 3, 3, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(255,255,255,0.35)';
+  ctx.fill();
+}
+
+// ─── Overlay update ───────────────────────────────────────────────────────────
+
+function updateOverlay(progress) {
+  const now       = new Date();
+  const remaining = Math.max(0, Math.ceil((END - now) / 86400000));
+  const pct       = (progress * 100).toFixed(1);
+  const rem       = (100 - progress * 100).toFixed(1);
+
+  document.getElementById('days').textContent    = remaining.toLocaleString();
+  document.getElementById('pct-line').textContent = `${pct}% elapsed · ${rem}% remaining`;
+  document.getElementById('bar-fill').style.width = `${pct}%`;
+}
+
+// ─── Main loop ────────────────────────────────────────────────────────────────
+
+function getProgress() {
+  const now = new Date();
+  return Math.max(0, Math.min(1, (now - START) / TOTAL_MS));
+}
+
+let lastMinute = -1;
+
+function draw(ts) {
+  const t        = ts / 1000;
+  const progress = getProgress();
+  const angle    = START_ANGLE + progress * Math.PI * 2;
+  const pos      = ellipsePoint(angle);
+
+  ctx.clearRect(0, 0, W, H);
+
+  drawStars(t);
+  drawOrbit(progress);
+  drawTrail(progress);
+  drawSun(t);
+  drawPlanet(pos.x, pos.y, t);
+
+  // Refresh text once per minute
+  const minute = Math.floor(t / 60);
+  if (minute !== lastMinute) {
+    updateOverlay(progress);
+    lastMinute = minute;
+  }
+
+  requestAnimationFrame(draw);
+}
+
+// ─── Bootstrap ────────────────────────────────────────────────────────────────
+
+window.addEventListener('resize', resize);
+resize();
+updateOverlay(getProgress());
+requestAnimationFrame(draw);
+</script>
+</body>
+</html>

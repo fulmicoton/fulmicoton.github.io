@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Associative memory and the delta rule — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="An **associative memory** is a function that maps keys to values, where both are continuous vectors. Given a key $k$, the memory returns its associated value $v$. The classical question — going back t…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Concept</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Concept</div><h1 class="entry-title">Associative memory and the delta rule</h1><div class="entry-meta"><span class="tags"><span class="tag concept">concept</span></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h1>Associative memory and the delta rule</h1>
+<h2>The intuition</h2>
+<p>An <strong>associative memory</strong> is a function that maps keys to values, where both are continuous vectors. Given a key <span class="math math-inline">$k$</span>, the memory returns its associated value <span class="math math-inline">$v$</span>. The classical question — going back to Hopfield, Kanerva, Anderson — is: can we store many <span class="math math-inline">$(k, v)$</span> pairs in a <em>fixed-size</em> state and recover them on query?</p>
+<p>The simplest construction: store the sum of outer products.</p>
+<div class="math math-block">$$S = \sum_i v_i k_i^\top, \qquad \hat{v}(k) = S k$$</div>
+<p>If the keys are orthonormal, this is a perfect lookup table. If they are merely <em>near-orthogonal</em> (random vectors in high dimension), this is a noisy but useful associative recall — the foundation of Hopfield networks and the modern &ldquo;linear attention as fast weights&rdquo; view (Schlag, Irie, Schmidhuber 2021).</p>
+<h2>The delta rule</h2>
+<p>Plain accumulation <span class="math math-inline">$S \leftarrow S + v_t k_t^\top$</span> has two problems: it can&rsquo;t <em>correct</em> a wrong association, and it has no notion of forgetting. The <strong>delta rule</strong> (Widrow-Hoff, 1960; the same algorithm as online LMS) fixes the first:</p>
+<div class="math math-block">$$S_t = S_{t-1} + \beta_t \cdot \underbrace{(v_t - S_{t-1} k_t)}_{\text{residual}} k_t^\top$$</div>
+<p>This is exactly SGD on the squared-error loss <span class="math math-inline">$\mathcal{L}_t(S) = \tfrac{1}{2}\|S k_t - v_t\|^2$</span>, with learning rate <span class="math math-inline">$\beta_t$</span>. Three properties matter:</p>
+<ol>
+<li><strong>Self-correcting</strong>: if <span class="math math-inline">$S_{t-1} k_t$</span> already equals <span class="math math-inline">$v_t$</span>, the update is zero. Only <em>new information</em> moves <span class="math math-inline">$S$</span>.</li>
+<li><strong>Capacity ≈ rank</strong>: with <span class="math math-inline">$k_t \in \mathbb{R}^r$</span>, the state <span class="math math-inline">$S \in \mathbb{R}^{r \times r}$</span> has <span class="math math-inline">$r$</span>-dimensional column space. You can store ~<span class="math math-inline">$r$</span> near-orthogonal associations cleanly.</li>
+<li><strong>Local in time</strong>: each update depends only on the current <span class="math math-inline">$(k, v, \beta)$</span> and the previous state. Streaming-friendly.</li>
+</ol>
+<h2>Adding a forget gate</h2>
+<p>To handle drift in long sequences, add a per-step decay:</p>
+<div class="math math-block">$$S_t = \lambda_t S_{t-1} + \beta_t (v_t - S_{t-1} k_t) k_t^\top$$</div>
+<p>With <span class="math math-inline">$\lambda_t \in [0,1)$</span> this gives <strong>graded forgetting</strong> — old associations decay exponentially unless re-written. In δ-mem, both gates are <em>dimension-wise</em> (vectors, not scalars): some memory dimensions retain old state, others overwrite. Generalizes naturally to the gated linear-attention family (RetNet, GLA, RWKV-7, DeltaNet).</p>
+<h2>Worked micro-example</h2>
+<p>Pseudocode for a single-head online associative memory, dimensions <span class="math math-inline">$r=4$</span>:</p>
+<pre><code class="language-python">import torch
+
+r = 4
+S = torch.zeros(r, r)        # the state
+
+def step(x, W_k, W_v, W_q, W_beta):
+    k = torch.tanh(W_k @ x); k = k / k.norm()
+    v = W_v @ x
+    q = torch.tanh(W_q @ x); q = q / q.norm()
+    beta  = torch.sigmoid(W_beta @ x)   # write gate, per dimension
+    lam   = 1.0 - beta                   # forget gate, per dimension
+
+    # 1. READ — query the previous state
+    r_t = S @ q                          # ∈ R^r
+
+    # 2. WRITE — gated delta-rule update
+    residual = v - S @ k                 # ∈ R^r
+    update = torch.outer(beta * residual, k)
+    decay  = torch.diag(lam) @ S
+    nonlocal_S = decay + update
+
+    return r_t, nonlocal_S
+</code></pre>
+<p>This is the <em>kernel</em> of δ-mem (and structurally also of Titans&rsquo; MLP memory, of DeltaNet, of RetNet&rsquo;s gated retention). The wrapping differs: how the read vector <span class="math math-inline">$r_t$</span> is used to influence the backbone, how the projections <span class="math math-inline">$W_k, W_v, W_q, W_\beta$</span> are trained.</p>
+<h2>How it shows up in the syllabus</h2>
+<ul>
+<li><strong><a class="wikilink is-source" href="wu-2022-memorizing-transformers.html">Memorizing Transformers (Wu et al., 2022)</a></strong> — <em>doesn&rsquo;t</em> use this kernel. Its memory is a non-differentiable kNN cache; this kernel was the answer to &ldquo;how do we make it learnable?&rdquo;.</li>
+<li><strong><a class="wikilink is-source" href="behrouz-2024-titans.html">Titans (Behrouz et al., 2024)</a></strong> — generalizes the kernel: the state is a small MLP, the update is SGD-with-momentum on a surprise loss, not just delta-rule.</li>
+<li><strong><a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a></strong> — uses the kernel <em>exactly</em> (gated delta rule), with a tiny <span class="math math-inline">$8\times 8$</span> matrix, applied as a side-state to a <em>frozen</em> Transformer.</li>
+</ul>
+<h2>Why this concept is the heart of the syllabus</h2>
+<p>The textual-memory line (MemGPT, Generative Agents, Mem0) treats memory as a database problem: insert, retrieve, summarize. The online-state line treats memory as an <em>optimization</em> problem: at every step, do one step of SGD on the running key→value map. The delta rule is the simplest learning rule that gets you a self-correcting, dynamically-decaying memory — which is why every modern test-time-learned memory module is built around it.</p>
+<h2>Pointers</h2>
+<ul>
+<li>Schlag, Irie, Schmidhuber (2021), &ldquo;Linear Transformers Are Secretly Fast Weight Programmers&rdquo; — the bridge between linear attention and Hopfield-style associative memory.</li>
+<li>Yang et al. (2024), &ldquo;Gated Linear Attention Transformers&rdquo; — the gated delta-rule kernel for sequence modeling.</li>
+<li><a class="wikilink is-concept" href="concept-agent-memory-paradigms.html">Memory mechanisms for AI agents — a 4-paradigm taxonomy</a> — where this concept sits in the bigger picture.</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

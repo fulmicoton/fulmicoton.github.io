@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Generative Agents (Park et al., 2023) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Generative Agents (Park, O&#x27;Brien, Cai, Morris, Liang, Bernstein — Stanford/Google, UIST 2023) is the seminal architecture for *believable* simulated humans powered by LLMs. 25 agents inhabit a Sims-li…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">Generative Agents (Park et al., 2023)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/park-2023-generative-agents.pdf">park-2023-generative-agents.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h2>Summary</h2>
+<p>Generative Agents (Park, O&rsquo;Brien, Cai, Morris, Liang, Bernstein — Stanford/Google, UIST 2023) is the seminal architecture for <em>believable</em> simulated humans powered by LLMs. 25 agents inhabit a Sims-like sandbox town (&ldquo;Smallville&rdquo;); each agent&rsquo;s behavior is driven by an explicit memory architecture with three pillars: a <strong>memory stream</strong> (append-only log of natural-language observations), a <strong>retrieval function</strong> scoring memories by recency × importance × relevance, and a <strong>reflection mechanism</strong> that periodically asks the LLM to synthesize higher-level inferences from recent memories and write them back into the stream. Planning is driven by retrieving from the stream rather than from raw context. The Valentine&rsquo;s-Day experiment is the headline: from a single seeded &ldquo;I want to throw a party&rdquo; prompt, agents autonomously gossip about the party, form acquaintances, coordinate timing, and show up. The paper established memory-stream + reflection as a default agent design pattern, and is the spiritual ancestor of Mem0&rsquo;s ADD/UPDATE/NOOP operations and most modern agent-memory libraries.</p>
+<h2>Key points</h2>
+<h3>The three pillars</h3>
+<ol>
+<li>
+<p><strong>Memory stream</strong> — a chronological list of memory objects, each a natural-language description (&ldquo;had breakfast with Klaus&rdquo;, &ldquo;noticed Maria is preparing for an event&rdquo;). Includes observations, reflections, and plans. Append-only.</p>
+</li>
+<li>
+<p><strong>Retrieval</strong> — given the current situation, fetch top-k memories ranked by a weighted sum of:
+   - <strong>Recency</strong> — exponential decay (15-min half-life in the paper).
+   - <strong>Importance</strong> — 1–10 score elicited from the LLM at insertion time (&ldquo;how poignant is this memory?&rdquo;).
+   - <strong>Relevance</strong> — cosine similarity between the situation embedding and the memory embedding.
+   Scores normalized to [0,1] and summed (equal weights in the paper). The retrieved set is what fits in the agent&rsquo;s planning prompt.</p>
+</li>
+<li>
+<p><strong>Reflection</strong> — when the cumulative importance of recent memories crosses a threshold, the agent stops, prompts itself with &ldquo;What 3 most salient questions can we answer about the subject from these memories?&rdquo;, retrieves memories for each question, and asks the LLM to produce abstract reflections (&ldquo;Klaus is dedicated to research&rdquo;, &ldquo;Isabella is preparing a Valentine&rsquo;s party&rdquo;). Reflections are written <em>back</em> into the stream — they are first-class memories. This builds a forest of inferences over time.</p>
+</li>
+</ol>
+<h3>Planning loop</h3>
+<p>Each agent maintains a hierarchical daily plan, expanded just-in-time into hour-level then minute-level actions. Planning prompts pull from the memory stream via retrieval. Plans themselves are stored as memories — so an agent &ldquo;remembers&rdquo; what it intended to do.</p>
+<h3>Smallville sandbox</h3>
+<ul>
+<li>25 agents with one-paragraph backstories.</li>
+<li>2D sandbox with locations, objects, and time-of-day.</li>
+<li>Users can intervene in natural language (talk to agents, change the environment).</li>
+<li>Agents communicate by emitting dialogue that goes into both speakers&rsquo; memory streams.</li>
+</ul>
+<h3>Emergent behaviors (the famous result)</h3>
+<p>From a single seed (&ldquo;Isabella wants to throw a Valentine&rsquo;s party&rdquo;):
+- Isabella tells nearby agents.
+- Agents pass the invitation along through conversations.
+- Some agents form new acquaintances during the propagation.
+- Couples form. Agents coordinate when and where to meet.
+- The party happens at the scheduled time with a subset of agents who chose to attend.</p>
+<p>Crucially, none of this is hard-coded — it falls out of the memory + retrieval + reflection + planning loop with an LLM (GPT-3.5 in the paper).</p>
+<h3>Human evaluation</h3>
+<p>A controlled study with raters compares full Generative Agents against ablations dropping each component. The full system is ranked most believable; removing reflection causes the largest single-component drop, followed by planning, followed by observation. This was the first empirical evidence that <em>reflection</em> (LLM-summarized inferences over memories) is necessary, not optional.</p>
+<h3>Why it became foundational</h3>
+<ul>
+<li>Defined the <strong>observation → memory stream → retrieval → reflection → action</strong> loop that almost every later agent framework reuses (AutoGPT, BabyAGI, LangGraph, Letta, Mem0).</li>
+<li>Showed that <em>importance scoring at write time</em> matters as much as relevance at read time.</li>
+<li>Made the case for <em>abstraction-via-reflection</em>: memory consolidation isn&rsquo;t just compression, it&rsquo;s the creation of new, queryable inferences.</li>
+</ul>
+<h3>Limitations</h3>
+<ul>
+<li><strong>Retrieval scoring is hand-tuned</strong> — the three weights and the decay constant are picked by the authors; not learned.</li>
+<li><strong>Memory grows unboundedly</strong> — no forgetting/eviction; long-running agents would eventually overwhelm the vector store.</li>
+<li><strong>LLM-as-importance-scorer is calibrated poorly</strong> — the 1–10 score is noisy and inconsistent across LLMs.</li>
+<li><strong>Costly</strong> — every observation triggers an LLM call for importance scoring; reflection adds more calls.</li>
+<li><strong>All-text storage</strong> — same compaction-loss / retrieval-noise concerns that motivate the latent-memory line (Memorizing Transformers, Titans, δ-mem).</li>
+</ul>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-concept" href="concept-agent-memory-paradigms.html">Memory mechanisms for AI agents — a 4-paradigm taxonomy</a> — textual-memory exemplar, <em>with</em> the addition of reflection</li>
+<li><a class="wikilink is-source" href="packer-2023-memgpt.html">Memgpt (Packer et al., 2023)</a> — contemporaneous; OS-style paging vs Park&rsquo;s memory stream + reflection</li>
+<li><a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a> — direct production-grade successor; replaces hand-tuned scoring with structured ADD/UPDATE/DELETE</li>
+<li><a class="wikilink is-syllabus" href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a> — full reading path</li>
+</ul><nav class="entry-nav"><a class="nav-prev" href="packer-2023-memgpt.html"><span class="nav-label">Previous</span>Memgpt (Packer et al., 2023)</a><a class="nav-next" href="behrouz-2024-titans.html"><span class="nav-label">Next</span>Titans (Behrouz et al., 2024)</a></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

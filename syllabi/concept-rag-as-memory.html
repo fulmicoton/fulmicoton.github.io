@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>RAG vs persistent agent memory — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The term &quot;memory&quot; gets used for two related-but-distinct things:">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Concept</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Concept</div><h1 class="entry-title">RAG vs persistent agent memory</h1><div class="entry-meta"><span class="tags"><span class="tag concept">concept</span></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h1>RAG vs persistent agent memory</h1>
+<h2>The confusion</h2>
+<p>The term &ldquo;memory&rdquo; gets used for two related-but-distinct things:</p>
+<ol>
+<li><strong>Retrieval over a corpus</strong> — at query time, embed the query, kNN-search a vector store of pre-indexed documents, stuff the top-k into the prompt. This is <strong>RAG</strong> (Lewis et al., 2020).</li>
+<li><strong>Persistent state of an interacting agent</strong> — the agent has accumulated facts, preferences, and inferences over many sessions, and brings them to bear on the current turn.</li>
+</ol>
+<p>Both involve fetching past content. They are often conflated because they share the same machinery (embeddings, vector DBs, kNN). But the design constraints are different in ways that matter.</p>
+<h2>A side-by-side</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><strong>RAG</strong></th>
+<th><strong>Agent memory</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Corpus</td>
+<td>mostly <em>static</em> (documents you indexed once)</td>
+<td><em>grows continuously</em> with every interaction</td>
+</tr>
+<tr>
+<td>Distribution</td>
+<td>fixed at index time</td>
+<td>drifts per user / per session</td>
+</tr>
+<tr>
+<td>Write pattern</td>
+<td>batch</td>
+<td>streaming</td>
+</tr>
+<tr>
+<td>Forgetting</td>
+<td>no concept</td>
+<td>essential (contradictions, stale facts)</td>
+</tr>
+<tr>
+<td>Consolidation</td>
+<td>none</td>
+<td>reflection, summarization, graph linking</td>
+</tr>
+<tr>
+<td>Update primitives</td>
+<td><em>insert</em> (and rarely <em>delete</em>)</td>
+<td>ADD, UPDATE, DELETE, NOOP</td>
+</tr>
+<tr>
+<td>Failure mode</td>
+<td>retrieve irrelevant chunk</td>
+<td>persist a wrong fact, or fail to retire a stale one</td>
+</tr>
+<tr>
+<td>Granularity</td>
+<td>document chunks (paragraphs)</td>
+<td>facts, episodes, reflections</td>
+</tr>
+</tbody>
+</table>
+<h2>Why this distinction matters for AI agents</h2>
+<p>Treating agent memory as &ldquo;just RAG over conversation history&rdquo; is the implicit baseline in most LLM chat systems — and it is <em>exactly</em> what every modern agent memory paper argues is insufficient. The reasons:</p>
+<ol>
+<li><strong>No write-time intelligence.</strong> RAG indexes whatever you give it; agent memory has to decide <em>what is worth remembering</em> (importance scoring in <a class="wikilink is-source" href="park-2023-generative-agents.html">Generative Agents (Park et al., 2023)</a>) and <em>whether it contradicts an existing fact</em> (UPDATE in <a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a>).</li>
+<li><strong>No consolidation.</strong> RAG cannot synthesize a higher-level inference from many chunks. Generative Agents and Mem0 both invest heavily in <em>reflection</em>: an LLM-driven step that reads many memories and writes new abstracted ones back.</li>
+<li><strong>No bounded state.</strong> RAG stores everything; agent memory has to fit useful history into a working budget — whether that&rsquo;s a working-context cap (MemGPT), a forgetting curve (Generative Agents), or a fixed-size state matrix (<a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a>).</li>
+<li><strong>Online distribution shift.</strong> A long conversation drifts; the embedding of &ldquo;what the user wants&rdquo; at turn 100 may not match its embedding at turn 1. RAG indexes are static; agent memory must adapt.</li>
+</ol>
+<h2>RAG-as-memory is a <em>baseline</em>, not a solution</h2>
+<p>In every paper in this syllabus, <em>BM25 RAG</em> or <em>embedding RAG</em> is the baseline; the contribution is what gets <em>added</em> on top:</p>
+<ul>
+<li><strong>MemGPT</strong> adds a structured tier hierarchy and self-managed function calls.</li>
+<li><strong>Generative Agents</strong> adds importance scoring, recency decay, and reflection.</li>
+<li><strong>Mem0</strong> adds explicit ADD/UPDATE/DELETE/NOOP semantics and a graph variant.</li>
+<li><strong>Memorizing Transformers</strong> keeps the kNN but moves it inside the model&rsquo;s representational space (KV pairs, not text).</li>
+<li><strong>Titans / δ-mem</strong> abandon retrieval entirely in favor of a continuously-updated parametric state.</li>
+</ul>
+<h2>When RAG-as-memory is fine</h2>
+<ul>
+<li>The user is asking about documents (e.g., a knowledge base assistant). Then it really is a retrieval problem.</li>
+<li>The conversation is short and the LLM context fits the whole history.</li>
+<li>You have a separate mechanism (a structured profile, a CRM) that holds the persistent facts; the LLM is stateless on top.</li>
+</ul>
+<h2>When RAG-as-memory breaks</h2>
+<ul>
+<li>The conversation is long enough that critical facts have left the context (multi-session assistants).</li>
+<li>Facts mutate over time (&ldquo;my address used to be X, now it&rsquo;s Y&rdquo; — vanilla RAG happily retrieves <em>both</em>).</li>
+<li>The agent needs to reason over <em>episodes</em>, not chunks (&ldquo;what did we discuss last Tuesday?&rdquo;).</li>
+<li>Tasks require the agent to recognize that a piece of context is <em>important enough to remember</em>, vs. transient.</li>
+</ul>
+<p>These are the regimes where the agent-memory literature lives.</p>
+<h2>Pointers</h2>
+<ul>
+<li><a class="wikilink is-concept" href="concept-agent-memory-paradigms.html">Memory mechanisms for AI agents — a 4-paradigm taxonomy</a> — RAG sits inside the &ldquo;textual memory&rdquo; paradigm; the full taxonomy contextualizes its limits.</li>
+<li><a class="wikilink is-source" href="packer-2023-memgpt.html">Memgpt (Packer et al., 2023)</a> — replaces flat RAG with a tier hierarchy and self-managed function calls.</li>
+<li><a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a> — the production-grade version of &ldquo;RAG + write-time intelligence&rdquo;.</li>
+<li>Lewis et al. (2020), &ldquo;Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks&rdquo; — the canonical RAG paper.</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

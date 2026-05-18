@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>AI agent memory — implementation landscape — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The two dominant open-source production-shaped agent-memory libraries as of mid-2026, plus the research code for the latent-memory line.">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Implementation</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Implementation</div><h1 class="entry-title">AI agent memory — implementation landscape</h1><div class="entry-meta"><span class="tags"><span class="tag project">project</span></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h1>AI agent memory — implementation landscape</h1>
+<p>The two dominant open-source production-shaped agent-memory libraries as of mid-2026, plus the research code for the latent-memory line.</p>
+<h2>Letta (formerly MemGPT)</h2>
+<ul>
+<li><strong>Repo</strong>: https://github.com/letta-ai/letta</li>
+<li><strong>Stars</strong>: ~22k as of May 2026</li>
+<li><strong>License</strong>: Apache 2.0</li>
+<li><strong>Language</strong>: Python; backend service + SDK</li>
+<li><strong>Last release</strong>: v0.16.7, March 2026 (active)</li>
+</ul>
+<p>What it implements:
+- The full <a class="wikilink is-source" href="packer-2023-memgpt.html">Memgpt (Packer et al., 2023)</a> architecture: main context (with subsections), recall storage (vector-indexed conversation history), archival storage (long-term documents).
+- LLM-emitted <strong>function calls</strong> for memory management: <code>core_memory_append</code>, <code>core_memory_replace</code>, <code>archival_memory_insert</code>, <code>archival_memory_search</code>, <code>conversation_search</code>.
+- Multi-step agent loop with <code>request_heartbeat</code> to chain function calls before responding.
+- Web UI for inspecting agent state, memory contents, function call traces.
+- Multi-tenant deployment via the Letta server.</p>
+<p>What it does <em>not</em> implement:
+- The latent-memory line (Memorizing Transformers, Titans, δ-mem) — Letta is squarely in the textual-memory paradigm.
+- Automatic reflection (à la Generative Agents) — there are recipes for it but it&rsquo;s not built in.
+- Forgetting curves — eviction is FIFO from working context to recall.</p>
+<p>Notable in the 2026 timeline:
+- 2024-09: MemGPT rebranded to Letta; the company maintains the project.
+- 2026-03: v0.16.7 raised the default working context from 32k to 128k and overhauled compaction.</p>
+<h2>Mem0</h2>
+<ul>
+<li><strong>Repo</strong>: https://github.com/mem0ai/mem0</li>
+<li><strong>Stars</strong>: ~54k as of May 2026 (much wider adoption than Letta)</li>
+<li><strong>License</strong>: Apache 2.0</li>
+<li><strong>Language</strong>: Python; SDK + hosted API</li>
+<li><strong>Maintenance</strong>: Active commits as of 2026-05.</li>
+</ul>
+<p>What it implements:
+- The <a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a> pipeline: per-turn fact extraction → search → ADD/UPDATE/DELETE/NOOP decision → vector-store apply.
+- Pluggable vector stores (Qdrant, Chroma, pgvector, Pinecone, etc.).
+- <strong>Mem0g</strong> graph variant for relational memory (uses Neo4j or similar).
+- Chrome extension + MCP server for stuffing Mem0 into existing chat apps (ChatGPT, Claude, Perplexity, Grok).
+- Hosted SaaS at mem0.ai with persistence and team features.</p>
+<p>What it does <em>not</em> implement:
+- The latent / online-state memory line.
+- Self-managed function-call style (the agent doesn&rsquo;t &ldquo;choose&rdquo; to remember; extraction is automatic per turn).
+- Bounded context tier hierarchy à la MemGPT — memory is one flat vector store (or a graph).</p>
+<p>Comparison vs Letta:
+- <strong>Letta</strong>: agent <em>is</em> the system. The LLM autonomously manages tiers via function calls. Good fit if you&rsquo;re building a stateful assistant from scratch.
+- <strong>Mem0</strong>: drop-in memory layer for <em>existing</em> agents. The agent isn&rsquo;t aware of Mem0 — it just calls <code>mem0.add(...)</code> and <code>mem0.search(...)</code>. Good fit if you have an existing chat app and want to bolt on persistence.</p>
+<h2>Research code for the latent-memory line</h2>
+<h3>Titans</h3>
+<ul>
+<li><strong>Repo</strong>: not officially released by Google as of May 2026 (paper has no public code link).</li>
+<li>Multiple community PyTorch implementations on GitHub (lucidrains/titans-pytorch, etc.) of varying fidelity.</li>
+</ul>
+<h3>δ-mem</h3>
+<ul>
+<li><strong>Repos</strong> (declared in the paper): https://github.com/Declare-lab and https://github.com/MindLab-Research</li>
+<li>Paper dated 2026-05-12; code was being released in the same window.</li>
+<li>Status as of 2026-05-17 (paper-release week): code exists but is not yet battle-tested in production; fidelity to the paper varies across forks.</li>
+</ul>
+<p>These are research artifacts, not production libraries. For deploying online-state memory in a real agent today, the practical answer is: there isn&rsquo;t one yet. The latent-memory line is on the cusp.</p>
+<h2>What&rsquo;s missing in the landscape</h2>
+<ul>
+<li><strong>No mature library that combines textual memory with online-state memory.</strong> The two paradigms are complementary (textual for explainable facts, online-state for low-level steering) but no framework integrates both.</li>
+<li><strong>No standard benchmark suite that all libraries report against.</strong> Mem0 reports LOCOMO; δ-mem reports LoCoMo + MemoryAgentBench + HotpotQA. Letta reports its own internal eval.</li>
+<li><strong>Letta and Mem0 don&rsquo;t directly bench against each other</strong> in the literature. Anecdotally Mem0 has wider adoption; Letta has the richer agent-state model.</li>
+</ul>
+<h2>Pointers</h2>
+<ul>
+<li><a class="wikilink is-source" href="packer-2023-memgpt.html">Memgpt (Packer et al., 2023)</a> — paper Letta implements</li>
+<li><a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a> — paper Mem0 implements</li>
+<li><a class="wikilink is-source" href="behrouz-2024-titans.html">Titans (Behrouz et al., 2024)</a> — Titans research code (no official Google release)</li>
+<li><a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a> — δ-mem research code at Declare-lab / MindLab-Research</li>
+<li><a class="wikilink is-syllabus" href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a> — the syllabus that contextualizes these implementations</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

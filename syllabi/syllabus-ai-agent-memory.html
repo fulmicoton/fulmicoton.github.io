@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Syllabus — Memory for AI agents — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Long-horizon LLM agents (Letta, Codex, Claude Code, autonomous research agents) need to *accumulate, update, and reuse* historical information across sessions — and &quot;just make the context window bigge…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Syllabus</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Syllabus</div><h1 class="entry-title">Syllabus — Memory for AI agents</h1><div class="entry-meta"><span class="tags"><span class="tag syllabus">syllabus</span></span></div><h1>Syllabus — Memory for AI agents</h1>
+<h2>What this covers</h2>
+<p>Long-horizon LLM agents (Letta, Codex, Claude Code, autonomous research agents) need to <em>accumulate, update, and reuse</em> historical information across sessions — and &ldquo;just make the context window bigger&rdquo; doesn&rsquo;t solve it. Million-token contexts still suffer from <em>context rot</em> (Hong et al. 2025), and quadratic attention is expensive. This syllabus traces the design space: from the earliest external kNN memory (Memorizing Transformers, 2022) through the textual-memory production line (MemGPT, Generative Agents, Mem0) to the latest online-state line (Titans, δ-mem). After reading you should understand the <strong>four-paradigm taxonomy</strong> of memory mechanisms, see <em>why</em> each paradigm exists, know the <strong>delta-rule kernel</strong> that powers the modern online-state methods, and have a calibrated sense of which approach fits which problem.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li><a class="wikilink is-concept" href="concept-agent-memory-paradigms.html">Memory mechanisms for AI agents — a 4-paradigm taxonomy</a> — the 4-paradigm frame (textual / outside-channel / parametric / online-state) used throughout the syllabus. Read first; everything else hangs off it.</li>
+<li><a class="wikilink is-concept" href="concept-rag-as-memory.html">RAG vs persistent agent memory</a> — why &ldquo;just do RAG over conversation history&rdquo; is the wrong default, and how agent memory differs from RAG.</li>
+<li><a class="wikilink is-concept" href="concept-associative-memory-delta-rule.html">Associative memory and the delta rule</a> — math kernel for the modern online-state line: Hopfield-style associative recall, the delta rule as SGD on <span class="math math-inline">$\tfrac{1}{2}\|Sk - v\|^2$</span>, gating for forgetting.</li>
+</ul>
+<h2>Reading order</h2>
+<ol>
+<li>
+<p><a class="wikilink is-source" href="wu-2022-memorizing-transformers.html">Memorizing Transformers (Wu et al., 2022)</a> — the canonical <em>outside-channel</em> baseline. A non-differentiable kNN cache attached to one Transformer layer, with a learned gate to mix local and external attention. Demonstrates that external memory works in principle and that <em>gains scale with cache size</em>. Read for the cleanest exposition of the OMM paradigm before anything else replaces it.</p>
+</li>
+<li>
+<p><a class="wikilink is-source" href="packer-2023-memgpt.html">Memgpt (Packer et al., 2023)</a> — the canonical <em>textual memory</em> paper and the OS framing. Tier hierarchy (main context / recall / archival), LLM-emitted function calls for self-managed paging, interrupt-driven control loop. Read for the vocabulary (<em>working context</em>, <em>archival storage</em>) that every later TMM paper inherits.</p>
+</li>
+<li>
+<p><a class="wikilink is-source" href="park-2023-generative-agents.html">Generative Agents (Park et al., 2023)</a> — the same year as MemGPT, the same paradigm (textual), but introduces the <em>memory stream + reflection</em> loop that becomes the second pillar of modern TMM. Read for: importance scoring at write time, the recency × importance × relevance retrieval, and the empirical case that <em>reflection</em> is what makes memory actually useful.</p>
+</li>
+<li>
+<p><a class="wikilink is-source" href="behrouz-2024-titans.html">Titans (Behrouz et al., 2024)</a> — the inflection point. Recasts memory as <em>online optimization</em>: a neural memory module updated at test time by gradient descent on a surprise loss, with momentum and forgetting. Read for the conceptual leap from &ldquo;retrieve from a static cache&rdquo; to &ldquo;learn at inference time&rdquo; — and for the Memory-as-Context / Memory-as-Gate / Memory-as-Layer integration patterns.</p>
+</li>
+<li>
+<p><a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a> — the production-shaped TMM. The contribution is operational, not algorithmic: ADD / UPDATE / DELETE / NOOP as the right primitives, with LLM-as-judge for each turn. Read for the LOCOMO benchmark (now the standard) and for how textual memory looks when it grows up.</p>
+</li>
+<li>
+<p><a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a> — finally, the synthesis. Compact <span class="math math-inline">$8\times 8$</span> online-state memory, updated by gated delta-rule, read as a low-rank correction into a <em>frozen</em> full-attention backbone. Read for the unified 4-paradigm taxonomy, the parameter-efficiency claim (0.12% trainable), and the striking <em>no-context</em> recovery result (8×8 state lifts HotpotQA EM from 0.08 → 6.48).</p>
+</li>
+</ol>
+<h2>Implementations</h2>
+<ul>
+<li><a class="wikilink is-project" href="agent-memory-implementations.html">AI agent memory — implementation landscape</a> — Letta (open-source MemGPT successor, ~22k stars, Apache 2.0) and Mem0 (open-source production memory layer, ~54k stars, Apache 2.0). Research code for Titans/δ-mem exists but is not production-ready as of May 2026.</li>
+</ul>
+<h2>Open questions</h2>
+<ul>
+<li><strong>Latent memory vs textual memory head-to-head.</strong> δ-mem (Lei 2026) doesn&rsquo;t benchmark against Mem0 (Chhikara 2025); the comparison everyone wants is missing. The two paradigms may also be complementary — no library combines them.</li>
+<li><strong>Forgetting curves.</strong> Every method handles forgetting differently: MemGPT FIFOs the working context, Generative Agents uses exponential recency decay, Mem0 forgets only on contradiction, Titans/δ-mem have learned per-dimension forget gates. No empirical comparison of <em>which forgetting policy serves which workload</em>.</li>
+<li><strong>Memory composition across paradigms.</strong> Should a production agent in 2026 run textual memory for user-facing facts <em>and</em> online-state memory for low-level steering? Nobody has built this; the design space is wide open.</li>
+<li><strong>Online memory in agent loops, not just sequences.</strong> Titans/δ-mem are evaluated on long sequences, not on multi-tool agent trajectories with branching, tool calls, and back-and-forth. Whether the online-state kernel survives that setting is unknown.</li>
+<li><strong>The &ldquo;memory of what was previously remembered&rdquo; problem.</strong> Reflection (Generative Agents) and consolidation are LLM calls over memories. As memory scales, the reflection prompt itself overflows context. No principled solution yet.</li>
+<li><strong>Standard benchmarks.</strong> LOCOMO and MemoryAgentBench are the closest to a standard, but coverage is uneven (LOCOMO is synthetic conversational; MemoryAgentBench covers retrieval / TTL / selective forgetting / long-range understanding). A unified leaderboard would clarify the field.</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

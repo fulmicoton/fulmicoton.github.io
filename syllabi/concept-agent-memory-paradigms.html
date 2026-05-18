@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Memory mechanisms for AI agents — a 4-paradigm taxonomy — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Most &quot;AI agent memory&quot; mechanisms can be characterized by two dimensions: - **Memory state** — how historical information is stored. - **Memory steering** — how the stored state influences the backbon…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Concept</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Concept</div><h1 class="entry-title">Memory mechanisms for AI agents — a 4-paradigm taxonomy</h1><div class="entry-meta"><span class="tags"><span class="tag concept">concept</span></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h1>Memory mechanisms for AI agents — a 4-paradigm taxonomy</h1>
+<h2>The unified frame</h2>
+<p>Most &ldquo;AI agent memory&rdquo; mechanisms can be characterized by two dimensions:
+- <strong>Memory state</strong> — how historical information is stored.
+- <strong>Memory steering</strong> — how the stored state influences the backbone LLM&rsquo;s reasoning at inference.</p>
+<p>Under this frame, the existing literature falls into four broad paradigms. The taxonomy is from the δ-mem paper (Lei et al., 2026), with origins in earlier surveys.</p>
+<h2>The four paradigms</h2>
+<h3>1. Textual Memory Mechanisms (TMM)</h3>
+<ul>
+<li><strong>Storage</strong>: natural-language text — message logs, extracted facts, summaries.</li>
+<li><strong>Steering</strong>: re-injected into the input prompt (sometimes after retrieval).</li>
+<li><strong>Examples</strong>: <a class="wikilink is-source" href="packer-2023-memgpt.html">Memgpt (Packer et al., 2023)</a> (MemGPT), <a class="wikilink is-source" href="park-2023-generative-agents.html">Generative Agents (Park et al., 2023)</a> (Generative Agents), <a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a> (Mem0), MemoryBank, RAG, RETRO.</li>
+<li><strong>Strengths</strong>: flexible, interpretable, requires no architectural change.</li>
+<li><strong>Weaknesses</strong>: context-window limits, retrieval noise, compaction loss (the LLM &ldquo;summarizes&rdquo; away information that turns out to matter later).</li>
+</ul>
+<h3>2. Outside-Channel Memory Mechanisms (OMM)</h3>
+<ul>
+<li><strong>Storage</strong>: external module — a kNN cache of past key-value pairs, an autoencoded latent bank, a side network.</li>
+<li><strong>Steering</strong>: retrieved &amp; fused via an auxiliary pathway (a separate attention head, a gated residual).</li>
+<li><strong>Examples</strong>: <a class="wikilink is-source" href="wu-2022-memorizing-transformers.html">Memorizing Transformers (Wu et al., 2022)</a> (Memorizing Transformers), LongMem, MLP Memory.</li>
+<li><strong>Strengths</strong>: avoids tokenization loss; the stored representation is latent and high-dimensional.</li>
+<li><strong>Weaknesses</strong>: retrieval overhead, integration complexity, possible representational mismatch between stored and current activations.</li>
+</ul>
+<h3>3. Parametric Memory Mechanisms (PMM)</h3>
+<ul>
+<li><strong>Storage</strong>: in additional trainable parameters — LoRA adapters, prefix tokens, edited weights (ROME, MEMIT).</li>
+<li><strong>Steering</strong>: the parameters <em>are</em> part of the forward pass; the LLM is permanently modified.</li>
+<li><strong>Examples</strong>: LoRA, Prefix-Tuning, ROME, MEMIT, MemGen.</li>
+<li><strong>Strengths</strong>: zero runtime overhead; compatible with frozen backbones.</li>
+<li><strong>Weaknesses</strong>: static after training; can&rsquo;t evolve with a conversation. Suited to <em>knowledge editing</em>, not <em>online</em> memory.</li>
+</ul>
+<h3>4. Online-State / Associative Memory Mechanisms</h3>
+<ul>
+<li><strong>Storage</strong>: a compact, dynamically-updated state (a small matrix or an MLP) maintained alongside the backbone, updated by online learning (delta rule, gradient descent on a &ldquo;surprise&rdquo; loss).</li>
+<li><strong>Steering</strong>: read into the forward pass as a low-rank correction to attention components.</li>
+<li><strong>Examples</strong>: <a class="wikilink is-source" href="behrouz-2024-titans.html">Titans (Behrouz et al., 2024)</a> (Titans), <a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a> (δ-mem). Linear-attention models that close on the same kernel: DeltaNet, GLA, Mamba2-style.</li>
+<li><strong>Strengths</strong>: compact (a 64-scalar state is enough in δ-mem!), backbone-aligned, no retrieval overhead.</li>
+<li><strong>Weaknesses</strong>: requires training the read/write projections; throughput cost per token; explainability is poor compared to TMM.</li>
+</ul>
+<h2>A worked picture</h2>
+<pre><code>                                  ┌─ TMM: prompt re-injection ───────────┐
+        ┌───────┐                  │
+LLM ────│ attn  │── output       ──┼─ OMM: side pathway + gate ──────────┤
+        └───────┘                  │
+                                  └─ Online: low-rank correction (δ-mem)─┘
+
+                  PMM: weights themselves are the memory (LoRA / ROME)
+</code></pre>
+<h2>When to use which</h2>
+<ul>
+<li><strong>You have a clear set of long-lived facts and want explainability</strong> → TMM (Mem0, MemGPT).</li>
+<li><strong>You want maximum recall fidelity over very long histories and can afford a kNN index</strong> → OMM (Memorizing Transformers, LongMem).</li>
+<li><strong>You want to permanently teach the model new knowledge</strong> → PMM (ROME / MEMIT).</li>
+<li><strong>You want a tiny, dynamic, backbone-aligned memory state for online learning at inference time</strong> → Online-state (Titans, δ-mem).</li>
+</ul>
+<p>In practice, production agents <em>combine</em> paradigms: TMM for user-facing facts, RAG for documents, and increasingly online-state for low-level steering.</p>
+<h2>Pointers in this syllabus</h2>
+<ul>
+<li><a class="wikilink is-source" href="wu-2022-memorizing-transformers.html">Memorizing Transformers (Wu et al., 2022)</a> — canonical OMM</li>
+<li><a class="wikilink is-source" href="packer-2023-memgpt.html">Memgpt (Packer et al., 2023)</a> — canonical TMM (and the OS framing)</li>
+<li><a class="wikilink is-source" href="park-2023-generative-agents.html">Generative Agents (Park et al., 2023)</a> — TMM with reflection layered on top</li>
+<li><a class="wikilink is-source" href="behrouz-2024-titans.html">Titans (Behrouz et al., 2024)</a> — online-state with momentum + surprise</li>
+<li><a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a> — production TMM (ADD/UPDATE/DELETE/NOOP)</li>
+<li><a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a> — online-state as low-rank correction to frozen backbone; popularised the 4-paradigm taxonomy</li>
+</ul></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

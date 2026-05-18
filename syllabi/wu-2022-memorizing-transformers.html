@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Memorizing Transformers (Wu et al., 2022) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Memorizing Transformers (Wu, Rabe, Hutchins, Szegedy — ICLR 2022) is the canonical &quot;outside-channel&quot; baseline in the AI-agent-memory taxonomy. Rather than expand attention or rewrite weights, a single…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">Memorizing Transformers (Wu et al., 2022)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/wu-2022-memorizing-transformers.pdf">wu-2022-memorizing-transformers.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h2>Summary</h2>
+<p>Memorizing Transformers (Wu, Rabe, Hutchins, Szegedy — ICLR 2022) is the canonical &ldquo;outside-channel&rdquo; baseline in the AI-agent-memory taxonomy. Rather than expand attention or rewrite weights, a single Transformer layer is augmented with a <em>non-differentiable</em> approximate kNN lookup over a cache of past (key, value) pairs. At inference, the layer attends to (1) the standard local context and (2) the top-k nearest keys retrieved from the external memory, and gates between them with a learned scalar. The model is trained end-to-end (despite the non-differentiable lookup) and shown to extend useful context across long-document tasks — code, mathematical papers (arXiv), formal proofs (Isabelle), books (PG-19), and C4 — with memory banks scaled up to 262k tokens. Perplexity improves monotonically with memory size, and the largest gains are on highly structured/repetitive domains (math, code, formal theorems) where rare-name recall matters.</p>
+<h2>Key points</h2>
+<h3>Memory architecture</h3>
+<ul>
+<li>A <strong>single layer</strong> of the Transformer is modified (the authors place it deep in the stack, ~9th of 12). All other layers are vanilla self-attention.</li>
+<li>The memory is a <strong>(key, value) cache</strong> of previously-seen positions, <em>not</em> a parametric store. Keys and values are the same tensors used by attention at the memory layer.</li>
+<li>A <strong>batch of past segments</strong> is appended to the memory bank as it is processed. At test time, the bank can be arbitrarily larger than the training-time bank — performance keeps improving up to 262k entries.</li>
+<li>Retrieval is <strong>approximate kNN</strong> (ScaNN-style) over the keys; the top-k retrieved entries form an external attention context for the current query.</li>
+</ul>
+<h3>Gated attention</h3>
+<p>For each query, the layer computes:
+- local self-attention output <span class="math math-inline">$o_\text{local}$</span> (standard windowed attention),
+- external attention output <span class="math math-inline">$o_\text{ext}$</span> (attention over the top-k retrieved (k,v) pairs),
+- a learned per-head gate <span class="math math-inline">$g \in [0,1]$</span>,
+- final output <span class="math math-inline">$o = (1-g) o_\text{local} + g o_\text{ext}$</span>.</p>
+<p>The gate gives heads the freedom to be &ldquo;memory heads&rdquo; or &ldquo;local heads&rdquo;; in practice some heads strongly prefer the external pathway.</p>
+<h3>Training &amp; generalization</h3>
+<ul>
+<li>Trained on long-document corpora at fixed segment length, with the memory growing across segments within a document but cleared across documents.</li>
+<li>Critically, the <strong>memory size at inference can far exceed the size used at training</strong>: a model trained with a 8k memory still benefits from extending to 65k or 262k at eval. This is the property δ-mem and Titans later try to recover with state, not retrieval.</li>
+<li>Reported perplexity wins across PG-19, arXiv-Math, GitHub, C4, Isabelle, with the bigger relative gains on the structured domains.</li>
+</ul>
+<h3>Why it became <em>the</em> outside-channel baseline</h3>
+<ul>
+<li>Conceptually simple — one extra attention pathway, one gate, one cache.</li>
+<li>Demonstrated that a frozen-memory, kNN-retrieved store could substantially help next-token prediction without any architectural surgery to the rest of the model.</li>
+<li>Influenced LongMem (Wang 2023), Landmark Attention, and the whole &ldquo;retrieval-augmented attention&rdquo; line.</li>
+</ul>
+<h3>Limitations (and why the field moved on)</h3>
+<ul>
+<li><strong>Non-differentiable retrieval</strong>: gradients don&rsquo;t flow into the memory; the cache is a frozen snapshot of past KV. Drift / mismatch when training distribution and serving distribution differ.</li>
+<li><strong>Latency</strong>: kNN over hundreds of thousands of entries adds non-trivial inference cost; gate scalar doesn&rsquo;t fix this.</li>
+<li><strong>Memory grows linearly with history</strong> — not a true <em>compression</em> of past information, just a bigger lookup table.</li>
+<li><strong>No explicit forgetting / consolidation</strong> — every past KV stays in the bank until manually flushed.</li>
+</ul>
+<p>δ-mem (Lei 2026) and Titans (Behrouz 2024) explicitly position themselves against this baseline: same goal (use history beyond context), but with a <em>compressed state</em> and a <em>backbone-aligned</em> steering pathway instead of a kNN cache.</p>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-concept" href="concept-agent-memory-paradigms.html">Memory mechanisms for AI agents — a 4-paradigm taxonomy</a> — this paper is the prototype of the &ldquo;outside-channel&rdquo; paradigm</li>
+<li><a class="wikilink is-source" href="behrouz-2024-titans.html">Titans (Behrouz et al., 2024)</a> — direct successor argument: replace kNN cache with a <em>learned</em> test-time memory</li>
+<li><a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a> — compact-state alternative to the kNN cache</li>
+<li><a class="wikilink is-syllabus" href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a> — full reading path</li>
+</ul><nav class="entry-nav"><span></span><a class="nav-next" href="packer-2023-memgpt.html"><span class="nav-label">Next</span>Memgpt (Packer et al., 2023)</a></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

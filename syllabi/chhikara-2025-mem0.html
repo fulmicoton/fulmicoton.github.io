@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mem0 (Chhikara et al., 2025) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Mem0 (Chhikara, Khant, Aryan, Singh, Yadav — Mem0 Inc., 2025) is the production-shaped successor to MemGPT and Generative Agents: a memory layer that sits between an LLM application and its conversati…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">Mem0 (Chhikara et al., 2025)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/chhikara-2025-mem0.pdf">chhikara-2025-mem0.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h2>Summary</h2>
+<p>Mem0 (Chhikara, Khant, Aryan, Singh, Yadav — Mem0 Inc., 2025) is the production-shaped successor to MemGPT and Generative Agents: a memory layer that sits between an LLM application and its conversational history, extracts <em>salient facts</em>, and exposes them as four crisp operations — <strong>ADD, UPDATE, DELETE, NOOP</strong> — driven by an LLM-as-judge over candidate updates. The system is bench-tested on <strong>LOCOMO</strong> (very-long-term conversational memory) across four question types (single-hop, temporal, multi-hop, open-domain) and against six families of baselines (RAG, OpenAI Memory, MemGPT, ZEP, LangMem, full-context). Headline: <strong>+26% on the LLM-as-Judge metric vs OpenAI Memory</strong>, <strong>91% lower p95 latency</strong>, <strong>&gt;90% token-cost savings</strong> vs full-context replay. A graph-structured variant <strong>Mem0g</strong> adds ~2% by capturing relational structure. The paper is more system-design than scientific contribution, but it codified what production agent-memory looks like in 2025 and is the open-source default for many shipping applications.</p>
+<h2>Key points</h2>
+<h3>Pipeline</h3>
+<p>For every new turn in a conversation:</p>
+<ol>
+<li><strong>Extract</strong> — an LLM call distils the turn into a list of candidate fact-claims.</li>
+<li><strong>Search</strong> — for each candidate, retrieve the top-k most-similar existing memories.</li>
+<li><strong>Decide</strong> — an LLM call inspects (candidate, retrieved) and emits one of:
+   - <code>ADD</code> — memory is novel; insert.
+   - <code>UPDATE</code> — memory contradicts/refines an existing entry; replace.
+   - <code>DELETE</code> — existing memory is invalidated; remove.
+   - <code>NOOP</code> — already-known or irrelevant; skip.</li>
+<li><strong>Apply</strong> — execute the operation against the vector store.</li>
+</ol>
+<p>This is the same primitive set Generative Agents implicitly used (insert + reflect), but <strong>made explicit and idempotent</strong>. It maps cleanly onto a database schema and lets you reason about memory state.</p>
+<h3>Mem0g — graph variant</h3>
+<p>The graph variant stores memories as nodes connected by typed edges (relationships extracted by the LLM). Queries can traverse the graph for multi-hop reasoning (&ldquo;who works at the company where Alice&rsquo;s brother is the CTO?&rdquo;). The overhead is modest (~2% accuracy gain, comparable latency).</p>
+<h3>Benchmark: LOCOMO</h3>
+<p>LOCOMO (Maharana et al., 2024) is the standard long-term conversational memory benchmark: ~600-turn synthetic dialogues with persona-grounded facts, and question types that probe:
+- <strong>Single-hop</strong> — direct fact retrieval.
+- <strong>Temporal</strong> — &ldquo;what did Alice do before she met Bob?&rdquo;.
+- <strong>Multi-hop</strong> — chains of facts.
+- <strong>Open-domain</strong> — synthesis across many turns.</p>
+<p>Mem0 outperforms:
+- OpenAI Memory (the in-product feature) — +26% LLM-as-Judge.
+- MemGPT — substantially on multi-hop and temporal, modestly on single-hop.
+- Vanilla RAG — across all categories.
+- Full-context replay — wins on multi-hop and temporal <em>despite</em> having less raw information available.</p>
+<h3>Efficiency claims</h3>
+<ul>
+<li><strong>91% lower p95 latency</strong> — because the prompt is the extracted facts, not the conversation history.</li>
+<li><strong>&gt;90% token cost</strong> — same reason; the LLM no longer re-reads the past.</li>
+<li>This is the <em>commercial</em> angle that distinguishes Mem0 from research-grade memory frameworks: extraction is amortized across many future queries.</li>
+</ul>
+<h3>What the paper does well</h3>
+<ul>
+<li><strong>Clean operational model</strong>. ADD/UPDATE/DELETE/NOOP is the right vocabulary; previous work conflated insertion and consolidation.</li>
+<li><strong>Comparison against OpenAI Memory</strong> is genuinely useful — most academic papers don&rsquo;t benchmark against shipping products.</li>
+<li><strong>LOCOMO + benchmark categories</strong> is now the standard. The δ-mem paper (Lei 2026) and many others use the same setup.</li>
+</ul>
+<h3>What&rsquo;s missing / honest gaps</h3>
+<ul>
+<li><strong>Heavy LLM-call cost at ingest</strong> — every turn triggers ≥2 LLM calls (extract, decide). At scale this is non-trivial; the paper amortizes but doesn&rsquo;t fully characterize.</li>
+<li><strong>Drift in the decision LLM</strong> — UPDATE vs ADD is sensitive to prompt phrasing; reproducibility across model versions isn&rsquo;t quantified.</li>
+<li><strong>No explicit forgetting curve</strong> — DELETE is triggered by contradictions, not by decay. Long-running memory stores will accumulate stale entries.</li>
+<li><strong>Still textual</strong> — same compaction-loss and retrieval-noise concerns as MemGPT and Generative Agents; the latent-memory line (Titans, δ-mem) attacks this directly.</li>
+</ul>
+<h3>Position in the syllabus</h3>
+<p>Mem0 is the <strong>strongest textual-memory baseline</strong> as of 2026. δ-mem (Lei 2026) explicitly compares against MemoryBank (predecessor of Mem0 in the same family); the next round of latent-vs-textual comparison will need to bench-test δ-mem against Mem0 head-to-head, which the δ-mem paper does not do.</p>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-concept" href="concept-agent-memory-paradigms.html">Memory mechanisms for AI agents — a 4-paradigm taxonomy</a> — Mem0 is the current textual-memory state-of-the-art</li>
+<li><a class="wikilink is-source" href="packer-2023-memgpt.html">Memgpt (Packer et al., 2023)</a> — predecessor; ADD/UPDATE/DELETE/NOOP refines MemGPT&rsquo;s working-context / archival ad-hoc operations</li>
+<li><a class="wikilink is-source" href="park-2023-generative-agents.html">Generative Agents (Park et al., 2023)</a> — spiritual ancestor (memory stream + reflection); Mem0 systematizes the operations</li>
+<li><a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a> — latent-memory critique of all textual approaches</li>
+<li><a class="wikilink is-syllabus" href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a> — full reading path</li>
+</ul><nav class="entry-nav"><a class="nav-prev" href="behrouz-2024-titans.html"><span class="nav-label">Previous</span>Titans (Behrouz et al., 2024)</a><a class="nav-next" href="lei-2026-delta-mem.html"><span class="nav-label">Next</span>Delta MEM (Lei et al., 2026)</a></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

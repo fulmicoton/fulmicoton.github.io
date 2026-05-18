@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Memgpt (Packer et al., 2023) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="MemGPT (Packer, Wooders, Lin, Fang, Patil, Stoica, Gonzalez — UC Berkeley, 2023) frames the LLM context window as RAM and proposes that the LLM should manage its own memory hierarchy via function call…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">Memgpt (Packer et al., 2023)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/packer-2023-memgpt.pdf">packer-2023-memgpt.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h2>Summary</h2>
+<p>MemGPT (Packer, Wooders, Lin, Fang, Patil, Stoica, Gonzalez — UC Berkeley, 2023) frames the LLM context window as RAM and proposes that the LLM should manage its own memory hierarchy via function calls — a virtual-memory OS for language models. The system has three tiers: <strong>main context</strong> (the in-prompt window, fast but capped), <strong>recall storage</strong> (recent message history, paged in on demand), and <strong>archival storage</strong> (long-term, unbounded vector store). The LLM emits <em>function calls</em> to read, write, and search the lower tiers; an interrupt-driven control loop pages content in and out without violating the context cap. Evaluated on document analysis far exceeding GPT-4&rsquo;s 32k window and on multi-session conversational agents (MSC dataset), MemGPT shows that explicit, self-managed memory substantially outperforms vanilla long-context prompting on tasks requiring retention across sessions. The paper became the reference for <em>textual memory</em> in the agent-memory taxonomy and led to Letta — the leading open-source stateful-agent framework.</p>
+<h2>Key points</h2>
+<h3>The OS analogy</h3>
+<p>The central pitch is rhetorical but operationally clean: traditional OS virtual memory creates the <em>illusion</em> of large memory through paging between RAM and disk. MemGPT does the same for an LLM:</p>
+<table>
+<thead>
+<tr>
+<th>OS concept</th>
+<th>MemGPT analog</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAM</td>
+<td>Main context (LLM input window)</td>
+</tr>
+<tr>
+<td>Disk</td>
+<td>Recall + archival storage (external)</td>
+</tr>
+<tr>
+<td>Page table</td>
+<td>LLM-emitted function calls</td>
+</tr>
+<tr>
+<td>Interrupt</td>
+<td>&ldquo;Heartbeat&rdquo; / control-loop tick that re-invokes the LLM</td>
+</tr>
+<tr>
+<td>Kernel</td>
+<td>Outer control loop (Python) that executes function calls</td>
+</tr>
+</tbody>
+</table>
+<h3>Memory hierarchy</h3>
+<ul>
+<li><strong>Main context</strong> — the actual prompt seen by the LLM. Split into:<ul>
+<li><em>System instructions</em> (fixed)</li>
+<li><em>Working context</em> (free-form scratchpad the LLM can rewrite — typically holds the user persona and a few key facts)</li>
+<li><em>FIFO queue</em> (recent messages, capped, oldest get evicted to recall)</li>
+</ul>
+</li>
+<li><strong>Recall storage</strong> — full history of past messages and function calls (vector-indexed). Searchable.</li>
+<li><strong>Archival storage</strong> — out-of-conversation knowledge: long documents, persistent facts. Vector store.</li>
+</ul>
+<h3>Self-managed via function calls</h3>
+<p>The LLM is taught (via system prompt) to emit functions like:
+- <code>core_memory_append(name, content)</code> — write to the working context (the in-prompt scratchpad).
+- <code>core_memory_replace(name, old, new)</code> — edit working context.
+- <code>conversation_search(query)</code> — query recall storage.
+- <code>archival_memory_insert(content)</code>, <code>archival_memory_search(query)</code> — write/read archival.
+- <code>send_message(...)</code> — actually reply to the user (otherwise the loop continues).</p>
+<p>The LLM is its own memory manager: it decides what to promote (write to working context) and what to demote (let it fall off the FIFO into recall).</p>
+<h3>Interrupt-driven control loop</h3>
+<p>After every LLM turn, the outer loop checks for emitted function calls and runs them, then re-invokes the LLM. The LLM can chain multiple function calls without a user response (it just emits another <code>request_heartbeat</code> instead of <code>send_message</code>). This is how multi-step memory operations (e.g., &ldquo;search archival, then update working context, then reply&rdquo;) are stitched together within one logical user turn.</p>
+<h3>Key experiments</h3>
+<ul>
+<li><strong>Document QA on long PDFs / multi-doc</strong> — MemGPT substantially outperforms truncated-context baselines on GPT-4 and GPT-3.5-Turbo. Notable because the LLM has to <em>actively</em> search archival, not just be given the right chunk.</li>
+<li><strong>Multi-session chat (MSC)</strong> — MemGPT remembers facts across sessions where vanilla 32k-context chat models forget.</li>
+<li><strong>Nested-key retrieval</strong> — synthetic stress test (find a key hidden many layers deep across documents). MemGPT scales while context-only baselines collapse.</li>
+</ul>
+<h3>Why it landed</h3>
+<ul>
+<li>First serious <em>production-shaped</em> memory framework: it&rsquo;s not a research artifact, it&rsquo;s an architecture for stateful agents.</li>
+<li>The OS framing made the design choices teachable and the abstractions reusable (working context / recall / archival is now standard vocabulary).</li>
+<li>Open-sourced from day one; the project rebranded to <strong>Letta</strong> in 2024 and became one of the dominant open-source agent frameworks.</li>
+</ul>
+<h3>Limitations the field is still grappling with</h3>
+<ul>
+<li><strong>Function-call reliability</strong> — the LLM has to <em>choose</em> to manage its memory. Weaker LLMs forget to write to working context, or write too aggressively.</li>
+<li><strong>Compression is text-based</strong> — the working context summarizes in natural language, paying tokenization cost and accumulating compaction loss (Laban 2025, Hong 2025).</li>
+<li><strong>Retrieval noise</strong> — archival search returns approximate matches; irrelevant chunks pollute the prompt.</li>
+<li><strong>No graded forgetting</strong> — the FIFO eviction is binary; there is no notion of an item slowly decaying or being consolidated.</li>
+</ul>
+<p>These limitations are exactly what Mem0, Generative Agents (with reflection), and the latent-memory line (Titans, δ-mem) try to address.</p>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-concept" href="concept-agent-memory-paradigms.html">Memory mechanisms for AI agents — a 4-paradigm taxonomy</a> — MemGPT is the canonical &ldquo;textual memory&rdquo; example</li>
+<li><a class="wikilink is-source" href="park-2023-generative-agents.html">Generative Agents (Park et al., 2023)</a> — contemporaneous textual-memory architecture, adds <em>reflection</em> on top of the memory stream</li>
+<li><a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a> — production successor; cleaner ADD/UPDATE/DELETE/NOOP semantics</li>
+<li><a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a> — direct critique: textual memory pays tokenization cost and suffers retrieval noise</li>
+<li><a class="wikilink is-syllabus" href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a> — full reading path</li>
+</ul><nav class="entry-nav"><a class="nav-prev" href="wu-2022-memorizing-transformers.html"><span class="nav-label">Previous</span>Memorizing Transformers (Wu et al., 2022)</a><a class="nav-next" href="park-2023-generative-agents.html"><span class="nav-label">Next</span>Generative Agents (Park et al., 2023)</a></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

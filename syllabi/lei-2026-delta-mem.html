@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Delta MEM (Lei et al., 2026) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="δ-mem (Lei et al., 2026) augments a *frozen* full-attention LLM with a compact online state of associative memory updated by a gated delta rule. Unlike textual memory (MemGPT, Mem0), outside-channel m…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">Delta MEM (Lei et al., 2026)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/lei-2026-delta-mem.pdf">lei-2026-delta-mem.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h2>Summary</h2>
+<p>δ-mem (Lei et al., 2026) augments a <em>frozen</em> full-attention LLM with a compact online state of associative memory updated by a gated delta rule. Unlike textual memory (MemGPT, Mem0), outside-channel memory (Memorizing Transformers, LongMem), or static parametric memory (LoRA, ROME), δ-mem keeps memory as a tiny matrix <span class="math math-inline">$S_t \in \mathbb{R}^{r \times r}$</span> that is read into the forward pass as a low-rank correction to the query and output of attention. With <span class="math math-inline">$r=8$</span> (an <span class="math math-inline">$8\times 8$</span> matrix) the method improves the Qwen3-4B-Instruct backbone average from 46.79% to 51.66% across IFEval / HotpotQA / GPQA-D / MemoryAgentBench / LoCoMo, and 1.31× on MemoryAgentBench. Striking corollary: in a no-context setting, the <span class="math math-inline">$8\times 8$</span> state alone recovers ~6.4 EM on HotpotQA from 0.08 EM — memory truly compresses history without storing tokens. Trainable parameter overhead is 0.12% (4.87M for the <span class="math math-inline">$r=8$</span> variant on Qwen3-4B).</p>
+<h2>Key points</h2>
+<h3>The unified 4-paradigm taxonomy (Section 1)</h3>
+<p>The paper&rsquo;s clearest contribution may be the framing: any memory mechanism is characterized by <strong>memory state</strong> (how history is stored) and <strong>memory steering</strong> (how the state influences the backbone). Existing methods fall into three paradigms, all with named limitations:</p>
+<table>
+<thead>
+<tr>
+<th>Paradigm</th>
+<th>How memory is stored</th>
+<th>How it steers backbone</th>
+<th>Limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Textual (TMM)</strong> — MemGPT, Mem0, MemoryBank, RAG, RETRO</td>
+<td>as text entries / summaries</td>
+<td>re-inject into input context</td>
+<td>context-window limits, retrieval noise, compaction loss</td>
+</tr>
+<tr>
+<td><strong>Outside-channel (OMM)</strong> — Memorizing Transformers, LongMem, MLP Memory</td>
+<td>external module (kNN bank, side network)</td>
+<td>retrieve &amp; fuse via auxiliary pathway</td>
+<td>overhead, integration complexity, possible representational mismatch</td>
+</tr>
+<tr>
+<td><strong>Parametric (PMM)</strong> — LoRA, Prefix-Tuning, ROME, MEMIT</td>
+<td>in additional weights/prefixes</td>
+<td>static modification of backbone</td>
+<td>doesn&rsquo;t evolve with the sequence</td>
+</tr>
+</tbody>
+</table>
+<p>δ-mem proposes a fourth: a <strong>compact online state directly coupled with attention computation</strong>.</p>
+<h3>Delta-rule online memory update</h3>
+<p>The memory state <span class="math math-inline">$S_t$</span> stores key→value associations. At each step, prediction is <span class="math math-inline">$\hat{v}_t = S_{t-1} k_t$</span>. The state is updated by minimizing <span class="math math-inline">$\frac{1}{2}\|S k_t - v_t\|^2$</span> via SGD, giving:</p>
+<div class="math math-block">$$S_t = \lambda_t S_{t-1} + \beta_t (v_t - S_{t-1} k_t) k_t^\top$$</div>
+<p>with <strong>dimension-wise</strong> gates <span class="math math-inline">$\lambda_t, \beta_t \in \mathbb{R}^r$</span> generated from the hidden state via a sigmoid. The forget gate is inspired by Qwen-Next&rsquo;s gated retention. Crucially, the update writes only the <em>residual</em> — well-learned associations induce negligible updates. This is the classical fast-weight / online associative memory recipe, applied as a side-state to a frozen Transformer.</p>
+<h3>Read = low-rank attention correction</h3>
+<p>Reading is just a matrix-vector product: <span class="math math-inline">$r_t = S_{t-1} q_t^m \in \mathbb{R}^r$</span>. The read vector then drives two affine projections into the backbone:
+- Query correction: <span class="math math-inline">$\tilde{q}_t = q_t^0 + \frac{\alpha}{r} W^\Delta_q r_t$</span>
+- Output correction: <span class="math math-inline">$\tilde{y}_t = a_t + \frac{\alpha}{r} W^\Delta_o r_t$</span></p>
+<p>The projections <span class="math math-inline">$W^\Delta_q, W^\Delta_o$</span> are fixed after training, but their input <span class="math math-inline">$r_t$</span> comes from the <em>dynamic</em> state, so the effective correction is history-conditioned — unlike LoRA where the update is static. Head ablation: <code>qo</code> is the sweet spot (47.97 avg); full <code>qkvo</code> only marginally better (48.05) at extra parameter cost.</p>
+<h3>Three writing granularities (Section 3.5)</h3>
+<ul>
+<li><strong>Token-State Write (TSW)</strong> — write at every token (finest, noisiest).</li>
+<li><strong>Sequence-State Write (SSW)</strong> — average hidden states within a message segment, write once per message.</li>
+<li><strong>Multi-State Write (MSW)</strong> — <span class="math math-inline">$N$</span> parallel sub-states <span class="math math-inline">$\{S^{(1)}, \ldots, S^{(N)}\}$</span> (<span class="math math-inline">$N=4$</span> in experiments), concatenate readouts.</li>
+</ul>
+<p>Empirically: TSW best on Qwen3-4B (51.66), SSW best on Qwen3-8B (50.86), MSW best on SmolLM3-3B (36.96). Capacity-matched: stronger backbones tolerate finer granularity; weaker backbones benefit from segregation.</p>
+<h3>Key experimental claims</h3>
+<ul>
+<li><strong>Memory benchmarks (Qwen3-4B-Instruct backbone)</strong>:<ul>
+<li>MemoryAgentBench avg: 29.54 → 38.85 (1.31×, MSW best)</li>
+<li>LoCoMo avg: 40.79 → 49.12 (1.20×, MSW best)</li>
+<li>TTL subtask: 26.14 → 50.50 (nearly 2×, SSW)</li>
+</ul>
+</li>
+<li><strong>General capability preserved</strong>: IFEval 81.89 → 82.99 (TSW), GPQA-D 39.39 → 41.41 (SSW).</li>
+<li><strong>Beats all four baseline families</strong> on the avg metric: BM25 RAG, LLMLingua-2, MemoryBank (textual); Context2LoRA, MemGen (parametric); MLP Memory (outside-channel).</li>
+<li><strong>No-context recovery</strong> (Section 5.1, the most striking result): with original context stripped, the 8×8 state lifts HotpotQA EM from 0.08 → 6.48 and F1 from 8.27 → 15.20. State really stores reusable historical signal.</li>
+<li><strong>Insertion depth ablation</strong>: all-layers &gt; middle-12 &gt; front-12 &gt; back-12. Middle layers are the most effective single locus.</li>
+<li><strong>Parameter overhead</strong>: 4.87M params (0.12% of 4B backbone) for SSW/TSW; 19.47M for MSW. Compare MLP Memory at 3,078M (76.4% of backbone).</li>
+<li><strong>Inference efficiency</strong>: GPU memory matches Vanilla / Context2LoRA even at 32k prompts; decode TPS lower than Vanilla (must read/update state per step) but well above MemGen.</li>
+</ul>
+<h3>Limitations and honest gaps</h3>
+<ul>
+<li>Training is on QASPER (2,219 samples, 8k context) — relatively small SFT regime; transfer to longer agent trajectories is asserted, not proven at scale.</li>
+<li>No comparison against Titans (Behrouz et al. 2024) — the closest neural-memory predecessor — even though both share the test-time learning premise.</li>
+<li>Throughput cost of the per-token state update is real (TPS drops vs. Vanilla); not benchmarked at high concurrency or with batched serving.</li>
+<li>The &ldquo;1.31× / 1.20×&rdquo; gains are on benchmarks the authors picked; LongMemEval and other community benchmarks aren&rsquo;t covered head-to-head.</li>
+</ul>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-concept" href="concept-agent-memory-paradigms.html">Memory mechanisms for AI agents — a 4-paradigm taxonomy</a> — the 4-paradigm taxonomy this paper popularizes</li>
+<li><a class="wikilink is-concept" href="concept-associative-memory-delta-rule.html">Associative memory and the delta rule</a> — the math kernel: <span class="math math-inline">$S \leftarrow \lambda S + \beta (v - Sk) k^\top$</span> and its lineage</li>
+<li><a class="wikilink is-source" href="wu-2022-memorizing-transformers.html">Memorizing Transformers (Wu et al., 2022)</a> — outside-channel kNN memory baseline</li>
+<li><a class="wikilink is-source" href="packer-2023-memgpt.html">Memgpt (Packer et al., 2023)</a> — textual memory contrast (OS-style paging)</li>
+<li><a class="wikilink is-source" href="behrouz-2024-titans.html">Titans (Behrouz et al., 2024)</a> — closest sibling: also test-time-learned neural memory</li>
+<li><a class="wikilink is-source" href="chhikara-2025-mem0.html">Mem0 (Chhikara et al., 2025)</a> — production textual memory baseline</li>
+<li><a class="wikilink is-syllabus" href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a> — full reading path</li>
+</ul><nav class="entry-nav"><a class="nav-prev" href="chhikara-2025-mem0.html"><span class="nav-label">Previous</span>Mem0 (Chhikara et al., 2025)</a><span></span></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>

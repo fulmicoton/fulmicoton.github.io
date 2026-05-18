@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Titans (Behrouz et al., 2024) — Syllabi</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Titans (Behrouz, Zhong, Mirrokni — Google, 2024) introduces a **neural long-term memory module** that learns to memorize at *test time* — its weights update during inference based on a &quot;surprise&quot; sign…">
+<link rel="stylesheet" href="style.css">
+<script>
+window.MathJax = {
+  tex: { inlineMath: [['$','$']], displayMath: [['$$','$$']] },
+  options: { skipHtmlTags: ['script','noscript','style','textarea','pre','code'] }
+};
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="index.html">Encyclopaedia<span class="brand-mark">· Source · paper</span></a>
+  <nav class="breadcrumb"><a href="index.html">Syllabi</a> &nbsp;›&nbsp; <a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></nav>
+</header>
+<main><article class="entry"><div class="entry-kicker">Source · paper</div><h1 class="entry-title">Titans (Behrouz et al., 2024)</h1><div class="entry-meta"><span class="tags"><span class="tag research">research</span></span><span class="entry-source">Source PDF: <a href="pdf/behrouz-2024-titans.pdf">behrouz-2024-titans.pdf</a></span></div><aside class="entry-syllabus-context"><div class="label">Part of</div><a href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a></aside><h2>Summary</h2>
+<p>Titans (Behrouz, Zhong, Mirrokni — Google, 2024) introduces a <strong>neural long-term memory module</strong> that learns to memorize at <em>test time</em> — its weights update during inference based on a &ldquo;surprise&rdquo; signal, with momentum and forgetting gates inspired by classical optimizer dynamics. The premise: attention is excellent <em>short-term</em> memory but bounded by context; explicit RNN/SSM state is <em>long-term</em> but lossy. Titans combines a frozen attention &ldquo;core&rdquo; with a parametric memory module updated online by gradient descent on a <em>surprise</em> loss (how poorly the module predicts the current key→value). Three integration variants — Memory-as-Context (MAC), Memory-as-Gate (MAG), Memory-as-Layer (MAL) — explore how the memory should interact with the core attention. Evaluated on language modeling, commonsense reasoning, genomics, and time series with context lengths beyond 2M tokens, Titans outperform Transformers and modern linear recurrent baselines (Mamba, RWKV, DeltaNet) on long-context retrieval (needle-in-haystack), and the test-time-learned memory is the direct conceptual ancestor of δ-mem.</p>
+<h2>Key points</h2>
+<h3>Memory as test-time learning</h3>
+<p>The core idea reframes &ldquo;memory&rdquo; as an inner optimization loop. At each step, the memory module <span class="math math-inline">$\mathcal{M}_t$</span> (a small MLP) is updated by gradient descent on a loss measuring how well <span class="math math-inline">$\mathcal{M}_{t-1}$</span> predicts the <em>value</em> given the <em>key</em> at the current position:</p>
+<div class="math math-block">$$\ell_t(\mathcal{M}) = \|\mathcal{M}(k_t) - v_t\|^2$$</div>
+<p>The update follows a momentum + decay rule:</p>
+<div class="math math-block">$$\mathcal{M}_t \leftarrow (1 - \alpha_t) \mathcal{M}_{t-1} + \eta_t \cdot m_t, \quad m_t = \beta_t m_{t-1} - \theta_t \nabla \ell_t(\mathcal{M}_{t-1})$$</div>
+<p>with all gates (<span class="math math-inline">$\alpha_t, \eta_t, \beta_t, \theta_t$</span>) generated from the current token. Surprise = the gradient norm; high-surprise tokens get written more strongly. The forget gate <span class="math math-inline">$\alpha_t$</span> enables graded forgetting.</p>
+<h3>Three integration variants</h3>
+<p>The paper sweeps how the test-time-learned memory module sits relative to the attention core:</p>
+<ul>
+<li><strong>Memory-as-Context (MAC)</strong> — memory output is <em>prepended</em> to the attention context as additional persistent tokens. Attention treats memory as a fixed-length extra window.</li>
+<li><strong>Memory-as-Gate (MAG)</strong> — memory output and attention output are mixed via a learned gate (sliding-window attention for short-term, memory for long-term).</li>
+<li><strong>Memory-as-Layer (MAL)</strong> — memory is a layer that <em>transforms</em> the sequence before attention sees it; the attention core then operates on the memory-augmented stream.</li>
+</ul>
+<p>MAG is the best on language modeling; MAC is the best on long-context retrieval (needle-in-haystack); MAL is intermediate.</p>
+<h3>Persistent memory tokens</h3>
+<p>Beyond the test-time-learned dynamic memory, Titans also have a small set of <strong>persistent memory tokens</strong> — learnable parameters trained once (like prompt tuning) that serve as task-conditioned anchors. The dynamic memory rides on top of this fixed scaffold.</p>
+<h3>Test-time training, properly framed</h3>
+<p>Titans is part of a broader 2024–2025 trend (Test-Time Training of Sun et al., DeltaNet, GLA, RWKV-7) that recasts state-space and linear-attention models as <em>online learners</em> of an associative key→value map. Titans is distinctive for:
+- Explicit <em>momentum</em> term (most contemporaries use SGD-only updates).
+- Per-dimension gates (vs. scalar).
+- Parameterizing the memory as an MLP rather than a linear matrix — a small nonlinear network can store more associations than <span class="math math-inline">$r^2$</span> scalars.</p>
+<h3>Benchmarks</h3>
+<ul>
+<li><strong>Language modeling</strong> — competitive with or better than equivalently-sized Transformers and Mamba/Mamba2 on standard perplexity benchmarks.</li>
+<li><strong>Needle-in-a-haystack</strong> — scales to context &gt;2M tokens, where Transformers blow up and SSMs degrade.</li>
+<li><strong>Commonsense reasoning</strong> — modest improvements over baselines.</li>
+<li><strong>Genomics, time series</strong> — wins on long-range dependency tasks where the relevant signal is hundreds of thousands of positions away.</li>
+</ul>
+<h3>Why it matters in the agent-memory line</h3>
+<ul>
+<li><strong>First serious answer to &ldquo;what would a learned memory module look like?&rdquo;</strong> — earlier outside-channel methods (Memorizing Transformers, LongMem) used non-differentiable kNN; Titans makes the memory itself trainable, and updateable during inference.</li>
+<li><strong>Directly inspires δ-mem</strong> — δ-mem&rsquo;s gated delta-rule update is structurally the same idea, simplified to a single matrix <span class="math math-inline">$S \in \mathbb{R}^{r \times r}$</span> instead of an MLP, and as a <em>side-channel</em> to a frozen Transformer rather than a fundamental architectural component.</li>
+<li><strong>Pre-trained vs. agent regime</strong> — Titans is trained from scratch alongside the backbone, so memory and attention co-adapt; δ-mem is for the <em>agentic</em> setting where a frozen pre-trained LLM is augmented post-hoc.</li>
+</ul>
+<h3>Open questions Titans does not fully resolve</h3>
+<ul>
+<li><strong>Optimizer choice</strong> — why momentum-SGD specifically? Adam-style adaptive learning rates not explored.</li>
+<li><strong>Memory module capacity vs. width tradeoff</strong> — bigger MLP memory helps, but the scaling law isn&rsquo;t characterized.</li>
+<li><strong>Compatibility with finetuned/agentic backbones</strong> — Titans is trained jointly; using a pre-trained backbone as the attention core (Frankenstein-style) isn&rsquo;t tested.</li>
+</ul>
+<h2>Related notes</h2>
+<ul>
+<li><a class="wikilink is-concept" href="concept-associative-memory-delta-rule.html">Associative memory and the delta rule</a> — Titans is the deepest exposition of the test-time-learned-memory mechanism</li>
+<li><a class="wikilink is-concept" href="concept-agent-memory-paradigms.html">Memory mechanisms for AI agents — a 4-paradigm taxonomy</a> — Titans straddles &ldquo;outside-channel&rdquo; and &ldquo;online state&rdquo; — it learns a side-module, but the module is parametric</li>
+<li><a class="wikilink is-source" href="wu-2022-memorizing-transformers.html">Memorizing Transformers (Wu et al., 2022)</a> — non-differentiable predecessor; Titans replaces the kNN cache with a learned MLP</li>
+<li><a class="wikilink is-source" href="lei-2026-delta-mem.html">Delta MEM (Lei et al., 2026)</a> — same delta-rule kernel, applied to a <em>frozen</em> backbone with a much smaller state</li>
+<li><a class="wikilink is-syllabus" href="syllabus-ai-agent-memory.html">Syllabus — Memory for AI agents</a> — full reading path</li>
+</ul><nav class="entry-nav"><a class="nav-prev" href="park-2023-generative-agents.html"><span class="nav-label">Previous</span>Generative Agents (Park et al., 2023)</a><a class="nav-next" href="chhikara-2025-mem0.html"><span class="nav-label">Next</span>Mem0 (Chhikara et al., 2025)</a></nav></article></main>
+<footer class="site-footer">Built from a personal knowledge vault.</footer>
+</body>
+</html>
